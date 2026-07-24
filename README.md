@@ -1,4 +1,4 @@
-# Pascal Editor
+# Arch Construct Editor
 
 A 3D building editor built with React Three Fiber and WebGPU.
 
