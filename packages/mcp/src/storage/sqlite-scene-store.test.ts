@@ -57,8 +57,8 @@ describe('resolveDefaultDatabasePath', () => {
   })
 
   test('resolves ARUCT_DATA_DIR to aruct.db', () => {
-    expect(resolveDefaultDatabasePath({ ARUCT_DATA_DIR: '/tmp/pascal-data' })).toBe(
-      path.join('/tmp/pascal-data', 'aruct.db'),
+    expect(resolveDefaultDatabasePath({ ARUCT_DATA_DIR: '/tmp/aruct-data' })).toBe(
+      path.join('/tmp/aruct-data', 'aruct.db'),
     )
   })
 

@@ -48,7 +48,7 @@ describe('Aruct texture references', () => {
     ).toBeNull()
   })
 
-  test('stamps the exact project-asset payload for Pascal storage URLs', () => {
+  test('stamps the exact project-asset payload for Aruct storage URLs', () => {
     const texture = new THREE.Texture()
     texture.colorSpace = THREE.SRGBColorSpace
 
@@ -68,7 +68,7 @@ describe('Aruct texture references', () => {
     expect(getAructTextureRef(texture)).toEqual(ref)
   })
 
-  test('keeps local and non-Pascal URLs unstamped', () => {
+  test('keeps local and non-Aruct URLs unstamped', () => {
     for (const src of [
       'asset://project/asset',
       'blob:https://editor.aruct.app/asset',

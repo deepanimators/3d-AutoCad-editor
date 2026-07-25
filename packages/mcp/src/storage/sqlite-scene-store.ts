@@ -82,8 +82,8 @@ const GraphSchema = z.object({
  * Precedence:
  * 1. `ARUCT_DB_PATH`
  * 2. `ARUCT_DATA_DIR/aruct.db`
- * 3. On Windows: `%APPDATA%/Pascal/data/aruct.db`
- * 4. `$XDG_DATA_HOME/pascal/data/aruct.db`
+ * 3. On Windows: `%APPDATA%/Aruct/data/aruct.db`
+ * 4. `$XDG_DATA_HOME/aruct/data/aruct.db`
  * 5. `$HOME/.aruct/data/aruct.db`
  */
 export function resolveDefaultDatabasePath(env: NodeJS.ProcessEnv = process.env): string {

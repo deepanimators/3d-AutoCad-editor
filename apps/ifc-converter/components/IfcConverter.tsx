@@ -32,7 +32,7 @@ function meta(node: { metadata?: unknown } | null | undefined): ConverterMetadat
 }
 
 export default function IfcConverter() {
-  const [aructData, setPascalData] = useState<AructSceneGraph | null>(null)
+  const [aructData, setAructData] = useState<AructSceneGraph | null>(null)
   const [status, setStatus] = useState<Status>('idle')
   const [error, setError] = useState<string | null>(null)
   const [isDragging, setIsDragging] = useState(false)
@@ -140,7 +140,7 @@ export default function IfcConverter() {
         setConversionMessage(message)
         setConversionProgress(percent)
       })
-      setPascalData(result)
+      setAructData(result)
       setStatus('ready')
       setConversionProgress(100)
       setConversionMessage('Conversion complete!')
