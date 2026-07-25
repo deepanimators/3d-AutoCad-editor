@@ -1,6 +1,7 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
+  serverExternalPackages: ['firebase-admin', '@neondatabase/serverless', 'drizzle-orm', 'drizzle-orm/neon-http'],
   logging: {
     browserToTerminal: true,
   },
