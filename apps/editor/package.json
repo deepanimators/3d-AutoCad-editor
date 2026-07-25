@@ -14,19 +14,23 @@
     "db:studio": "dotenv -e ../../.env.local -- drizzle-kit studio"
   },
   "dependencies": {
-    "@iconify/react": "^6.0.2",
-    "@number-flow/react": "^0.6.0",
     "@aruct/core": "*",
     "@aruct/editor": "*",
     "@aruct/mcp": "*",
     "@aruct/nodes": "*",
-    "@aruct/plugin-trees": "github:aruct/plugin-trees#56d978cd9b409b716207b3f3d269455d3cd6f067",
+    "@aruct/plugin-trees": "github:pascalorg/plugin-trees#56d978cd9b409b716207b3f3d269455d3cd6f067",
     "@aruct/viewer": "*",
+    "@iconify/react": "^6.0.2",
+    "@neondatabase/serverless": "^1.1.0",
+    "@number-flow/react": "^0.6.0",
     "@radix-ui/react-tooltip": "^1.2.8",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.5.0",
     "@tailwindcss/postcss": "^4.2.1",
     "clsx": "^2.1.1",
+    "drizzle-orm": "^0.45.2",
+    "firebase": "^12.16.0",
+    "firebase-admin": "^14.2.0",
     "geist": "^1.7.0",
     "lucide-react": "^1.7.0",
     "next": "16.2.9",
@@ -36,9 +40,7 @@
     "tailwind-merge": "^3.5.0",
     "tailwindcss": "^4.2.1",
     "three": "^0.185.0",
-    "zod": "^4.3.5",
-    "@neondatabase/serverless": "^1.1.0",
-    "drizzle-orm": "^0.45.2"
+    "zod": "^4.3.5"
   },
   "devDependencies": {
     "@aruct/typescript-config": "*",

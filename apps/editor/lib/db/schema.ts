@@ -1,5 +1,23 @@
 import { boolean, integer, text, timestamp, pgTable } from 'drizzle-orm/pg-core'
 
+export const users = pgTable('users', {
+  id: text('id').primaryKey(),                         // Firebase UID
+  email: text('email').notNull().unique(),
+  name: text('name').notNull(),
+  image: text('image'),
+  plan: text('plan', { enum: ['free', 'pro', 'team'] }).notNull().default('free'),
+  role: text('role', { enum: ['user', 'admin'] }).notNull().default('user'),
+  stripeCustomerId: text('stripe_customer_id').unique(),
+  stripeSubscriptionId: text('stripe_subscription_id'),
+  subscriptionStatus: text('subscription_status'),
+  planExpiresAt: timestamp('plan_expires_at', { mode: 'string' }),
+  createdAt: timestamp('created_at', { mode: 'string' }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { mode: 'string' }).notNull().defaultNow(),
+})
+
+export type UserRow = typeof users.$inferSelect
+export type NewUserRow = typeof users.$inferInsert
+
 export const scenes = pgTable('scenes', {
   id: text('id').primaryKey(),
   name: text('name').notNull(),
