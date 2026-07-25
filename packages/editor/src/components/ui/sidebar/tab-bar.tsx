@@ -58,6 +58,8 @@ interface IconRailProps {
   collapsed: boolean
   /** Clicking a rail icon: switch tab, or toggle the panel (see layout). */
   onIconClick: (id: string) => void
+  /** Slot rendered at the bottom of the rail (e.g. account/billing nav). */
+  bottomSlot?: ReactNode
 }
 
 /**
