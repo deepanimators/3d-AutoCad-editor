@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers'
-import { adminAuth } from '@/lib/firebase/admin'
+import { getAdminAuth } from '@/lib/firebase/admin'
 import { upsertUser } from '@/lib/auth-server'
 
 const SESSION_COOKIE = '__session'
@@ -18,9 +18,10 @@ export async function POST(request: Request) {
     return Response.json({ error: 'missing_token' }, { status: 400 })
   }
 
-  let decoded: Awaited<ReturnType<typeof adminAuth.verifyIdToken>>
+  const auth = getAdminAuth()
+  let decoded: Awaited<ReturnType<typeof auth.verifyIdToken>>
   try {
-    decoded = await adminAuth.verifyIdToken(idToken, true)
+    decoded = await auth.verifyIdToken(idToken, true)
   } catch (err) {
     console.error('[session] verifyIdToken failed:', err)
     return Response.json({ error: 'invalid_token' }, { status: 401 })
@@ -34,7 +35,7 @@ export async function POST(request: Request) {
     image: decoded.picture ?? null,
   })
 
-  const sessionCookie = await adminAuth.createSessionCookie(idToken, {
+  const sessionCookie = await auth.createSessionCookie(idToken, {
     expiresIn: SESSION_DURATION_MS,
   })
 

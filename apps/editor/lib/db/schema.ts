@@ -1,4 +1,4 @@
-import { boolean, integer, text, timestamp, pgTable } from 'drizzle-orm/pg-core'
+import { boolean, integer, text, timestamp, pgTable, unique } from 'drizzle-orm/pg-core'
 
 export const users = pgTable('users', {
   id: text('id').primaryKey(),                         // Firebase UID
@@ -36,3 +36,31 @@ export const scenes = pgTable('scenes', {
 
 export type SceneRow = typeof scenes.$inferSelect
 export type NewSceneRow = typeof scenes.$inferInsert
+
+// Phase 2: Scene collaborators (inviting others to view/edit a scene)
+export const sceneCollaborators = pgTable('scene_collaborators', {
+  id: text('id').primaryKey(),
+  sceneId: text('scene_id').notNull(),
+  userId: text('user_id'),
+  email: text('email'),
+  role: text('role', { enum: ['editor', 'viewer'] }).notNull(),
+  invitedAt: timestamp('invited_at', { mode: 'string' }).notNull().defaultNow(),
+  acceptedAt: timestamp('accepted_at', { mode: 'string' }),
+}, (t) => [unique().on(t.sceneId, t.userId)])
+
+export type SceneCollaboratorRow = typeof sceneCollaborators.$inferSelect
+
+// Phase 4: Audit log
+export const auditLog = pgTable('audit_log', {
+  id: text('id').primaryKey(),
+  orgId: text('org_id'),
+  userId: text('user_id'),
+  action: text('action').notNull(),
+  resourceType: text('resource_type'),
+  resourceId: text('resource_id'),
+  metadata: text('metadata'),
+  ipAddress: text('ip_address'),
+  createdAt: timestamp('created_at', { mode: 'string' }).notNull().defaultNow(),
+})
+
+export type AuditLogRow = typeof auditLog.$inferSelect

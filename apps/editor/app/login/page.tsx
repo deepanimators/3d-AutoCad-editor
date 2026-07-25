@@ -33,8 +33,7 @@ function LoginForm() {
       router.push(next)
     } catch (err: unknown) {
       const code = (err as { code?: string })?.code ?? ''
-      console.error('[login]', code, err)
-      setError(friendlyError(code) + (process.env.NODE_ENV === 'development' ? ` [${code || String(err)}]` : ''))
+      setError(friendlyError(code))
     } finally {
       setLoading(false)
     }

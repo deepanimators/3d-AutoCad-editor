@@ -3,6 +3,9 @@ import { z } from 'zod'
 import { apiGraphSchema } from '@/lib/graph-schema'
 import { guardSceneApiRequest, sceneApiJson, sceneApiPreflight } from '@/lib/scene-api-security'
 import { getSceneOperations } from '@/lib/scene-store-server'
+import { getSession } from '@/lib/auth-server'
+import { canCreateScene } from '@/lib/feature-gates'
+import { logAction } from '@/lib/audit'
 
 export const dynamic = 'force-dynamic'
 
@@ -24,8 +27,11 @@ export function OPTIONS(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
-  const guard = guardSceneApiRequest(request)
+  const guard = guardSceneApiRequest(request, { skipAuth: true })
   if (guard) return guard
+
+  const session = await getSession()
+  if (!session) return sceneApiJson(request, { error: 'unauthorized' }, { status: 401 })
 
   const url = new URL(request.url)
   const parsed = listQuerySchema.safeParse({
@@ -44,13 +50,17 @@ export async function GET(request: NextRequest) {
   const scenes = await operations.listScenes({
     projectId: parsed.data.projectId,
     limit: parsed.data.limit,
+    ownerId: session.role === 'admin' ? undefined : session.id,
   })
   return sceneApiJson(request, { scenes })
 }
 
 export async function POST(request: NextRequest) {
-  const guard = guardSceneApiRequest(request)
+  const guard = guardSceneApiRequest(request, { skipAuth: true })
   if (guard) return guard
+
+  const session = await getSession()
+  if (!session) return sceneApiJson(request, { error: 'unauthorized' }, { status: 401 })
 
   let body: unknown
   try {
@@ -72,15 +82,27 @@ export async function POST(request: NextRequest) {
     )
   }
 
+  // Enforce plan scene limit
   const operations = await getSceneOperations()
+  const existing = await operations.listScenes({ ownerId: session.id })
+  if (!canCreateScene(session, existing.length)) {
+    return sceneApiJson(
+      request,
+      { error: 'plan_limit_exceeded', limit: 5, current: existing.length, upgrade: '/pricing' },
+      { status: 402 },
+    )
+  }
+
   try {
     const meta = await operations.saveScene({
       id: parsed.data.id,
       name: parsed.data.name,
       projectId: parsed.data.projectId ?? null,
+      ownerId: session.id,
       graph: parsed.data.graph as never,
       thumbnailUrl: parsed.data.thumbnailUrl ?? null,
     })
+    await logAction({ userId: session.id, action: 'scene.create', resourceType: 'scene', resourceId: meta.id, request })
     return sceneApiJson(request, meta, {
       status: 201,
       headers: { Location: `/scene/${meta.id}` },

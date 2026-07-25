@@ -8,6 +8,9 @@ import {
   withSceneApiHeaders,
 } from '@/lib/scene-api-security'
 import { getSceneOperations } from '@/lib/scene-store-server'
+import { getSession } from '@/lib/auth-server'
+import { getSceneRole, canWrite, canDelete } from '@/lib/permissions'
+import { logAction } from '@/lib/audit'
 
 export const dynamic = 'force-dynamic'
 
@@ -49,10 +52,16 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 }
 
 export async function PUT(request: NextRequest, { params }: RouteParams) {
-  const guard = guardSceneApiRequest(request)
+  const guard = guardSceneApiRequest(request, { skipAuth: true })
   if (guard) return guard
 
+  const session = await getSession()
+  if (!session) return sceneApiJson(request, { error: 'unauthorized' }, { status: 401 })
+
   const { id } = await params
+
+  const role = session.role === 'admin' ? 'owner' : await getSceneRole(session.id, id)
+  if (!canWrite(role)) return sceneApiJson(request, { error: 'forbidden' }, { status: 403 })
 
   let body: unknown
   try {
@@ -93,6 +102,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
         parsed.data.thumbnailUrl === undefined ? existing.thumbnailUrl : parsed.data.thumbnailUrl,
       expectedVersion: expectedVersion ?? existing.version,
     })
+    await logAction({ userId: session.id, action: 'scene.update', resourceType: 'scene', resourceId: id, request })
     return sceneApiJson(request, meta, {
       headers: { ETag: `"${meta.version}"` },
     })
@@ -102,10 +112,17 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 }
 
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
-  const guard = guardSceneApiRequest(request)
+  const guard = guardSceneApiRequest(request, { skipAuth: true })
   if (guard) return guard
 
+  const session = await getSession()
+  if (!session) return sceneApiJson(request, { error: 'unauthorized' }, { status: 401 })
+
   const { id } = await params
+
+  const role = session.role === 'admin' ? 'owner' : await getSceneRole(session.id, id)
+  if (!canDelete(role)) return sceneApiJson(request, { error: 'forbidden' }, { status: 403 })
+
   const ifMatch = parseIfMatch(request.headers.get('If-Match'))
 
   const operations = await getSceneOperations()
@@ -114,6 +131,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
     if (!removed) {
       return sceneApiJson(request, { error: 'not_found' }, { status: 404 })
     }
+    await logAction({ userId: session.id, action: 'scene.delete', resourceType: 'scene', resourceId: id, request })
     return withSceneApiHeaders(request, new NextResponse(null, { status: 204 }))
   } catch (error) {
     return handleStoreError(request, error, { includeCurrentVersionFor: id })
@@ -121,10 +139,16 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
 }
 
 export async function PATCH(request: NextRequest, { params }: RouteParams) {
-  const guard = guardSceneApiRequest(request)
+  const guard = guardSceneApiRequest(request, { skipAuth: true })
   if (guard) return guard
 
+  const session = await getSession()
+  if (!session) return sceneApiJson(request, { error: 'unauthorized' }, { status: 401 })
+
   const { id } = await params
+
+  const role = session.role === 'admin' ? 'owner' : await getSceneRole(session.id, id)
+  if (!canWrite(role)) return sceneApiJson(request, { error: 'forbidden' }, { status: 403 })
 
   let body: unknown
   try {

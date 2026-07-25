@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers'
 import type { NextRequest } from 'next/server'
 import { eq } from 'drizzle-orm'
-import { adminAuth } from './firebase/admin'
+import { getAdminAuth } from './firebase/admin'
 import { db } from './db/client'
 import { users, type UserRow } from './db/schema'
 
@@ -15,7 +15,7 @@ export async function getSession(): Promise<AppUser | null> {
   if (!token) return null
 
   try {
-    const decoded = await adminAuth.verifySessionCookie(token, true)
+    const decoded = await getAdminAuth().verifySessionCookie(token, true)
     const [user] = await db.select().from(users).where(eq(users.id, decoded.uid))
     return user ?? null
   } catch {
@@ -28,7 +28,7 @@ export async function getSessionFromRequest(request: NextRequest): Promise<{ uid
   if (!token) return null
 
   try {
-    const decoded = await adminAuth.verifySessionCookie(token, true)
+    const decoded = await getAdminAuth().verifySessionCookie(token, true)
     return { uid: decoded.uid }
   } catch {
     return null

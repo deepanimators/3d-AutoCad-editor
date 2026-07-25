@@ -51,6 +51,35 @@ try {
   `
   console.log('✓ scenes table ready')
 
+  await sql`
+    CREATE TABLE IF NOT EXISTS "scene_collaborators" (
+      "id" text PRIMARY KEY NOT NULL,
+      "scene_id" text NOT NULL,
+      "user_id" text,
+      "email" text,
+      "role" text NOT NULL CHECK (role IN ('editor','viewer')),
+      "invited_at" timestamptz DEFAULT now() NOT NULL,
+      "accepted_at" timestamptz,
+      UNIQUE ("scene_id", "user_id")
+    )
+  `
+  console.log('✓ scene_collaborators table ready')
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS "audit_log" (
+      "id" text PRIMARY KEY NOT NULL,
+      "org_id" text,
+      "user_id" text,
+      "action" text NOT NULL,
+      "resource_type" text,
+      "resource_id" text,
+      "metadata" text,
+      "ip_address" text,
+      "created_at" timestamptz DEFAULT now() NOT NULL
+    )
+  `
+  console.log('✓ audit_log table ready')
+
   const u = await sql`SELECT COUNT(*) as count FROM users`
   const s = await sql`SELECT COUNT(*) as count FROM scenes`
   console.log(`✓ done — ${u[0].count} users, ${s[0].count} scenes`)
