@@ -48,7 +48,7 @@ export function AppSidebar({ user }: { user: User | null }) {
   const pathname = usePathname()
 
   const isActive = (href: string) =>
-    href === '/scenes' ? pathname === '/scenes' : pathname.startsWith(href.split('#')[0])
+    href === '/scenes' ? pathname === '/scenes' : pathname.startsWith(href.split('#')[0] ?? href)
 
   const visibleNav = NAV.filter((item) => !item.adminOnly || user?.role === 'admin')
 
@@ -108,7 +108,7 @@ export function AppSidebar({ user }: { user: User | null }) {
                 <p className="truncate text-xs font-medium">{user.name}</p>
                 <p className="truncate text-muted-foreground text-[11px]">{user.email}</p>
               </div>
-              <span className={`ml-2 shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold ${PLAN_COLORS[user.plan]}`}>
+              <span className={`ml-2 shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold ${PLAN_COLORS[user.plan as keyof typeof PLAN_COLORS] ?? ''}`}>
                 {PLAN_LABELS[user.plan]}
               </span>
             </div>
