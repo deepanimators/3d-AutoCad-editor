@@ -168,19 +168,35 @@ export interface ProjectVisibility {
   showGuidesPublic: boolean
 }
 
+export type SaveStatus = 'idle' | 'pending' | 'saving' | 'saved' | 'paused' | 'error'
+
 export interface SettingsPanelProps {
+  sceneId?: string
+  sceneName?: string
+  saveStatus?: SaveStatus
   projectId?: string
   projectVisibility?: ProjectVisibility
   onVisibilityChange?: (
     field: 'isPrivate' | 'showScansPublic' | 'showGuidesPublic',
     value: boolean,
   ) => Promise<void>
+  onRenameScene?: (newName: string) => Promise<void>
+  onSaveCloud?: () => void
+  onSaveAsNewCloud?: () => void
+  onClearAndStartNewCloud?: () => void
 }
 
 export function SettingsPanel({
+  sceneId,
+  sceneName,
+  saveStatus = 'idle',
   projectId,
   projectVisibility,
   onVisibilityChange,
+  onRenameScene,
+  onSaveCloud,
+  onSaveAsNewCloud,
+  onClearAndStartNewCloud,
 }: SettingsPanelProps = {}) {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const nodes = useScene((state) => state.nodes)
@@ -194,6 +210,31 @@ export function SettingsPanel({
   const setPhase = useEditor((state) => state.setPhase)
   const [isGeneratingThumbnail, setIsGeneratingThumbnail] = useState(false)
   const [pendingImport, setPendingImport] = useState<PendingImport | null>(null)
+  const [editingName, setEditingName] = useState(sceneName ?? '')
+  const [isRenaming, setIsRenaming] = useState(false)
+
+  useEffect(() => {
+    if (sceneName !== undefined) {
+      setEditingName(sceneName)
+    }
+  }, [sceneName])
+
+  const handleNameBlur = async () => {
+    if (onRenameScene && editingName.trim() && editingName !== sceneName) {
+      setIsRenaming(true)
+      try {
+        await onRenameScene(editingName.trim())
+      } finally {
+        setIsRenaming(false)
+      }
+    }
+  }
+
+  const handleNameKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.currentTarget.blur()
+    }
+  }
   const sceneGraphValue = useMemo(
     () => buildSceneGraphValue(nodes as Record<string, SceneNode>, rootNodeIds),
     [nodes, rootNodeIds],
@@ -292,6 +333,10 @@ export function SettingsPanel({
   }
 
   const handleResetToDefault = () => {
+    if (onClearAndStartNewCloud) {
+      onClearAndStartNewCloud()
+      return
+    }
     clearScene()
     // Same floor rule as import — undo after a reset must not resurrect the
     // old scene (or land on the empty intermediate `unloadScene` state).
@@ -315,10 +360,76 @@ export function SettingsPanel({
     await onVisibilityChange?.(field, value)
   }
 
+  const statusLabel =
+    saveStatus === 'saving'
+      ? 'Saving to cloud...'
+      : saveStatus === 'pending'
+        ? 'Unsaved changes'
+        : saveStatus === 'error'
+          ? 'Save error'
+          : saveStatus === 'paused'
+            ? 'Save paused'
+            : 'Saved to cloud'
+
+  const statusBadgeColor =
+    saveStatus === 'saving' || saveStatus === 'pending'
+      ? 'bg-amber-500/20 text-amber-300 border-amber-500/30'
+      : saveStatus === 'error'
+        ? 'bg-destructive/20 text-destructive border-destructive/30'
+        : 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
+
   return (
     <div className="flex flex-col gap-6 p-3">
-      {/* Visibility Section (only for cloud projects) */}
-      {projectId && !isLocalProject && (
+      {/* Scene Title & Cloud Auto-Save Status */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <label className="font-medium text-muted-foreground text-xs uppercase">Scene Details</label>
+          <span className={`rounded-full border px-2.5 py-0.5 font-medium text-[10px] ${statusBadgeColor}`}>
+            {statusLabel}
+          </span>
+        </div>
+        <div className="space-y-1">
+          <label className="text-muted-foreground text-xs">Scene Name</label>
+          <input
+            className="w-full rounded-md border border-border bg-background px-3 py-1.5 text-foreground text-sm focus:border-primary focus:outline-none disabled:opacity-50"
+            disabled={isRenaming}
+            onBlur={handleNameBlur}
+            onChange={(e) => setEditingName(e.target.value)}
+            onKeyDown={handleNameKeyDown}
+            placeholder="Untitled scene"
+            type="text"
+            value={editingName}
+          />
+        </div>
+      </div>
+
+      {/* Cloud Save & Actions */}
+      <div className="space-y-2">
+        <label className="font-medium text-muted-foreground text-xs uppercase">Cloud Save</label>
+        {onSaveCloud && (
+          <Button
+            className="w-full justify-start gap-2"
+            onClick={onSaveCloud}
+            variant="outline"
+          >
+            <Save className="size-4" />
+            Save to Cloud
+          </Button>
+        )}
+        {onSaveAsNewCloud && (
+          <Button
+            className="w-full justify-start gap-2"
+            onClick={onSaveAsNewCloud}
+            variant="outline"
+          >
+            <Save className="size-4" />
+            Save as New Cloud Scene
+          </Button>
+        )}
+      </div>
+
+      {/* Visibility Section */}
+      {(projectId || onVisibilityChange) && (
         <div className="space-y-3">
           <label className="font-medium text-muted-foreground text-xs uppercase">Visibility</label>
           <div className="flex items-center justify-between">
@@ -419,8 +530,8 @@ export function SettingsPanel({
         </div>
       </div>
 
-      {/* Thumbnail Section (only for cloud projects) */}
-      {projectId && !isLocalProject && (
+      {/* Thumbnail Section */}
+      {projectId && (
         <div className="space-y-2">
           <label className="font-medium text-muted-foreground text-xs uppercase">Thumbnail</label>
           <Button
@@ -435,13 +546,13 @@ export function SettingsPanel({
         </div>
       )}
 
-      {/* Save/Load Section */}
+      {/* Local Backup Save/Load Section */}
       <div className="space-y-2">
-        <label className="font-medium text-muted-foreground text-xs uppercase">Save & Load</label>
+        <label className="font-medium text-muted-foreground text-xs uppercase">Local Backup</label>
 
         <Button className="w-full justify-start gap-2" onClick={handleSaveBuild} variant="outline">
           <Save className="size-4" />
-          Save Build
+          Save Build (JSON file)
         </Button>
 
         <Button
@@ -450,7 +561,7 @@ export function SettingsPanel({
           variant="outline"
         >
           <Upload className="size-4" />
-          Load Build
+          Load Build (JSON file)
         </Button>
 
         <input

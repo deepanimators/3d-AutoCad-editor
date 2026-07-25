@@ -1,9 +1,12 @@
 'use client'
 
+import { useScene } from '@aruct/core'
 import { Editor, ItemsPanel } from '@aruct/editor'
 import { Hammer, Layers, Package, Settings } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useCallback } from 'react'
 import { BuildTab } from '@/components/build-tab'
 import { FloorplanConstructionPreflight } from '@/components/floorplan-construction-preflight'
 import { RailAccountNav } from '@/components/rail-account-nav'
@@ -89,6 +92,41 @@ const SIDEBAR_TABS = [
 const PROJECT_ID = 'local-editor'
 
 export default function Home() {
+  const router = useRouter()
+
+  const handleSaveAsNewCloud = useCallback(async () => {
+    const name =
+      typeof window !== 'undefined'
+        ? window.prompt('Enter scene name to save to account:', 'My Scene')
+        : null
+    if (!name) return
+    const currentState = useScene.getState()
+    const graph = {
+      nodes: currentState.nodes,
+      rootNodeIds: currentState.rootNodeIds,
+      collections: currentState.collections,
+      materials: currentState.materials,
+      installedPlugins: currentState.installedPlugins,
+    }
+    try {
+      const response = await fetch('/api/scenes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, graph }),
+      })
+      if (response.status === 401) {
+        router.push('/login?next=/scenes')
+        return
+      }
+      if (response.ok) {
+        const created = (await response.json()) as { id: string }
+        router.push(`/scene/${created.id}`)
+      }
+    } catch (err) {
+      console.error('Failed to create scene:', err)
+    }
+  }, [router])
+
   return (
     <div className="relative h-screen w-screen">
       <FloorplanConstructionPreflight />
@@ -112,6 +150,10 @@ export default function Home() {
         layoutVersion="v2"
         projectId={PROJECT_ID}
         railBottomSlot={<RailAccountNav />}
+        settingsPanelProps={{
+          sceneName: 'Local Workspace',
+          onSaveAsNewCloud: handleSaveAsNewCloud,
+        }}
         sidebarTabs={SIDEBAR_TABS}
         viewerToolbarLeft={<CommunityViewerToolbarLeft />}
         viewerToolbarRight={<CommunityViewerToolbarRight />}

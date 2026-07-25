@@ -3,9 +3,11 @@
 // Node registry bootstrap is loaded once at the root via
 // `<ClientBootstrap>` in `app/layout.tsx` — no per-page side-effect
 // import here.
+import { useScene } from '@aruct/core'
 import {
   applySceneGraphToEditor,
   Editor,
+  type SaveStatus,
   type SceneGraph,
   type SidebarTab,
 } from '@aruct/editor'
@@ -99,6 +101,8 @@ export function SceneLoader({ initialScene, meta }: SceneLoaderProps) {
   const suppressRemoteSaveUntilRef = useRef(0)
   const [conflict, setConflict] = useState(false)
   const [saveError, setSaveError] = useState<string | null>(null)
+  const [sceneName, setSceneName] = useState(meta.name)
+  const [saveStatus, setSaveStatus] = useState<SaveStatus>('idle')
 
   const handleLoad = useCallback(async () => initialScene, [initialScene])
 
@@ -120,11 +124,7 @@ export function SceneLoader({ initialScene, meta }: SceneLoaderProps) {
             'Content-Type': 'application/json',
             'If-Match': String(versionRef.current),
           },
-          body: JSON.stringify({ name: meta.name, graph }),
-          // `keepalive` lets the request outlive a page unload (the autosave
-          // flush on refresh/close). Browsers cap keepalive bodies at 64KB, so
-          // only the unload flush opts in — normal debounced saves omit it and
-          // can carry arbitrarily large scenes.
+          body: JSON.stringify({ name: sceneName, graph }),
           keepalive: options?.keepalive,
         })
 
@@ -145,8 +145,76 @@ export function SceneLoader({ initialScene, meta }: SceneLoaderProps) {
         setSaveError(error instanceof Error ? error.message : 'Save failed')
       }
     },
-    [meta.id, meta.name],
+    [meta.id, sceneName],
   )
+
+  const handleRenameScene = useCallback(
+    async (newName: string) => {
+      try {
+        const response = await fetch(`/api/scenes/${meta.id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: newName }),
+        })
+        if (response.ok) {
+          const updated = (await response.json()) as SceneMeta
+          setSceneName(updated.name)
+        }
+      } catch (err) {
+        console.error('Failed to rename scene:', err)
+      }
+    },
+    [meta.id],
+  )
+
+  const handleSaveAsNewCloud = useCallback(async () => {
+    const defaultName = `${sceneName} (Copy)`
+    const newName = typeof window !== 'undefined' ? window.prompt('Enter new scene name:', defaultName) : null
+    if (!newName) return
+    const currentState = useScene.getState()
+    const graph: SceneGraph = {
+      nodes: currentState.nodes,
+      rootNodeIds: currentState.rootNodeIds,
+      collections: currentState.collections,
+      materials: currentState.materials,
+      installedPlugins: currentState.installedPlugins,
+    }
+    try {
+      const response = await fetch('/api/scenes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: newName, graph }),
+      })
+      if (response.ok) {
+        const created = (await response.json()) as { id: string }
+        router.push(`/scene/${created.id}`)
+      }
+    } catch (err) {
+      console.error('Failed to save as new scene:', err)
+    }
+  }, [router, sceneName])
+
+  const handleClearAndStartNewCloud = useCallback(async () => {
+    if (
+      typeof window !== 'undefined' &&
+      !window.confirm('Start a new empty scene in your account?')
+    ) {
+      return
+    }
+    try {
+      const response = await fetch('/api/scenes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: 'Untitled scene', graph: { nodes: {}, rootNodeIds: [] } }),
+      })
+      if (response.ok) {
+        const created = (await response.json()) as { id: string }
+        router.push(`/scene/${created.id}`)
+      }
+    } catch (err) {
+      console.error('Failed to start new scene:', err)
+    }
+  }, [router])
 
   useEffect(() => {
     const source = new EventSource(`/api/scenes/${meta.id}/events`)
@@ -180,14 +248,9 @@ export function SceneLoader({ initialScene, meta }: SceneLoaderProps) {
 
   const handleThumb = useCallback(
     async (_blob: Blob) => {
-      // TODO(phase7): upload thumbnail via POST /api/scenes/[id]/thumbnail.
-      // Stub endpoint is not yet implemented in v0.1 — skip upload for now.
       await fetch(`/api/scenes/${meta.id}/thumbnail`, {
         method: 'POST',
-        // Intentionally no body — endpoint is a stub.
-      }).catch(() => {
-        // Swallow errors silently; thumbnail upload is best-effort.
-      })
+      }).catch(() => {})
     },
     [meta.id],
   )
@@ -235,8 +298,28 @@ export function SceneLoader({ initialScene, meta }: SceneLoaderProps) {
         layoutVersion="v2"
         onLoad={handleLoad}
         onSave={handleSave}
+        onSaveStatusChange={setSaveStatus}
         onThumbnailCapture={handleThumb}
         projectId={meta.projectId ?? 'default'}
+        settingsPanelProps={{
+          sceneId: meta.id,
+          sceneName,
+          saveStatus,
+          projectId: meta.projectId ?? undefined,
+          onRenameScene: handleRenameScene,
+          onSaveCloud: () => {
+            const currentState = useScene.getState()
+            handleSave({
+              nodes: currentState.nodes,
+              rootNodeIds: currentState.rootNodeIds,
+              collections: currentState.collections,
+              materials: currentState.materials,
+              installedPlugins: currentState.installedPlugins,
+            })
+          },
+          onSaveAsNewCloud: handleSaveAsNewCloud,
+          onClearAndStartNewCloud: handleClearAndStartNewCloud,
+        }}
         sidebarTabs={SIDEBAR_TABS}
         viewerToolbarLeft={<CommunityViewerToolbarLeft />}
         viewerToolbarRight={<CommunityViewerToolbarRight />}
