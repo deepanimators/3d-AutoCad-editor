@@ -28,7 +28,7 @@ function editorUrl(id: string): string {
   return `/editor/${id}`
 }
 
-function rowToMeta(row: SceneRow): SceneMeta {
+function rowToMeta(row: SceneRow): SceneMeta & { isPublic: boolean; showScansPublic: boolean; showGuidesPublic: boolean } {
   const url = editorUrl(row.id)
   return {
     id: row.id,
@@ -44,7 +44,10 @@ function rowToMeta(row: SceneRow): SceneMeta {
     graphHash: row.graphHash ?? undefined,
     editorUrl: url,
     url,
-    published: true,
+    published: row.isPublic,
+    isPublic: row.isPublic,
+    showScansPublic: row.showScansPublic,
+    showGuidesPublic: row.showGuidesPublic,
   }
 }
 

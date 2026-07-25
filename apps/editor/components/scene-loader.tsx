@@ -7,16 +7,19 @@ import { useScene } from '@aruct/core'
 import {
   applySceneGraphToEditor,
   Editor,
+  ItemsPanel,
+  type ProjectVisibility,
   type SaveStatus,
   type SceneGraph,
   type SidebarTab,
 } from '@aruct/editor'
-import { Hammer, Layers } from 'lucide-react'
+import { Hammer, Layers, Package, Settings } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { BuildTab } from './build-tab'
+import { RailAccountNav } from './rail-account-nav'
 import { CommunityViewerToolbarLeft, CommunityViewerToolbarRight } from './viewer-toolbar'
 
 export interface SceneMeta {
@@ -30,6 +33,9 @@ export interface SceneMeta {
   ownerId: string | null
   sizeBytes: number
   nodeCount: number
+  isPublic?: boolean
+  showScansPublic?: boolean
+  showGuidesPublic?: boolean
 }
 
 const SIDEBAR_TABS: (SidebarTab & { component: React.ComponentType })[] = [

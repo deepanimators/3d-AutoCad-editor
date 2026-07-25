@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
+import { eq } from 'drizzle-orm'
 import { apiGraphSchema } from '@/lib/graph-schema'
 import {
   guardSceneApiRequest,
@@ -11,6 +12,8 @@ import { getSceneOperations } from '@/lib/scene-store-server'
 import { getSession } from '@/lib/auth-server'
 import { getSceneRole, canWrite, canDelete } from '@/lib/permissions'
 import { logAction } from '@/lib/audit'
+import { db } from '@/lib/db/client'
+import { scenes } from '@/lib/db/schema'
 
 export const dynamic = 'force-dynamic'
 
@@ -24,9 +27,15 @@ const putSceneSchema = z.object({
 })
 
 const patchSceneSchema = z.object({
-  name: z.string().min(1).max(200),
+  name: z.string().min(1).max(200).optional(),
+  isPublic: z.boolean().optional(),
+  showScansPublic: z.boolean().optional(),
+  showGuidesPublic: z.boolean().optional(),
   expectedVersion: z.number().int().nonnegative().optional(),
-})
+}).refine(
+  (d) => d.name !== undefined || d.isPublic !== undefined || d.showScansPublic !== undefined || d.showGuidesPublic !== undefined,
+  { message: 'At least one field must be provided' },
+)
 
 export function OPTIONS(request: NextRequest) {
   return sceneApiPreflight(request)
@@ -175,10 +184,27 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
 
   const operations = await getSceneOperations()
   try {
-    const meta = await operations.renameStoredScene(id, parsed.data.name, { expectedVersion })
-    return sceneApiJson(request, meta, {
-      headers: { ETag: `"${meta.version}"` },
-    })
+    // Handle visibility-only updates directly via DB (store interface only has rename)
+    const { name, isPublic, showScansPublic, showGuidesPublic } = parsed.data
+    if (isPublic !== undefined || showScansPublic !== undefined || showGuidesPublic !== undefined) {
+      const visibilityPatch: Record<string, boolean> = {}
+      if (isPublic !== undefined) visibilityPatch.isPublic = isPublic
+      if (showScansPublic !== undefined) visibilityPatch.showScansPublic = showScansPublic
+      if (showGuidesPublic !== undefined) visibilityPatch.showGuidesPublic = showGuidesPublic
+      await db.update(scenes).set(visibilityPatch).where(eq(scenes.id, id))
+      if (!name) {
+        const [updated] = await db.select().from(scenes).where(eq(scenes.id, id))
+        if (!updated) return sceneApiJson(request, { error: 'not_found' }, { status: 404 })
+        return sceneApiJson(request, { id: updated.id, isPublic: updated.isPublic, showScansPublic: updated.showScansPublic, showGuidesPublic: updated.showGuidesPublic })
+      }
+    }
+    if (name) {
+      const meta = await operations.renameStoredScene(id, name, { expectedVersion })
+      return sceneApiJson(request, meta, {
+        headers: { ETag: `"${meta.version}"` },
+      })
+    }
+    return sceneApiJson(request, { ok: true })
   } catch (error) {
     return handleStoreError(request, error, { includeCurrentVersionFor: id })
   }
