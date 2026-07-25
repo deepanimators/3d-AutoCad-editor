@@ -1,11 +1,13 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { adminAuth } from '@/lib/firebase/admin'
 
 const PROTECTED = ['/', '/scenes', '/scene', '/account']
 const AUTH_ROUTES = ['/login', '/signup']
 
-export async function middleware(request: NextRequest) {
+// Middleware runs in Edge runtime — firebase-admin (Node.js only) cannot be used here.
+// Cookie presence check handles routing/UX; cryptographic verification happens in
+// server components and API routes via lib/auth-server.ts (getSession/requireSession).
+export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   const isProtected = PROTECTED.some((p) => pathname === p || pathname.startsWith(`${p}/`))
@@ -13,26 +15,16 @@ export async function middleware(request: NextRequest) {
 
   if (!isProtected && !isAuthRoute) return NextResponse.next()
 
-  const sessionCookie = request.cookies.get('__session')?.value
-  let isAuthenticated = false
+  const hasSession = !!request.cookies.get('__session')?.value
 
-  if (sessionCookie) {
-    try {
-      await adminAuth.verifySessionCookie(sessionCookie, true)
-      isAuthenticated = true
-    } catch {
-      // Expired or revoked cookie
-    }
-  }
-
-  if (isProtected && !isAuthenticated) {
+  if (isProtected && !hasSession) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'
     url.searchParams.set('next', pathname)
     return NextResponse.redirect(url)
   }
 
-  if (isAuthRoute && isAuthenticated) {
+  if (isAuthRoute && hasSession) {
     return NextResponse.redirect(new URL('/', request.url))
   }
 
