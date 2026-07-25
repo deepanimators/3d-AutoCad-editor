@@ -147,6 +147,8 @@ export interface EditorProps {
    * viewer toolbar stays on top so the host's stage switch remains reachable.
    */
   stageOverlay?: ReactNode
+  /** Slot rendered at the bottom of the left icon rail (v2), below tool icons. */
+  railBottomSlot?: ReactNode
   /**
    * Docked below the node inspector (v2). Hosts mount the "save as preset"
    * affordance here so it reads as part of the inspector surface and shows
@@ -1110,6 +1112,7 @@ export default function Editor({
   sidebarTop,
   navbarSlot,
   sidebarTabs,
+  railBottomSlot,
   viewerToolbarLeft,
   viewerToolbarRight,
   stageOverlay,
@@ -1409,6 +1412,7 @@ export default function Editor({
           <>
             <EditorLayoutV2
               navbarSlot={navbarSlot}
+              railBottomSlot={railBottomSlot}
               overlays={
                 <>
                   {!(isCaptureMode || stageOverlay) && <FloatingLevelSelector />}

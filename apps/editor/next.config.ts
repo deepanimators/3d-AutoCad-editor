@@ -1,7 +1,13 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
-  serverExternalPackages: ['firebase-admin', '@neondatabase/serverless', 'drizzle-orm', 'drizzle-orm/neon-http'],
+  serverExternalPackages: [
+    'firebase-admin',
+    '@neondatabase/serverless',
+    'drizzle-orm',
+    'drizzle-orm/neon-http',
+    '@aruct/mcp',
+  ],
   logging: {
     browserToTerminal: true,
   },
@@ -13,7 +19,6 @@ const nextConfig: NextConfig = {
     '@aruct/viewer',
     '@aruct/core',
     '@aruct/editor',
-    '@aruct/mcp',
     '@aruct/plugin-trees',
     '@pascal-app/core',
     '@pascal-app/editor',

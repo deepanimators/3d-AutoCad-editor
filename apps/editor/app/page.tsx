@@ -6,6 +6,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { BuildTab } from '@/components/build-tab'
 import { FloorplanConstructionPreflight } from '@/components/floorplan-construction-preflight'
+import { RailAccountNav } from '@/components/rail-account-nav'
 import {
   CommunityViewerToolbarLeft,
   CommunityViewerToolbarRight,
@@ -110,6 +111,7 @@ export default function Home() {
       <Editor
         layoutVersion="v2"
         projectId={PROJECT_ID}
+        railBottomSlot={<RailAccountNav />}
         sidebarTabs={SIDEBAR_TABS}
         viewerToolbarLeft={<CommunityViewerToolbarLeft />}
         viewerToolbarRight={<CommunityViewerToolbarRight />}
