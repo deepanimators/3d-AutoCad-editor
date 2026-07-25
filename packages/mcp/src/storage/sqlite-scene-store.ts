@@ -91,20 +91,20 @@ export function resolveDefaultDatabasePath(env: NodeJS.ProcessEnv = process.env)
     return env.ARUCT_DB_PATH
   }
   if (env.ARUCT_DATA_DIR && env.ARUCT_DATA_DIR.length > 0) {
-    return path.join(env.ARUCT_DATA_DIR, 'aruct.db')
+    return path.join(/*turbopackIgnore: true*/ env.ARUCT_DATA_DIR, 'aruct.db')
   }
   if (process.platform === 'win32') {
     const appData = env.APPDATA
     if (appData && appData.length > 0) {
-      return path.join(appData, 'Aruct', 'data', 'aruct.db')
+      return path.join(/*turbopackIgnore: true*/ appData, 'Aruct', 'data', 'aruct.db')
     }
-    return path.join(os.homedir(), '.aruct', 'data', 'aruct.db')
+    return path.join(/*turbopackIgnore: true*/ os.homedir(), '.aruct', 'data', 'aruct.db')
   }
   const xdg = env.XDG_DATA_HOME
   if (xdg && xdg.length > 0) {
-    return path.join(xdg, 'aruct', 'data', 'aruct.db')
+    return path.join(/*turbopackIgnore: true*/ xdg, 'aruct', 'data', 'aruct.db')
   }
-  return path.join(os.homedir(), '.aruct', 'data', 'aruct.db')
+  return path.join(/*turbopackIgnore: true*/ os.homedir(), '.aruct', 'data', 'aruct.db')
 }
 
 function resolveMaxSceneBytes(

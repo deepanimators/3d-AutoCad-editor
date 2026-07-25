@@ -4,10 +4,10 @@ import { BarChart3, CreditCard, LayoutDashboard, LogOut, Shield, User } from 'lu
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
-import { Tooltip, TooltipContent, TooltipTrigger } from '@aruct/editor/components/ui/primitives/tooltip'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/toolbar-tooltip'
 import { signOut } from 'firebase/auth'
 import { firebaseAuth } from '@/lib/firebase/client'
-import { cn } from '@aruct/editor/lib/utils'
+import { cn } from '@/lib/utils'
 
 type MeResponse = {
   id: string
