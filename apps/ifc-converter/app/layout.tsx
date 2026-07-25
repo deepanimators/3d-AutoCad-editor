@@ -3,7 +3,7 @@ import { ClientBootstrap } from './client-bootstrap'
 import './globals.css'
 
 export const metadata = {
-  title: 'IFC → Pascal Converter',
+  title: 'IFC → Aruct Converter',
   description: 'Convert IFC building models into Aruct scene-graph JSON.',
 }
 

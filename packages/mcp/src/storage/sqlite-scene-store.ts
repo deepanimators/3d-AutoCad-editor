@@ -77,7 +77,7 @@ const GraphSchema = z.object({
 })
 
 /**
- * Resolves Pascal's local SQLite database path.
+ * Resolves Aruct's local SQLite database path.
  *
  * Precedence:
  * 1. `ARUCT_DB_PATH`
@@ -96,15 +96,15 @@ export function resolveDefaultDatabasePath(env: NodeJS.ProcessEnv = process.env)
   if (process.platform === 'win32') {
     const appData = env.APPDATA
     if (appData && appData.length > 0) {
-      return path.join(appData, 'Pascal', 'data', 'aruct.db')
+      return path.join(appData, 'Aruct', 'data', 'aruct.db')
     }
-    return path.join(os.homedir(), '.pascal', 'data', 'aruct.db')
+    return path.join(os.homedir(), '.aruct', 'data', 'aruct.db')
   }
   const xdg = env.XDG_DATA_HOME
   if (xdg && xdg.length > 0) {
     return path.join(xdg, 'aruct', 'data', 'aruct.db')
   }
-  return path.join(os.homedir(), '.pascal', 'data', 'aruct.db')
+  return path.join(os.homedir(), '.aruct', 'data', 'aruct.db')
 }
 
 function resolveMaxSceneBytes(

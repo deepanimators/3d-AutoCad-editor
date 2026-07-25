@@ -1,6 +1,6 @@
 # @aruct/viewer
 
-3D viewer component for Pascal building editor.
+3D viewer component for Aruct building editor.
 
 ## Installation
 
@@ -97,7 +97,7 @@ import { resolveCdnUrl, ASSETS_CDN_URL } from '@aruct/viewer'
 
 // Resolves relative paths to CDN URLs
 const url = resolveCdnUrl('/items/chair/model.glb')
-// → 'https://pascal-cdn.wawasensei.dev/items/chair/model.glb'
+// → 'https://aruct-cdn.wawasensei.dev/items/chair/model.glb'
 
 // Handles external URLs and asset:// protocol
 const externalUrl = resolveCdnUrl('https://example.com/model.glb')

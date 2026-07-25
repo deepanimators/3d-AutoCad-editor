@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server'
 const DEFAULT_RATE_LIMIT_PER_MINUTE = 120
 const WINDOW_MS = 60_000
 const ALLOWED_METHODS = 'GET, POST, PUT, PATCH, DELETE, OPTIONS'
-const ALLOWED_HEADERS = 'authorization, content-type, if-match, last-event-id, x-pascal-scene-token'
+const ALLOWED_HEADERS = 'authorization, content-type, if-match, last-event-id, x-aruct-scene-token'
 
 type RateBucket = {
   resetAt: number
@@ -69,7 +69,7 @@ function validateAuth(request: Request): NextResponse | null {
     return sceneApiJson(request, { error: 'scene_api_token_required' }, { status: 503 })
   }
 
-  const supplied = bearerToken(request) ?? request.headers.get('x-pascal-scene-token')
+  const supplied = bearerToken(request) ?? request.headers.get('x-aruct-scene-token')
   if (supplied && safeEqual(supplied, token)) return null
   return sceneApiJson(request, { error: 'unauthorized' }, { status: 401 })
 }

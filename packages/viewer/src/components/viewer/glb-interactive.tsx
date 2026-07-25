@@ -25,10 +25,10 @@ import useViewer from '../../store/use-viewer'
 import { ControlWidget } from '../../systems/interactive/control-widget'
 
 /** An interactive item recovered from the scene graph so the baked GLB can be
- *  re-lit / re-animated by joining on `pascalId`. The GLB carries the geometry
+ *  re-lit / re-animated by joining on `aructId`. The GLB carries the geometry
  *  + identity; the effects + controls live in the DB scene graph (no sidecar). */
 export type GlbInteractiveItem = {
-  pascalId: AnyNodeId
+  aructId: AnyNodeId
   label: string
   /** Item height (world units) for placing the controls overlay above it. */
   height: number
@@ -63,7 +63,7 @@ export function buildGlbInteractiveItems(
     const dims = node.asset?.dimensions ?? [1, 1, 1]
     const scaleY = node.scale?.[1] ?? 1
     items.push({
-      pascalId: id as AnyNodeId,
+      aructId: id as AnyNodeId,
       label: node.asset?.name ?? id,
       height: (dims[1] ?? 1) * scaleY,
       interactive,
@@ -78,7 +78,7 @@ const _itemPos = new Vector3()
  * Re-creates the item-driven interactivity the parametric viewer has — pooled
  * lights, ambient animation, and the controls overlay — on top of a baked GLB.
  * Effects come from the DB scene graph (`items`); world transforms come from the
- * baked Object3Ds (`identity`), joined on `pascalId`. Nothing is stamped into
+ * baked Object3Ds (`identity`), joined on `aructId`. Nothing is stamped into
  * the GLB itself, so the artifact stays integrator-clean.
  */
 export function GlbInteractive({
@@ -92,9 +92,9 @@ export function GlbInteractive({
   identity: Map<string, Object3D>
   zones: GlbZoneRef[]
   /** Baked animation actions keyed by clip name — ambient item loops play from
-   *  `<pascalId>: loop`. */
+   *  `<aructId>: loop`. */
   actions: Record<string, AnimationAction | null>
-  /** Level pascalIds bottom-to-top, so the light pool can prefer ground-floor
+  /** Level aructIds bottom-to-top, so the light pool can prefer ground-floor
    *  lights when nothing is focused (mirrors the parametric level factor). */
   levelOrder: string[]
 }) {
@@ -106,14 +106,14 @@ export function GlbInteractive({
   useEffect(() => {
     const store = useInteractive.getState()
     for (const item of items) {
-      store.initItem(item.pascalId, item.interactive)
+      store.initItem(item.aructId, item.interactive)
       item.interactive.controls.forEach((control, i) => {
-        if (control.kind === 'toggle') store.setControlValue(item.pascalId, i, true)
+        if (control.kind === 'toggle') store.setControlValue(item.aructId, i, true)
       })
     }
     return () => {
       const store = useInteractive.getState()
-      for (const item of items) store.removeItem(item.pascalId)
+      for (const item of items) store.removeItem(item.aructId)
     }
   }, [items])
 
@@ -131,14 +131,14 @@ export function GlbInteractive({
         | LightEffect
         | undefined
       if (!effect) continue
-      const object = identity.get(item.pascalId)
+      const object = identity.get(item.aructId)
       if (!object) continue
       const controls = item.interactive.controls
       const toggleIndex = controls.findIndex((c) => c.kind === 'toggle')
       const sliderIndex = controls.findIndex((c) => c.kind === 'slider')
       const slider = sliderIndex >= 0 ? (controls[sliderIndex] as SliderControl) : null
       regs.push({
-        key: item.pascalId,
+        key: item.aructId,
         object,
         effect,
         toggleIndex,
@@ -175,14 +175,14 @@ export function GlbInteractive({
     <>
       <GlbItemLights levelIndexById={levelIndexById} regs={lightRegs} />
       {animationItems.map((item) => (
-        <GlbItemAnimation actions={actions} item={item} key={item.pascalId} />
+        <GlbItemAnimation actions={actions} item={item} key={item.aructId} />
       ))}
       {items.map((item) => {
-        const object = identity.get(item.pascalId)
+        const object = identity.get(item.aructId)
         return object ? (
           <GlbItemControls
             item={item}
-            key={item.pascalId}
+            key={item.aructId}
             object={object}
             worldPolygon={worldPolygon}
           />
@@ -225,12 +225,12 @@ const _camFwd = new Vector3()
 const _dir = new Vector3()
 const _lightWorld = new Vector3()
 
-/** The nearest level-identity ancestor's pascalId, for the level factor. */
+/** The nearest level-identity ancestor's aructId, for the level factor. */
 function findLevelId(object: Object3D): string | null {
   let cur: Object3D | null = object
   while (cur) {
-    const ud = cur.userData as { kind?: string; pascalId?: string }
-    if (ud.kind === 'level' && ud.pascalId) return ud.pascalId
+    const ud = cur.userData as { kind?: string; aructId?: string }
+    if (ud.kind === 'level' && ud.aructId) return ud.aructId
     cur = cur.parent
   }
   return null
@@ -464,12 +464,12 @@ function GlbItemAnimation({
   item: GlbInteractiveItem
   actions: Record<string, AnimationAction | null>
 }) {
-  const values = useInteractive(useShallow((s) => s.items[item.pascalId]?.controlValues))
+  const values = useInteractive(useShallow((s) => s.items[item.aructId]?.controlValues))
   const toggleIndex = item.interactive.controls.findIndex((c) => c.kind === 'toggle')
   const isOn = toggleIndex >= 0 ? Boolean(values?.[toggleIndex] ?? true) : true
 
   useEffect(() => {
-    const action = actions[`${item.pascalId}: loop`]
+    const action = actions[`${item.aructId}: loop`]
     if (!action) return
     action.loop = LoopRepeat
     action.clampWhenFinished = false
@@ -480,7 +480,7 @@ function GlbItemAnimation({
     } else {
       action.stop()
     }
-  }, [actions, item.pascalId, isOn])
+  }, [actions, item.aructId, isOn])
 
   return null
 }
@@ -498,7 +498,7 @@ function GlbItemControls({
   object: Object3D
   worldPolygon: [number, number][] | null
 }) {
-  const controlValues = useInteractive(useShallow((s) => s.items[item.pascalId]?.controlValues))
+  const controlValues = useInteractive(useShallow((s) => s.items[item.aructId]?.controlValues))
   const setControlValue = useInteractive((s) => s.setControlValue)
 
   let visible = false
@@ -562,7 +562,7 @@ function GlbItemControls({
           <ControlWidget
             control={control}
             key={i}
-            onChange={(v) => setControlValue(item.pascalId, i, v)}
+            onChange={(v) => setControlValue(item.aructId, i, v)}
             value={controlValues[i] ?? false}
           />
         ))}

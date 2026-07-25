@@ -1,4 +1,4 @@
-import { type Kind, parseQuantity, quantity } from '@aruct/lingo'
+import { type Kind, parseQuantity, quantity } from '@pascal-app/lingo'
 
 /**
  * Natural-language measurement parsing for editor property fields, backed by

@@ -4,7 +4,7 @@ import type { SceneOperations } from '../operations'
 export const AGENT_GUIDE = [
   '# Aruct MCP Agent Guide',
   '',
-  'You are editing Pascal architectural projects. Use MCP tools only; do not inspect the Pascal repository unless the user explicitly asks.',
+  'You are editing Aruct architectural projects. Use MCP tools only; do not inspect the Aruct repository unless the user explicitly asks.',
   '',
   '## Standard Workflow',
   '',

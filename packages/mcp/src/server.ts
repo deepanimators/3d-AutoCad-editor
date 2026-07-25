@@ -7,7 +7,7 @@ import type { SceneStore } from './storage/types'
 import { registerTools } from './tools'
 import { registerVisionTools } from './tools/vision'
 
-export type CreatePascalMcpServerOptions = {
+export type CreateAructMcpServerOptions = {
   bridge: SceneBridge
   operations?: SceneOperations
   /** Required for persistence tools. Hosted apps and CLIs inject their own store. */
@@ -16,7 +16,7 @@ export type CreatePascalMcpServerOptions = {
   version?: string
 }
 
-export function createAructMcpServer(opts: CreatePascalMcpServerOptions): McpServer {
+export function createAructMcpServer(opts: CreateAructMcpServerOptions): McpServer {
   const server = new McpServer({
     name: opts.name ?? 'aruct-mcp',
     version: opts.version ?? '0.1.0',

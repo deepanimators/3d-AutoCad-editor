@@ -20,7 +20,7 @@
     "@aruct/editor": "*",
     "@aruct/mcp": "*",
     "@aruct/nodes": "*",
-    "@aruct/plugin-trees": "github:aruct/plugin-trees#56d978cd9b409b716207b3f3d269455d3cd6f067",
+    "@aruct/plugin-trees": "github:pascalorg/plugin-trees#56d978cd9b409b716207b3f3d269455d3cd6f067",
     "@aruct/viewer": "*",
     "@radix-ui/react-tooltip": "^1.2.8",
     "@react-three/drei": "^10.7.7",

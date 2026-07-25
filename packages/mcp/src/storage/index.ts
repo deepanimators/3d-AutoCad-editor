@@ -5,7 +5,7 @@ export * from './sqlite-scene-store'
 export * from './types'
 
 /**
- * Factory for Pascal's local-first scene store.
+ * Factory for Aruct's local-first scene store.
  *
  * The store is backed by the runtime's built-in SQLite driver. By default it
  * writes to `~/.aruct/data/aruct.db`; set `ARUCT_DB_PATH` for an exact file

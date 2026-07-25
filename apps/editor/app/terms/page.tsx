@@ -105,7 +105,7 @@ export default function TermsPage() {
           <section className="mb-8 space-y-4">
             <h2 className="font-semibold text-xl">6. Platform Ownership</h2>
             <p className="text-foreground/90 leading-relaxed">
-              The Platform, including its design, features, and proprietary code, is owned by Pascal
+              The Platform, including its design, features, and proprietary code, is owned by Aruct
               Group Inc. and protected by intellectual property laws. While the Editor source code
               is open-source under the MIT License, the Platform services, branding, and
               infrastructure remain our proprietary property.
@@ -145,7 +145,7 @@ export default function TermsPage() {
           <section className="mb-8 space-y-4">
             <h2 className="font-semibold text-xl">9. Limitation of Liability</h2>
             <p className="text-foreground/90 leading-relaxed">
-              TO THE MAXIMUM EXTENT PERMITTED BY LAW, PASCAL GROUP INC. SHALL NOT BE LIABLE FOR ANY
+              TO THE MAXIMUM EXTENT PERMITTED BY LAW, ARUCT INC. SHALL NOT BE LIABLE FOR ANY
               INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING LOSS OF
               DATA, PROFITS, OR GOODWILL, ARISING FROM YOUR USE OF THE PLATFORM.
             </p>

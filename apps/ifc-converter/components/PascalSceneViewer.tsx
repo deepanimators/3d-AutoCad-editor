@@ -34,7 +34,7 @@ type CameraControlsImpl = {
 
 import { FitSceneButton, LevelSelector, PreviewToolbar } from './PreviewToolbar'
 
-interface PascalSceneViewerProps {
+interface AructSceneViewerProps {
   sceneGraph: AructSceneGraph
   className?: string
   /** Fired when the user clicks a node in the 3D view. */
@@ -112,11 +112,11 @@ function LevelFocus() {
   return null
 }
 
-export default function PascalSceneViewer({
+export default function AructSceneViewer({
   sceneGraph,
   className,
   onSelectNode,
-}: PascalSceneViewerProps) {
+}: AructSceneViewerProps) {
   const setScene = useScene((s) => s.setScene)
   const setSelection = useViewer((s) => s.setSelection)
   const [fitTrigger, setFitTrigger] = useState(0)

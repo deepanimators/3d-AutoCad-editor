@@ -1153,7 +1153,7 @@ function addDoorLeaf(
   // Marks this group as the swing leaf and records its fully-open angle so the
   // GLB exporter can bake an open/close animation clip from a single pose. The
   // exporter strips this marker before writing the file.
-  leafGroup.userData.pascalSwingLeaf = { axis: 'y', openRotationY }
+  leafGroup.userData.aructSwingLeaf = { axis: 'y', openRotationY }
   mesh.add(leafGroup)
 
   const addLeafBox = (
@@ -1368,7 +1368,7 @@ const ROLLUP_CURTAIN_NAME = 'door-rollup-curtain'
  * Mirrors `poseWindowMovingParts`: the live door system calls it after a
  * (re)build so `operationState` is reflected, and the GLB exporter calls it on a
  * clone to sample keyframes. Swing doors are not handled here — their leaf group
- * carries a `pascalSwingLeaf` marker the exporter reads directly.
+ * carries a `aructSwingLeaf` marker the exporter reads directly.
  *
  * Roll-up is the one type whose live geometry changes (slats vanish onto a
  * drum), which a glTF clip can't express; the baked approximation scales the

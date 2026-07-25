@@ -1,4 +1,4 @@
-import { type Kind, parseQuantity } from '@aruct/lingo'
+import { type Kind, parseQuantity } from '@pascal-app/lingo'
 import { z } from 'zod'
 
 /**

@@ -266,7 +266,7 @@ function applyTextureProperties(
 }
 
 function setTextureCacheKey(texture: THREE.Texture, cacheKey: string): THREE.Texture {
-  texture.userData.pascalTextureCacheKey = cacheKey
+  texture.userData.aructTextureCacheKey = cacheKey
   return texture
 }
 
@@ -306,7 +306,7 @@ function createAssignedTexture(
   slot?: TextureSlot,
 ): THREE.Texture {
   const texture = source.clone()
-  const cacheKey = source.userData.pascalTextureCacheKey
+  const cacheKey = source.userData.aructTextureCacheKey
   if (typeof cacheKey === 'string') {
     setTextureCacheKey(texture, cacheKey)
   }
@@ -392,7 +392,7 @@ function queueTextureAssignment(
   const resolvedPath = resolveCdnUrl(path) ?? path
   const cacheKey = getPresetTextureCacheKey(resolvedPath, props, slot)
 
-  if (textureMaterial[slot]?.userData.pascalTextureCacheKey === cacheKey) {
+  if (textureMaterial[slot]?.userData.aructTextureCacheKey === cacheKey) {
     applyTextureProperties(textureMaterial[slot], props, slot)
     return
   }

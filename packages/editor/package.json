@@ -1,7 +1,7 @@
 {
   "name": "@aruct/editor",
   "version": "0.9.2",
-  "description": "Pascal building editor component",
+  "description": "Aruct building editor component",
   "type": "module",
   "exports": {
     ".": "./src/index.tsx",
@@ -26,7 +26,7 @@
     "@dnd-kit/utilities": "^3.2.2",
     "@iconify/react": "^6.0.2",
     "@number-flow/react": "^0.6.0",
-    "@aruct/lingo": "^0.2.0",
+    "@pascal-app/lingo": "^0.2.0",
     "@radix-ui/react-alert-dialog": "^1.1.15",
     "@radix-ui/react-context-menu": "^2.2.16",
     "@radix-ui/react-dialog": "^1.1.15",

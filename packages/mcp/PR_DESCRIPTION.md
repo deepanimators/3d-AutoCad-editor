@@ -2,7 +2,7 @@
 
 ## Summary
 
-Introduces a new workspace package `@aruct/mcp` (v0.1.0) that exposes the Aruct scene graph (`@aruct/core`) as MCP **tools**, **resources**, and **prompts** so any MCP-compatible AI host — Claude Desktop, Claude Code, Codex CLI, Cursor, or a custom agent — can read, mutate, save, and reopen Pascal projects programmatically with full Zod validation, atomic patches, undo-safe mutations, multimodal image inputs, and local SQLite persistence.
+Introduces a new workspace package `@aruct/mcp` (v0.1.0) that exposes the Aruct scene graph (`@aruct/core`) as MCP **tools**, **resources**, and **prompts** so any MCP-compatible AI host — Claude Desktop, Claude Code, Codex CLI, Cursor, or a custom agent — can read, mutate, save, and reopen Aruct project programmatically with full Zod validation, atomic patches, undo-safe mutations, multimodal image inputs, and local SQLite persistence.
 
 The branch is now local-first: scenes persist to `~/.aruct/data/aruct.db` through SQLite, using `bun:sqlite` in the MCP CLI and `node:sqlite` when the Next.js editor server imports the storage package. The earlier Supabase adapter, SQL migrations, and committed `test-reports/` artifacts have been removed.
 
@@ -131,7 +131,7 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
 For Codex CLI:
 
 ```bash
-codex mcp add pascal-dev \
+codex mcp add aruct-dev \
   --env ARUCT_DATA_DIR="$HOME/.aruct/data" \
   -- bun "$PWD/packages/mcp/dist/bin/aruct-mcp.js"
 ```
@@ -167,7 +167,7 @@ Documented in [`packages/mcp/CROSS_CUTTING.md`](./CROSS_CUTTING.md):
 - ✅ `bun run --cwd packages/mcp smoke` — spawns stdio server, registers 30 tools, exercises `get_scene` / `create_level` / `validate_scene` / `undo` end-to-end
 - ✅ `bun test apps/editor/lib/scene-store-server.test.ts` — editor store singleton test passes
 - ✅ Editor smoke — `/api/scenes/<id>` and `/scene/<id>` return 200 for a scene saved through MCP using the shared SQLite DB
-- ✅ Local Codex MCP probe with `gpt-5.5` — saved a template scene through `pascal-dev`, then reloaded it and created a wall
+- ✅ Local Codex MCP probe with `gpt-5.5` — saved a template scene through `aruct-dev`, then reloaded it and created a wall
 - ✅ Docs: README with Claude Desktop, Claude Code, Codex CLI, Cursor configs + tool/resource/prompt tables, CHANGELOG, 3 examples
 - ✅ Conventional commit series (9 commits on `feat/mcp-server`)
 - ✅ No Supabase dependency, SQL migrations, or committed test-report artifacts

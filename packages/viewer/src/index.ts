@@ -138,10 +138,10 @@ export {
   THUMBNAIL_WIDTH,
 } from './lib/snapshot-pipeline'
 export {
-  getPascalTextureRef,
-  type PascalTextureColorSpace,
-  type PascalTextureMap,
-  type PascalTextureRef,
+  getAructTextureRef,
+  type AructTextureColorSpace,
+  type AructTextureMap,
+  type AructTextureRef,
   stampAructTextureRef,
   textureMapForSlot,
 } from './lib/texture-reference'

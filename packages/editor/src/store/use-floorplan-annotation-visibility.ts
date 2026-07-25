@@ -37,7 +37,7 @@ const useFloorplanAnnotationVisibility = create<FloorplanAnnotationVisibilitySta
         }),
     }),
     {
-      name: 'pascal-floorplan-annotation-visibility',
+      name: 'aruct-floorplan-annotation-visibility',
       merge: (persistedState, currentState) => ({
         ...currentState,
         visibility: normalizeFloorplanAnnotationVisibility(

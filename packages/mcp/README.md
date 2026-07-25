@@ -164,7 +164,7 @@ For local workspace testing before publish:
 
 ```bash
 bun run --cwd packages/mcp build
-codex mcp add pascal-dev \
+codex mcp add aruct-dev \
   --env ARUCT_DATA_DIR="$HOME/.aruct/data" \
   -- bun "$PWD/packages/mcp/dist/bin/aruct-mcp.js"
 ```
@@ -172,11 +172,11 @@ codex mcp add pascal-dev \
 This writes an entry like this to `~/.codex/config.toml`:
 
 ```toml
-[mcp_servers.pascal-dev]
+[mcp_servers.aruct-dev]
 command = "bun"
 args = ["/absolute/path/to/editor/packages/mcp/dist/bin/aruct-mcp.js"]
 
-[mcp_servers.pascal-dev.env]
+[mcp_servers.aruct-dev.env]
 ARUCT_DATA_DIR = "/Users/you/.aruct/data"
 ```
 
@@ -229,7 +229,7 @@ compilable version.
 
 ## Coordinate conventions
 
-Pascal is a **right-handed** scene where **X and Z form the ground plane and Y
+Aruct is a **right-handed** scene where **X and Z form the ground plane and Y
 is up**. Lengths are in **metres**; rotations are **radians**, stored as Euler
 `[x, y, z]` tuples.
 
@@ -258,7 +258,7 @@ from the iso default position, world and screen axes are offset by ~45° until
 you orbit to an axis-aligned view. So a layout authored as if
 *"Y = north, viewed top-down"* — common in land surveys, north-up site plans,
 and 2-D plotting libraries — will arrive **rotated** relative to its source
-when viewed in Pascal (and possibly further reflected, depending on which
+when viewed in Aruct (and possibly further reflected, depending on which
 viewport and camera state you're in). The editor's own 2-D and 3-D tools are
 internally consistent with their stored coordinates, so this only affects
 geometry authored programmatically. To verify orientation before trusting

@@ -80,7 +80,7 @@ describe('prepareSceneForExport', () => {
     stamped.flipY = false
     stamped.colorSpace = THREE.SRGBColorSpace
     stamped.updateMatrix()
-    stamped.userData.pascalTextureRef = {
+    stamped.userData.aructTextureRef = {
       v: 1,
       kind: 'library-material',
       src: `${STORAGE_ORIGIN}/storage/v1/object/public/materials/user/material/oak_basecolor_512.ktx2`,
@@ -113,7 +113,7 @@ describe('prepareSceneForExport', () => {
     expect(placeholder.rotation).toBe(stamped.rotation)
     expect(placeholder.flipY).toBe(stamped.flipY)
     expect(placeholder.colorSpace).toBe(stamped.colorSpace)
-    expect(placeholder.userData.pascalTextureRef).toEqual(stamped.userData.pascalTextureRef)
+    expect(placeholder.userData.aructTextureRef).toEqual(stamped.userData.aructTextureRef)
     expect(material.normalMap).toBe(unstamped)
     const sharedMaterial = (scene.children[1] as THREE.Mesh).material as THREE.MeshStandardMaterial
     expect(sharedMaterial.map).toBe(placeholder)
@@ -129,16 +129,16 @@ describe('prepareSceneForExport', () => {
       map: 'normal',
       colorSpace: 'linear',
     }
-    texture.userData.pascalTextureRef = ref
+    texture.userData.aructTextureRef = ref
     const imageDef: { extras?: Record<string, unknown> } = {}
     const textureDef: { source: number; extras?: Record<string, unknown> } = { source: 0 }
     const writer = { json: { images: [imageDef] } } as unknown as GLTFWriter
 
     writeTextureReferenceExtras(writer, texture, textureDef)
 
-    expect(textureDef.extras?.pascalTextureRef).toEqual(ref)
-    expect(imageDef.extras?.pascalTextureRef).toEqual(ref)
-    expect(textureDef.extras?.pascalTextureRef).toEqual(imageDef.extras?.pascalTextureRef)
+    expect(textureDef.extras?.aructTextureRef).toEqual(ref)
+    expect(imageDef.extras?.aructTextureRef).toEqual(ref)
+    expect(textureDef.extras?.aructTextureRef).toEqual(imageDef.extras?.aructTextureRef)
   })
 
   test('strips editor overlays that live off the scene layer', () => {
@@ -226,7 +226,7 @@ describe('prepareSceneForExport', () => {
     const root = new THREE.Group()
     const doorGroup = new THREE.Group()
     const leaf = new THREE.Group()
-    leaf.userData.pascalSwingLeaf = { axis: 'y', openRotationY: Math.PI / 2 }
+    leaf.userData.aructSwingLeaf = { axis: 'y', openRotationY: Math.PI / 2 }
     leaf.add(meshWithNodeMaterial(nodeMaterial()))
     doorGroup.add(leaf)
     root.add(doorGroup)
@@ -247,7 +247,7 @@ describe('prepareSceneForExport', () => {
     const exportedDoor = scene.getObjectByProperty('name', doorId)
     expect(exportedDoor).toBeDefined()
     expect(exportedDoor?.userData).toEqual({
-      pascalId: doorId,
+      aructId: doorId,
       kind: 'door',
       label: 'Front door',
       openable: true,
@@ -257,7 +257,7 @@ describe('prepareSceneForExport', () => {
     // The swing-leaf marker must not survive into glTF extras.
     let leafMarkerSurvived = false
     scene.traverse((object) => {
-      if (object.userData.pascalSwingLeaf) leafMarkerSurvived = true
+      if (object.userData.aructSwingLeaf) leafMarkerSurvived = true
     })
     expect(leafMarkerSurvived).toBe(false)
   })
@@ -286,7 +286,7 @@ describe('prepareSceneForExport', () => {
     expect(animations).toHaveLength(0)
     const exported = scene.getObjectByProperty('name', openingId)
     expect(exported?.userData).toEqual({
-      pascalId: openingId,
+      aructId: openingId,
       kind: 'door',
       label: 'Cased opening',
     })
@@ -328,7 +328,7 @@ describe('prepareSceneForExport', () => {
     // Forced visible so GLTFExporter's onlyVisible keeps the metadata node.
     expect(exported?.visible).toBe(true)
     expect(exported?.userData).toEqual({
-      pascalId: zoneId,
+      aructId: zoneId,
       kind: 'zone',
       label: 'Living Room',
       polygon,
@@ -346,7 +346,7 @@ describe('prepareSceneForExport', () => {
     const root = new THREE.Group()
     const doorGroup = new THREE.Group()
     const leaf = new THREE.Group()
-    leaf.userData.pascalSwingLeaf = { axis: 'y', openRotationY: Math.PI / 2 }
+    leaf.userData.aructSwingLeaf = { axis: 'y', openRotationY: Math.PI / 2 }
     leaf.add(meshWithNodeMaterial(nodeMaterial()))
     doorGroup.add(leaf)
     root.add(doorGroup)
@@ -421,7 +421,7 @@ describe('prepareSceneForExport', () => {
     expect(animations[0]!.name).toBe('registry_openable: open')
     const exported = scene.getObjectByProperty('name', nodeId)
     expect(exported?.userData).toMatchObject({
-      pascalId: nodeId,
+      aructId: nodeId,
       kind,
       label: 'Custom openable',
       openable: true,

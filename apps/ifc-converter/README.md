@@ -1,4 +1,4 @@
-# IFC → Pascal Converter
+# IFC → Aruct Converter
 
 A web app that converts IFC building models into Aruct scene-graph JSON and
 previews the result in the real `@aruct/viewer`. Drop in an `.ifc` file
@@ -23,7 +23,7 @@ JSON to load into the Aruct editor.
 
 - **`@aruct/ifc-converter`** (`packages/ifc-converter`) — the pure
   conversion logic. Parses IFC via [web-ifc](https://github.com/ThatOpen/engine_web-ifc),
-  maps elements onto Pascal node schemas from `@aruct/core`. No DOM, no
+  maps elements onto Aruct node schemas from `@aruct/core`. No DOM, no
   React.
 - **This app** — the UI: drop zone, example picker, element search/filters,
   the 3D preview, and JSON download.
@@ -45,7 +45,7 @@ fetched from a public bucket at runtime; the small ones are committed under
 - Plain `IFCWALL` (Brep/mapped geometry) falls back to a default height — exact
   per-wall heights need geometry-AABB extraction.
 - Items (furniture, etc.) are skipped — Aruct items require a catalog asset.
-- Beams have no Pascal node type yet and are skipped.
+- Beams have no Aruct node type yet and are skipped.
 - Doors/windows are matched to walls by proximity when the IFC omits fill
   relationships; matching isn't perfect.
 - Stairs/roofs are placeholders (bounding box / flat polygon in metadata).

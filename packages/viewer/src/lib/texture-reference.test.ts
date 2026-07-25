@@ -2,14 +2,14 @@
 // depend on @types/bun so the import type is unresolved at compile time.
 import { describe, expect, test } from 'bun:test'
 import * as THREE from 'three'
-import { getPascalTextureRef, stampAructTextureRef } from './texture-reference'
+import { getAructTextureRef, stampAructTextureRef } from './texture-reference'
 
 // The module reads the storage origin lazily on first use, so setting the env
 // here (before any stamp call) pins it for the whole test file.
 process.env.NEXT_PUBLIC_SUPABASE_URL ??= 'https://test-storage.supabase.co'
 const STORAGE_ORIGIN = new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).origin
 
-describe('Pascal texture references', () => {
+describe('Aruct texture references', () => {
   test("resolves 'material' input to library-material for storage-bucket URLs", () => {
     const texture = new THREE.Texture()
     texture.colorSpace = THREE.SRGBColorSpace
@@ -24,7 +24,7 @@ describe('Pascal texture references', () => {
       map: 'basecolor',
       colorSpace: 'srgb',
     })
-    expect(getPascalTextureRef(texture)).toEqual(ref)
+    expect(getAructTextureRef(texture)).toEqual(ref)
   })
 
   test("resolves 'material' input to app-material for assets-CDN catalog URLs", () => {
@@ -36,7 +36,7 @@ describe('Pascal texture references', () => {
     const ref = stampAructTextureRef(texture, { kind: 'material', src, slot: 'normalMap' })
 
     expect(ref).toEqual({ v: 1, kind: 'app-material', src, map: 'normal', colorSpace: 'linear' })
-    expect(getPascalTextureRef(texture)).toEqual(ref)
+    expect(getAructTextureRef(texture)).toEqual(ref)
 
     const foreign = new THREE.Texture()
     expect(
@@ -65,7 +65,7 @@ describe('Pascal texture references', () => {
       map: 'basecolor',
       colorSpace: 'srgb',
     })
-    expect(getPascalTextureRef(texture)).toEqual(ref)
+    expect(getAructTextureRef(texture)).toEqual(ref)
   })
 
   test('keeps local and non-Pascal URLs unstamped', () => {
@@ -77,7 +77,7 @@ describe('Pascal texture references', () => {
     ]) {
       const texture = new THREE.Texture()
       expect(stampAructTextureRef(texture, { kind: 'project-asset', src, slot: 'map' })).toBeNull()
-      expect(texture.userData.pascalTextureRef).toBeUndefined()
+      expect(texture.userData.aructTextureRef).toBeUndefined()
     }
   })
 

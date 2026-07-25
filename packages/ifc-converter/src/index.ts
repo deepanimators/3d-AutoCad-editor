@@ -1233,7 +1233,7 @@ export async function convertIfcToAruct(
 
           // TODO(ifc-fix): same scalar-vs-tuple position issue as door above.
           // sillHeight stays read-only metadata until we resolve the window
-          // schema (Pascal's WindowNode doesn't have sillHeight today —
+          // schema (Aruct's WindowNode doesn't have sillHeight today —
           // moved to metadata for now so we don't lose the value).
           const windowPosition: [number, number, number] = [
             position ?? 0,

@@ -38,7 +38,7 @@ const ROLE_BY_KIND: Record<string, SurfaceRole> = {
 /** A building floor discovered in the baked GLB, ordered bottom-to-top. */
 export type GlbLevel = { id: `level_${string}`; label: string }
 
-/** pascalId → display info, reported so a host can label the breadcrumb. */
+/** aructId → display info, reported so a host can label the breadcrumb. */
 export type GlbIdentity = Record<string, { kind: string; label: string }>
 
 /** What the cursor would act on at the current drill depth (for a hover label). */
@@ -64,8 +64,8 @@ type GlbZoneEntry = {
   centroid: [number, number]
 }
 
-type PascalExtras = {
-  pascalId?: string
+type AructExtras = {
+  aructId?: string
   kind?: string
   label?: string
   openable?: boolean
@@ -99,7 +99,7 @@ type HitCandidate = { object: THREE.Object3D; point?: THREE.Vector3 }
 function findIdentityAncestor(object: THREE.Object3D): THREE.Object3D | null {
   let current: THREE.Object3D | null = object
   while (current) {
-    if ((current.userData as PascalExtras).pascalId) return current
+    if ((current.userData as AructExtras).aructId) return current
     current = current.parent
   }
   return null
@@ -108,8 +108,8 @@ function findIdentityAncestor(object: THREE.Object3D): THREE.Object3D | null {
 function findAncestorLevelId(object: THREE.Object3D): string | null {
   let current = object.parent
   while (current) {
-    const extras = current.userData as PascalExtras
-    if (extras.kind === 'level' && extras.pascalId) return extras.pascalId
+    const extras = current.userData as AructExtras
+    if (extras.kind === 'level' && extras.aructId) return extras.aructId
     current = current.parent
   }
   return null
@@ -294,7 +294,7 @@ export function GlbScene({
 }: {
   url: string
   /** Light / animation effects + controls recovered from the DB scene graph,
-   *  joined to the baked nodes by `pascalId` to re-light + re-animate the GLB. */
+   *  joined to the baked nodes by `aructId` to re-light + re-animate the GLB. */
   interactiveItems?: GlbInteractiveItem[]
   /** Scan / guide nodes from the scene graph, re-added at runtime (they're
    *  stripped from the bake). Already filtered by the privacy flags upstream. */
@@ -326,7 +326,7 @@ export function GlbScene({
   // (`userData.__bakedMaterial`) so it survives the cached GLTF across remounts.
   useEffect(() => {
     gltf.scene.traverse((object) => {
-      const role = ROLE_BY_KIND[(object.userData as PascalExtras).kind ?? '']
+      const role = ROLE_BY_KIND[(object.userData as AructExtras).kind ?? '']
       if (!role) return
       object.traverse((child) => {
         const mesh = child as THREE.Mesh
@@ -393,7 +393,7 @@ export function GlbScene({
     let buildingNode: THREE.Object3D | null = null
     let siteNode: THREE.Object3D | null = null
     gltf.scene.traverse((object) => {
-      const extras = object.userData as PascalExtras
+      const extras = object.userData as AructExtras
       // The spawn marker is an authoring-only node (walkthrough start pose); it
       // should never render in the viewer. Its transform still feeds the
       // walkthrough controller — visibility doesn't affect that.
@@ -401,8 +401,8 @@ export function GlbScene({
         object.visible = false
         return
       }
-      if (!extras.pascalId) return
-      objects.set(extras.pascalId, object)
+      if (!extras.aructId) return
+      objects.set(extras.aructId, object)
       // `bake: 'replace'` kinds are baked as static geometry (portable), but a
       // loaded plugin re-renders them live from the scene graph — hide the frozen
       // baked mesh so only the live one shows. Gated on the registry, so with no
@@ -413,7 +413,7 @@ export function GlbScene({
       if (extras.kind === 'ceiling' || extras.kind === 'roof') occluderNodes.push(object)
       if (extras.kind === 'level') {
         floors.push({
-          id: extras.pascalId as GlbLevel['id'],
+          id: extras.aructId as GlbLevel['id'],
           node: object,
           baseY: object.position.y,
         })
@@ -425,11 +425,11 @@ export function GlbScene({
           polygon.reduce((sum, [, z]) => sum + z, 0) / polygon.length,
         ]
         zoneList.push({
-          id: extras.pascalId,
+          id: extras.aructId,
           node: object,
           levelId: findAncestorLevelId(object),
           polygon,
-          label: extras.label ?? extras.pascalId,
+          label: extras.label ?? extras.aructId,
           color: extras.color ?? '#3b82f6',
           centroid,
         })
@@ -447,7 +447,7 @@ export function GlbScene({
     }
   }, [gltf.scene])
   const zoneById = useMemo(() => new Map(zoneEntries.map((zone) => [zone.id, zone])), [zoneEntries])
-  // Level pascalIds bottom-to-top, for the interactive light pool's level factor.
+  // Level aructIds bottom-to-top, for the interactive light pool's level factor.
   const levelOrder = useMemo(() => levels.map((entry) => entry.id), [levels])
 
   // The dollhouse hides ceilings/roof — but only their OWN geometry. Items hosted
@@ -458,7 +458,7 @@ export function GlbScene({
     const meshes: THREE.Mesh[] = []
     const walk = (node: THREE.Object3D) => {
       for (const child of node.children) {
-        if ((child.userData as PascalExtras).pascalId) continue // hosted item — keep visible
+        if ((child.userData as AructExtras).aructId) continue // hosted item — keep visible
         if ((child as THREE.Mesh).isMesh) meshes.push(child as THREE.Mesh)
         walk(child)
       }
@@ -479,7 +479,7 @@ export function GlbScene({
   const focusSelectedId = useViewer((s) => s.selection.selectedIds[0] ?? null)
   useEffect(() => {
     if (!controls) return
-    const flyToBookmark = (bookmark: NonNullable<PascalExtras['camera']>) => {
+    const flyToBookmark = (bookmark: NonNullable<AructExtras['camera']>) => {
       const { position: p, target: t } = bookmark
       controls.setLookAt(p[0], p[1], p[2], t[0], t[1], t[2], true)
       controls.normalizeRotations?.()
@@ -491,7 +491,7 @@ export function GlbScene({
     if (focusSelectedId) {
       const object = identity.get(focusSelectedId)
       if (!object) return
-      const itemBookmark = (object.userData as PascalExtras).camera
+      const itemBookmark = (object.userData as AructExtras).camera
       if (itemBookmark) {
         flyToBookmark(itemBookmark)
         return
@@ -528,7 +528,7 @@ export function GlbScene({
       _camBox.setFromObject(rootNode ?? gltf.scene)
     }
 
-    const bookmark = (bookmarkNode?.userData as PascalExtras | undefined)?.camera
+    const bookmark = (bookmarkNode?.userData as AructExtras | undefined)?.camera
     if (bookmark) {
       flyToBookmark(bookmark)
       return
@@ -571,11 +571,11 @@ export function GlbScene({
 
   useEffect(() => {
     onLevelsChange?.(
-      levels.map(({ id, node }) => ({ id, label: (node.userData as PascalExtras).label ?? id })),
+      levels.map(({ id, node }) => ({ id, label: (node.userData as AructExtras).label ?? id })),
     )
     const labels: GlbIdentity = {}
     identity.forEach((object, id) => {
-      const extras = object.userData as PascalExtras
+      const extras = object.userData as AructExtras
       labels[id] = { kind: extras.kind ?? 'node', label: extras.label ?? id }
     })
     onIdentityChange?.(labels)
@@ -697,12 +697,12 @@ export function GlbScene({
   const openIds = useRef(new Set<string>())
   const toggleOpenable = useCallback(
     (node: THREE.Object3D) => {
-      const extras = node.userData as PascalExtras
+      const extras = node.userData as AructExtras
       const clipName = extras.clips?.[0]
       if (!extras.openable || !clipName) return
       const action = actions[clipName]
       if (!action) return
-      const id = extras.pascalId as string
+      const id = extras.aructId as string
       const willOpen = !openIds.current.has(id)
       action.enabled = true
       action.paused = false
@@ -755,7 +755,7 @@ export function GlbScene({
     (hits: HitCandidate[], ray: THREE.Ray): Target | null => {
       const firstNode = hits.length > 0 ? findIdentityAncestor(hits[0]!.object) : null
       const toTarget = (object: THREE.Object3D, tid: string): Target => {
-        const e = object.userData as PascalExtras
+        const e = object.userData as AructExtras
         return { object, id: tid, kind: e.kind ?? 'node', label: e.label ?? tid }
       }
       const { selection } = useViewer.getState()
@@ -763,8 +763,8 @@ export function GlbScene({
       // Building view → drill to the floor the hit object belongs to.
       if (!selection.levelId) {
         if (!firstNode) return null
-        const extras = firstNode.userData as PascalExtras
-        const levelId = extras.kind === 'level' ? extras.pascalId : findAncestorLevelId(firstNode)
+        const extras = firstNode.userData as AructExtras
+        const levelId = extras.kind === 'level' ? extras.aructId : findAncestorLevelId(firstNode)
         const levelObject = levelId ? identity.get(levelId) : undefined
         return levelObject && levelId ? toTarget(levelObject, levelId) : null
       }
@@ -783,8 +783,8 @@ export function GlbScene({
       for (const hit of hits) {
         const node = findIdentityAncestor(hit.object)
         if (!node) continue
-        const extras = node.userData as PascalExtras
-        const id = extras.pascalId
+        const extras = node.userData as AructExtras
+        const id = extras.aructId
         if (!id || seen.has(id)) continue
         seen.add(id)
 
@@ -895,7 +895,7 @@ export function GlbScene({
       if (_walkPos.y >= level.baseY - 0.5) floor = level
       else break
     }
-    const floorLabel = floor ? ((floor.node.userData as PascalExtras).label ?? floor.id) : null
+    const floorLabel = floor ? ((floor.node.userData as AructExtras).label ?? floor.id) : null
     const zone = floor ? zoneAtPoint(_walkPos, floor.id) : null
 
     _reticleRaycaster.far = WALK_REACH
@@ -906,10 +906,10 @@ export function GlbScene({
     let door: { label: string; isOpen: boolean } | null = null
     if (hit) {
       const node = findIdentityAncestor(hit.object)
-      const extras = node?.userData as PascalExtras | undefined
+      const extras = node?.userData as AructExtras | undefined
       if (node && extras?.openable && extras.clips?.length) {
         doorNode = node
-        doorId = extras.pascalId as string
+        doorId = extras.aructId as string
         door = { label: extras.label ?? 'Door', isOpen: openIds.current.has(doorId) }
       }
     }
@@ -1063,7 +1063,7 @@ export function GlbScene({
         onPointerOut={handlePointerOut}
       />
       {/* Re-light + re-animate the baked artifact from the DB scene graph,
-          joined to the baked nodes by pascalId. */}
+          joined to the baked nodes by aructId. */}
       {interactiveItems?.length ? (
         <GlbInteractive
           actions={actions}

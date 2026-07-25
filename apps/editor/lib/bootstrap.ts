@@ -56,7 +56,7 @@ function loadBuiltinsSync(): void {
     // prod the registry is reachable through @aruct/core's
     // exports only.
     if (typeof globalThis !== 'undefined') {
-      ;(globalThis as { __pascalNodeRegistry?: typeof nodeRegistry }).__pascalNodeRegistry =
+      ;(globalThis as { __aructNodeRegistry?: typeof nodeRegistry }).__aructNodeRegistry =
         nodeRegistry
     }
   }

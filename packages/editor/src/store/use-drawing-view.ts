@@ -104,7 +104,7 @@ const useDrawingView = create<DrawingViewState>()(
         }),
     }),
     {
-      name: 'pascal-floorplan-drawing-view',
+      name: 'aruct-floorplan-drawing-view',
       merge: (persistedState, currentState) => ({
         ...currentState,
         drawingType: normalizeDrawingType(

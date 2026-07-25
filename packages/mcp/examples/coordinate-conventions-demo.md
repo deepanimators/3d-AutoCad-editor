@@ -2,7 +2,7 @@
 
 Companion scene for the **Coordinate conventions** section of
 [`../README.md`](../README.md). Stress-tests every claim that section
-makes against real Pascal-generated geometry, built entirely through the
+makes against real Aruct-generated geometry, built entirely through the
 MCP API.
 
 ## Load it
@@ -30,7 +30,7 @@ you're in.
 
 ## What it confirms
 
-Open the scene in Pascal (or render it from the JSON) and you can read
+Open the scene in Aruct (or render it from the JSON) and you can read
 each claim directly off the geometry:
 
 1. **`[x, z] → world (x, 0, z)` is exact, no sign flip.** Demo A and
@@ -44,7 +44,7 @@ each claim directly off the geometry:
    edges. No rendering required.
 
 3. **External page coordinates *rotate* (not mirror) when pasted as
-   `[x, z]` and viewed in Pascal.** Inspecting Demo C in the 2-D plan
+   `[x, z]` and viewed in Aruct.** Inspecting Demo C in the 2-D plan
    panel: the page-up L lands rotated 90° clockwise, so the author's
    "stem-up, foot-bottom-right" reads as "stem-on-right, foot-along-top"
    on screen. Inspecting Demo D right next to it: the z-reflected

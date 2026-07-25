@@ -37,7 +37,7 @@ function makeGraph(overrides: Partial<SceneGraph> = {}): SceneGraph {
 }
 
 async function mkTmpRoot(): Promise<string> {
-  return fs.mkdtemp(path.join(os.tmpdir(), 'pascal-sqlite-test-'))
+  return fs.mkdtemp(path.join(os.tmpdir(), 'aruct-sqlite-test-'))
 }
 
 async function rmrf(p: string): Promise<void> {
@@ -69,9 +69,9 @@ describe('resolveDefaultDatabasePath', () => {
     )
   })
 
-  test('falls back to homedir + .pascal/data/aruct.db', () => {
+  test('falls back to homedir + .aruct/data/aruct.db', () => {
     if (process.platform === 'win32') return
-    expect(resolveDefaultDatabasePath({}).endsWith(path.join('.pascal', 'data', 'aruct.db'))).toBe(
+    expect(resolveDefaultDatabasePath({}).endsWith(path.join('.aruct', 'data', 'aruct.db'))).toBe(
       true,
     )
   })

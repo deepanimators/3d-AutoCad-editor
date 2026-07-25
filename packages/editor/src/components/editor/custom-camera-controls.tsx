@@ -564,11 +564,11 @@ export const CustomCameraControls = () => {
     // camera changes, so a captured instance goes stale.
     if (process.env.NODE_ENV !== 'development') return
     const w = window as typeof window & {
-      __pascalCameraControls?: (() => CameraControlsImpl | null) | null
+      __aructCameraControls?: (() => CameraControlsImpl | null) | null
     }
-    w.__pascalCameraControls = () => controls.current
+    w.__aructCameraControls = () => controls.current
     return () => {
-      w.__pascalCameraControls = null
+      w.__aructCameraControls = null
     }
   }, [])
 
