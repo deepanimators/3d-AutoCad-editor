@@ -285,8 +285,10 @@ export function SceneLoader({ initialScene, meta }: SceneLoaderProps) {
 
   useEffect(() => {
     const source = new EventSource(`/api/scenes/${meta.id}/events`)
+    let everConnected = false
 
     source.addEventListener('scene', (event) => {
+      everConnected = true
       let payload: LiveSceneEvent
       try {
         payload = JSON.parse((event as MessageEvent<string>).data) as LiveSceneEvent
@@ -304,8 +306,11 @@ export function SceneLoader({ initialScene, meta }: SceneLoaderProps) {
       setSaveError(null)
     })
 
+    // Suppress the "connection closed" banner on first close — the Postgres
+    // store doesn't support SSE events and returns 501 immediately, which is
+    // expected. Only show the error if we successfully connected at least once.
     source.addEventListener('error', () => {
-      if (source.readyState === EventSource.CLOSED) {
+      if (source.readyState === EventSource.CLOSED && everConnected) {
         setSaveError('Live scene connection closed')
       }
     })
