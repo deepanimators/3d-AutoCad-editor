@@ -20,10 +20,12 @@ function LeftColumn({
   tabs,
   renderTabContent,
   sidebarOverlay,
+  railBottomSlot,
 }: {
   tabs: SidebarTab[]
   renderTabContent: (tabId: string) => ReactNode
   sidebarOverlay?: ReactNode
+  railBottomSlot?: ReactNode
 }) {
   const width = useSidebarStore((s) => s.width)
   const isCollapsed = useSidebarStore((s) => s.isCollapsed)
@@ -122,6 +124,7 @@ function LeftColumn({
     <div className="relative z-10 flex h-full flex-shrink-0 bg-sidebar text-sidebar-foreground">
       <IconRail
         activeTab={activePanel}
+        bottomSlot={railBottomSlot}
         collapsed={isCollapsed}
         onIconClick={handleRailClick}
         tabs={tabs}
@@ -211,6 +214,7 @@ export interface EditorLayoutV2Props {
   sidebarTabs?: SidebarTab[]
   renderTabContent: (tabId: string) => ReactNode
   sidebarOverlay?: ReactNode
+  railBottomSlot?: ReactNode
   viewerToolbarLeft?: ReactNode
   viewerToolbarRight?: ReactNode
   viewerContent: ReactNode
@@ -223,6 +227,7 @@ export function EditorLayoutV2({
   sidebarTabs = [],
   renderTabContent,
   sidebarOverlay,
+  railBottomSlot,
   viewerToolbarLeft,
   viewerToolbarRight,
   viewerContent,
@@ -256,6 +261,7 @@ export function EditorLayoutV2({
       <div className="flex min-h-0 flex-1">
         {!isCaptureMode && sidebarTabs.length > 0 && (
           <LeftColumn
+            railBottomSlot={railBottomSlot}
             renderTabContent={renderTabContent}
             sidebarOverlay={sidebarOverlay}
             tabs={sidebarTabs}

@@ -67,7 +67,13 @@ interface IconRailProps {
  * panel is collapsed) so the user can reopen the panel by clicking an icon.
  * The label renders as a hover tooltip on the right.
  */
-export function IconRail({ tabs, activeTab, collapsed, onIconClick }: IconRailProps) {
+export function IconRail({
+  tabs,
+  activeTab,
+  collapsed,
+  onIconClick,
+  bottomSlot,
+}: IconRailProps) {
   const pluginPanelIds = new Set(
     editorHostPanelRegistry.getSnapshot().flatMap((panel) =>
       panel.pluginId ? [panel.id] : [],
@@ -110,6 +116,11 @@ export function IconRail({ tabs, activeTab, collapsed, onIconClick }: IconRailPr
         {pluginTabs.length > 0 && (
           <div className="mt-1 flex w-11 flex-col items-center gap-1 border-border/70 border-t pt-2">
             {pluginTabs.map(renderTab)}
+          </div>
+        )}
+        {bottomSlot != null && (
+          <div className="mt-auto flex w-11 flex-col items-center gap-1 border-border/70 border-t pt-2">
+            {bottomSlot}
           </div>
         )}
       </div>
