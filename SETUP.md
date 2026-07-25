@@ -1,4 +1,4 @@
-# Pascal Editor — Setup
+# Aruct Editor — Setup
 
 ## Prerequisites
 
