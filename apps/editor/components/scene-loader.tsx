@@ -145,6 +145,11 @@ export function SceneLoader({ initialScene, meta }: SceneLoaderProps) {
   const [saveError, setSaveError] = useState<string | null>(null)
   const [sceneName, setSceneName] = useState(meta.name)
   const [saveStatus, setSaveStatus] = useState<SaveStatus>('idle')
+  const [projectVisibility, setProjectVisibility] = useState<ProjectVisibility>({
+    isPrivate: !(meta.isPublic ?? false),
+    showScansPublic: meta.showScansPublic ?? true,
+    showGuidesPublic: meta.showGuidesPublic ?? true,
+  })
 
   const handleLoad = useCallback(async () => initialScene, [initialScene])
 
