@@ -31,7 +31,7 @@ const PLAN_LABELS = { free: 'Free', pro: 'Pro', team: 'Team' }
 type NavItem = {
   href: string
   label: string
-  icon: React.ElementType
+  icon: React.ComponentType<{ className?: string }>
   adminOnly?: boolean
 }
 

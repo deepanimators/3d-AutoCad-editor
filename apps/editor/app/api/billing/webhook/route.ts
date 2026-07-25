@@ -44,9 +44,10 @@ async function syncSubscription(sub: Stripe.Subscription) {
   const userId = sub.metadata.userId
   if (!userId) return
 
-  const priceId = sub.items.data[0]?.price.id
+  const firstItem = sub.items.data[0]
+  const priceId = firstItem?.price.id
   const plan = resolvePlan(priceId)
-  const periodEnd = sub.current_period_end
+  const periodEnd = firstItem?.current_period_end
 
   await db.update(users).set({
     plan,

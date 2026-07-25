@@ -83,7 +83,8 @@ export async function loadExternalPlugins(): Promise<void> {
 // Register the first-party example node plugin alongside any host-provided
 // discovery source instead of replacing it. Its Nature rail panel is host UI,
 // so it is registered separately from the core plugin manifest.
-extendPluginDiscovery(async () => [treesPlugin])
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+extendPluginDiscovery(async () => [treesPlugin as any])
 registerEditorHostPanel(treesHostPanel)
 
 loadBuiltinsSync()

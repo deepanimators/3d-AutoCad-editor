@@ -1,6 +1,6 @@
-import Link from 'next/link'
 import { CreateSceneButton } from '@/components/save-button'
 import type { SceneMeta } from '@/components/scene-loader'
+import { SceneCard } from '@/components/scene-card'
 import { AppShell } from '@/components/app-shell'
 import { getSession } from '@/lib/auth-server'
 import { getSceneOperations } from '@/lib/scene-store-server'
@@ -20,14 +20,6 @@ async function fetchScenes(): Promise<SceneMeta[]> {
   } catch (error) {
     console.error('[ScenesPage] Failed to fetch scenes:', error)
     return []
-  }
-}
-
-function formatDate(iso: string): string {
-  try {
-    return new Date(iso).toLocaleString()
-  } catch {
-    return iso
   }
 }
 
@@ -59,34 +51,14 @@ export default async function ScenesPage() {
         ) : (
           <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {scenes.map((scene) => (
-              <li key={scene.id}>
-                <Link
-                  className="group block rounded-xl border border-border/60 bg-background p-4 transition-colors hover:border-border hover:bg-accent/30"
-                  href={`/scene/${scene.id}`}
-                >
-                  <div className="flex aspect-video items-center justify-center overflow-hidden rounded-lg bg-accent/30">
-                    {scene.thumbnailUrl ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        alt={scene.name}
-                        className="h-full w-full object-cover"
-                        src={scene.thumbnailUrl}
-                      />
-                    ) : (
-                      <span className="text-muted-foreground text-xs">No thumbnail</span>
-                    )}
-                  </div>
-                  <div className="mt-3">
-                    <h2 className="truncate font-semibold text-sm group-hover:text-foreground">
-                      {scene.name}
-                    </h2>
-                    <div className="mt-1 flex items-center justify-between text-muted-foreground text-xs">
-                      <span>{scene.nodeCount} nodes</span>
-                      <time dateTime={scene.updatedAt}>{formatDate(scene.updatedAt)}</time>
-                    </div>
-                  </div>
-                </Link>
-              </li>
+              <SceneCard
+                key={scene.id}
+                id={scene.id}
+                name={scene.name}
+                nodeCount={scene.nodeCount}
+                updatedAt={scene.updatedAt}
+                thumbnailUrl={scene.thumbnailUrl}
+              />
             ))}
           </ul>
         )}
