@@ -5,6 +5,8 @@ import { upsertUser } from '@/lib/auth-server'
 const SESSION_COOKIE = '__session'
 const SESSION_DURATION_MS = 14 * 24 * 60 * 60 * 1000 // 14 days
 
+export const dynamic = 'force-dynamic'
+
 export async function POST(request: Request) {
   let idToken: string | undefined
   try {

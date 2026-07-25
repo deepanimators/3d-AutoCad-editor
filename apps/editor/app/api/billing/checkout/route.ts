@@ -4,6 +4,8 @@ import { db } from '@/lib/db/client'
 import { users } from '@/lib/db/schema'
 import { eq } from 'drizzle-orm'
 
+export const dynamic = 'force-dynamic'
+
 export async function POST(request: Request) {
   const session = await getSession()
   if (!session) return Response.json({ error: 'unauthorized' }, { status: 401 })
