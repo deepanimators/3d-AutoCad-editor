@@ -14,7 +14,11 @@ const nextConfig: NextConfig = {
     '@aruct/editor',
     '@aruct/mcp',
     '@aruct/plugin-trees',
+    '@pascal-app/core',
+    '@pascal-app/editor',
+    '@pascal-app/lingo',
     '@pascal-app/plugin-trees',
+    '@pascal-app/viewer',
     '@dgreenheck/ez-tree',
   ],
   turbopack: {
