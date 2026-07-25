@@ -45,10 +45,14 @@ try {
       "node_count" integer DEFAULT 0 NOT NULL,
       "graph_hash" text,
       "is_public" boolean DEFAULT false NOT NULL,
+      "show_scans_public" boolean DEFAULT true NOT NULL,
+      "show_guides_public" boolean DEFAULT true NOT NULL,
       "created_at" timestamptz DEFAULT now() NOT NULL,
       "updated_at" timestamptz DEFAULT now() NOT NULL
     )
   `
+  await sql`ALTER TABLE scenes ADD COLUMN IF NOT EXISTS "show_scans_public" boolean DEFAULT true NOT NULL`
+  await sql`ALTER TABLE scenes ADD COLUMN IF NOT EXISTS "show_guides_public" boolean DEFAULT true NOT NULL`
   console.log('✓ scenes table ready')
 
   await sql`

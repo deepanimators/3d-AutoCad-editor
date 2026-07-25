@@ -30,6 +30,8 @@ export const scenes = pgTable('scenes', {
   nodeCount: integer('node_count').notNull().default(0),
   graphHash: text('graph_hash'),
   isPublic: boolean('is_public').notNull().default(false),
+  showScansPublic: boolean('show_scans_public').notNull().default(true),
+  showGuidesPublic: boolean('show_guides_public').notNull().default(true),
   createdAt: timestamp('created_at', { mode: 'string' }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { mode: 'string' }).notNull().defaultNow(),
 })
