@@ -4,7 +4,10 @@ import { getAuth } from 'firebase-admin/auth'
 function getAdminApp() {
   if (getApps().length > 0) return getApp()
 
-  const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n')
+  const raw = process.env.FIREBASE_PRIVATE_KEY ?? ''
+  // dotenv-cli may have already converted \n → real newlines; handle both cases
+  const privateKey = raw.includes('\\n') ? raw.replace(/\\n/g, '\n') : raw
+  console.log('[firebase-admin] key_len:', privateKey.length, 'starts:', JSON.stringify(privateKey.slice(0, 40)))
 
   return initializeApp({
     credential: cert({
