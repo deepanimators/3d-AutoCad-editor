@@ -263,6 +263,26 @@ export function SceneLoader({ initialScene, meta }: SceneLoaderProps) {
     }
   }, [router])
 
+  const handleVisibilityChange = useCallback(
+    async (field: 'isPrivate' | 'showScansPublic' | 'showGuidesPublic', value: boolean) => {
+      const payload: Record<string, boolean> =
+        field === 'isPrivate' ? { isPublic: !value } : { [field]: value }
+      try {
+        const response = await fetch(`/api/scenes/${meta.id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        })
+        if (response.ok) {
+          setProjectVisibility((prev) => ({ ...prev, [field]: value }))
+        }
+      } catch (err) {
+        console.error('Failed to update visibility:', err)
+      }
+    },
+    [meta.id],
+  )
+
   useEffect(() => {
     const source = new EventSource(`/api/scenes/${meta.id}/events`)
 
