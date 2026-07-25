@@ -47,7 +47,7 @@ import {
   Tag,
 } from 'lucide-react'
 import Image from 'next/image'
-import { type ReactNode, useCallback } from 'react'
+import React, { type ReactNode, useCallback } from 'react'
 import { flushSync } from 'react-dom'
 import { cn } from '@/lib/utils'
 import { Tooltip, TooltipContent, TooltipTrigger } from './toolbar-tooltip'
@@ -709,6 +709,18 @@ export function CommunityViewerToolbarRight() {
       <div className="my-1.5 w-px bg-border/50" />
       <WalkthroughButton />
       <PreviewButton />
+      <div className="my-1.5 w-px bg-border/50" />
+      <UserMenuSlot />
     </div>
   )
+}
+
+function UserMenuSlot() {
+  // Dynamically imported to avoid SSR issues with Firebase client SDK
+  const [Menu, setMenu] = React.useState<React.ComponentType | null>(null)
+  React.useEffect(() => {
+    import('@/components/user-menu').then((m) => setMenu(() => m.UserMenu))
+  }, [])
+  if (!Menu) return null
+  return <Menu />
 }

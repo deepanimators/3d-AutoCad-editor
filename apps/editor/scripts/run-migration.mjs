@@ -1,6 +1,5 @@
 /**
  * One-shot migration script. Uses @neondatabase/serverless directly.
- * Bypasses drizzle-kit (which needs postgres package incompatible with workspace install).
  * Run: node scripts/run-migration.mjs  (with DATABASE_URL in env)
  */
 import { neon } from '@neondatabase/serverless'
@@ -12,10 +11,27 @@ if (!DATABASE_URL) {
 }
 
 const sql = neon(DATABASE_URL)
-
 console.log('Connecting to Neon...')
 
 try {
+  await sql`
+    CREATE TABLE IF NOT EXISTS "users" (
+      "id" text PRIMARY KEY NOT NULL,
+      "email" text NOT NULL UNIQUE,
+      "name" text NOT NULL,
+      "image" text,
+      "plan" text DEFAULT 'free' NOT NULL CHECK (plan IN ('free','pro','team')),
+      "role" text DEFAULT 'user' NOT NULL CHECK (role IN ('user','admin')),
+      "stripe_customer_id" text UNIQUE,
+      "stripe_subscription_id" text,
+      "subscription_status" text,
+      "plan_expires_at" timestamptz,
+      "created_at" timestamptz DEFAULT now() NOT NULL,
+      "updated_at" timestamptz DEFAULT now() NOT NULL
+    )
+  `
+  console.log('✓ users table ready')
+
   await sql`
     CREATE TABLE IF NOT EXISTS "scenes" (
       "id" text PRIMARY KEY NOT NULL,
@@ -35,8 +51,9 @@ try {
   `
   console.log('✓ scenes table ready')
 
-  const rows = await sql`SELECT COUNT(*) as count FROM scenes`
-  console.log('✓ verified — ' + rows[0].count + ' rows in table')
+  const u = await sql`SELECT COUNT(*) as count FROM users`
+  const s = await sql`SELECT COUNT(*) as count FROM scenes`
+  console.log(`✓ done — ${u[0].count} users, ${s[0].count} scenes`)
 } catch (err) {
   console.error('Migration failed:', err.message)
   process.exit(1)
