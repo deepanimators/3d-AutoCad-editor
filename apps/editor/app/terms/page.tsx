@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 export const metadata: Metadata = {
   title: 'Terms of Service',
-  description: 'Terms of Service for Pascal Editor and the Pascal platform.',
+  description: 'Terms of Service for Aruct Editor and the Aruct platform.',
 }
 
 export default function TermsPage() {
@@ -39,7 +39,7 @@ export default function TermsPage() {
           <section className="mb-8 space-y-4">
             <h2 className="font-semibold text-xl">1. Introduction</h2>
             <p className="text-foreground/90 leading-relaxed">
-              Welcome to Pascal Editor (&quot;Editor&quot;) and the Pascal platform at pascal.app
+              Welcome to Aruct Editor (&quot;Editor&quot;) and the Aruct platform at aruct.app
               (&quot;Platform&quot;), operated by Pascal Group Inc. (&quot;we,&quot; &quot;us,&quot;
               or &quot;our&quot;). By accessing or using our services, you agree to these Terms of
               Service.
@@ -49,12 +49,12 @@ export default function TermsPage() {
           <section className="mb-8 space-y-4">
             <h2 className="font-semibold text-xl">2. The Editor and Platform</h2>
             <p className="text-foreground/90 leading-relaxed">
-              The Pascal Editor is open-source software released under the MIT License. You may use,
+              The Aruct Editor is open-source software released under the MIT License. You may use,
               copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Editor
               software in accordance with the MIT License terms.
             </p>
             <p className="text-foreground/90 leading-relaxed">
-              The Pascal platform (pascal.app) and its associated services, including user accounts,
+              The Aruct platform (aruct.app) and its associated services, including user accounts,
               cloud storage, and project hosting, are proprietary services owned and operated by
               Pascal Group Inc. These Terms govern your use of the Platform.
             </p>
