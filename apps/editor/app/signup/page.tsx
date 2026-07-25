@@ -29,7 +29,8 @@ export default function SignupPage() {
       setVerifyPrompt(true)
     } catch (err: unknown) {
       const code = (err as { code?: string })?.code ?? ''
-      setError(friendlyError(code))
+      console.error('[signup]', code, err)
+      setError(friendlyError(code) + (process.env.NODE_ENV === 'development' ? ` [${code}]` : ''))
     } finally {
       setLoading(false)
     }
