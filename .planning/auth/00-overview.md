@@ -1,6 +1,6 @@
 # Auth, RBAC & Subscription — Master Plan
 
-**Platform:** Arch Construct Editor (`ace.tucnow.in`)  
+**Platform:** Aruct Editor (`ace.tucnow.in`)  
 **Stack:** Next.js 16, React 19, Vercel, SQLite (local), Bun, Turborepo  
 **Goal:** Enterprise-grade auth + 3-tier subscription monetisation
 

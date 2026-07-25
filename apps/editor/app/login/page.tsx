@@ -81,7 +81,7 @@ function LoginForm() {
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
           <h1 className="font-bold text-2xl text-foreground tracking-tight">Sign in</h1>
-          <p className="mt-1 text-muted-foreground text-sm">to Arch Construct Editor</p>
+          <p className="mt-1 text-muted-foreground text-sm">to Aruct Editor</p>
         </div>
 
         <div className="space-y-3">

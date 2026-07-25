@@ -1,4 +1,4 @@
-# Subscription Plans — Arch Construct Editor
+# Subscription Plans — Aruct Editor
 
 ## Plan Overview
 
