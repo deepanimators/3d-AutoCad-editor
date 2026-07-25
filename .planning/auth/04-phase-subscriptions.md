@@ -43,13 +43,13 @@ STRIPE_TEAM_YEARLY_PRICE_ID="price_..."   # per-seat
 In Stripe Dashboard or via script:
 
 ```
-Product: "Arch Construct Pro"
+Product: "Aruct Editor Pro"
   Prices:
     - $29.00 / month (recurring) → STRIPE_PRO_MONTHLY_PRICE_ID
     - $290.00 / year (recurring) → STRIPE_PRO_YEARLY_PRICE_ID
   Trial: 14 days
 
-Product: "Arch Construct Team"
+Product: "Aruct Editor Team"
   Prices:
     - $79.00 / month / seat (recurring, per-quantity) → STRIPE_TEAM_MONTHLY_PRICE_ID
     - $790.00 / year / seat (recurring, per-quantity) → STRIPE_TEAM_YEARLY_PRICE_ID

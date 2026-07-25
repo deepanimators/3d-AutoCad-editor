@@ -87,7 +87,7 @@ Get the Admin SDK credentials from Firebase Console → Project Settings → Ser
    - Google ✅
    - GitHub ✅ (needs GitHub OAuth app)
 3. **Add authorized domains:** `ace.tucnow.in`, `localhost`
-4. **Configure email templates** (verification, password reset) — branded with Arch Construct name/logo
+4. **Configure email templates** (verification, password reset) — branded with Aruct Editor name/logo
 
 ---
 

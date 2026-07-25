@@ -289,7 +289,7 @@ emailVerification: {
   sendVerificationEmail: async ({ user, url }) => {
     const resend = new Resend(process.env.RESEND_API_KEY)
     await resend.emails.send({
-      from: 'Arch Construct <noreply@ace.tucnow.in>',
+      from: 'Aruct Editor <noreply@ace.tucnow.in>',
       to: user.email,
       subject: 'Verify your email',
       html: `<a href="${url}">Click to verify</a>`,

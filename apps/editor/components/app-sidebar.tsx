@@ -58,7 +58,7 @@ export function AppSidebar({ user }: { user: User | null }) {
       <div className="flex h-14 items-center gap-2.5 border-b border-border px-4">
         <a href="/" className="flex items-center gap-2 text-foreground hover:opacity-80">
           <Box className="h-5 w-5" />
-          <span className="font-bold text-sm tracking-tight">Arch Construct</span>
+          <span className="font-bold text-sm tracking-tight">Aruct Editor</span>
         </a>
       </div>
 

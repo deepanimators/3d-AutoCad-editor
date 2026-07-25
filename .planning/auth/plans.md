@@ -151,11 +151,11 @@ canCollaborateRealtime(u) => user.plan === 'team'
 ## Stripe Products to Create
 
 ```
-product: "Arch Construct Pro"
+product: "Aruct Editor Pro"
   price: $29/month (recurring)
   price: $290/year (recurring)
 
-product: "Arch Construct Team"
+product: "Aruct Editor Team"
   price: $79/month per seat (recurring, metered or per-quantity)
   price: $790/year per seat
 ```
