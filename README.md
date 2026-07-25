@@ -6,7 +6,7 @@ A 3D building editor built with React Three Fiber and WebGPU.
 [![npm @aruct/core](https://img.shields.io/npm/v/@aruct/core?label=%40aruct%2Fcore)](https://www.npmjs.com/package/@aruct/core)
 [![npm @aruct/viewer](https://img.shields.io/npm/v/@aruct/viewer?label=%40aruct%2Fviewer)](https://www.npmjs.com/package/@aruct/viewer)
 [![Discord](https://img.shields.io/badge/Discord-Join%20Server-5865F2?logo=discord&logoColor=white)](https://discord.gg/SaBRA9t2)
-[![X (Twitter)](https://img.shields.io/badge/follow-%40pascal__app-black?logo=x&logoColor=white)](https://x.com/aruct_app)
+[![X (Twitter)](https://img.shields.io/badge/follow-%40aruct_app-black?logo=x&logoColor=white)](https://x.com/aruct_app)
 
 https://github.com/user-attachments/assets/8b50e7cf-cebe-4579-9cf3-8786b35f7b6b
 

@@ -1,6 +1,6 @@
 # Plugin authoring
 
-*Public contract for external node packs that extend the Pascal editor.*
+*Public contract for external node packs that extend the Aruct editor.*
 
 Applies to: anything that ships a `Plugin` for the editor to load.
 
@@ -32,7 +32,7 @@ export const myPlugin: Plugin = {
 
 The standalone [`aruct/plugin-trees`](https://github.com/aruct/plugin-trees) repository is the worked example. Clone it as a starting point.
 
-The same shape powers the built-in `pascal:core` plugin in `@aruct/nodes` — there's no "internal" plugin format. Whatever works for built-ins works for third parties.
+The same shape powers the built-in `aruct:core` plugin in `@aruct/nodes` — there's no "internal" plugin format. Whatever works for built-ins works for third parties.
 
 ## What a `NodeDefinition` can contribute
 
@@ -94,7 +94,7 @@ graph TD
 The host calls `discoverPlugins()` after the built-in plugin loads. The default implementation returns `[]`. Apps that ship external plugins replace it before the bootstrap module evaluates:
 
 ```ts
-// In app boot, BEFORE `import './pascal-bootstrap'`
+// In app boot, BEFORE `import './aruct-bootstrap'`
 import { setPluginDiscovery } from '@aruct/core'
 import { myPlugin } from '@acme/furniture-pack'
 

@@ -65,7 +65,7 @@ describe('resolveDefaultDatabasePath', () => {
   test('falls back to XDG_DATA_HOME on Unix', () => {
     if (process.platform === 'win32') return
     expect(resolveDefaultDatabasePath({ XDG_DATA_HOME: '/xdg/share' })).toBe(
-      path.join('/xdg/share', 'pascal', 'data', 'aruct.db'),
+      path.join('/xdg/share', 'aruct', 'data', 'aruct.db'),
     )
   })
 

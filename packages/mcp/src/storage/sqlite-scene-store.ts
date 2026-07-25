@@ -102,7 +102,7 @@ export function resolveDefaultDatabasePath(env: NodeJS.ProcessEnv = process.env)
   }
   const xdg = env.XDG_DATA_HOME
   if (xdg && xdg.length > 0) {
-    return path.join(xdg, 'pascal', 'data', 'aruct.db')
+    return path.join(xdg, 'aruct', 'data', 'aruct.db')
   }
   return path.join(os.homedir(), '.pascal', 'data', 'aruct.db')
 }

@@ -434,9 +434,9 @@ describe('SceneBridge', () => {
 
     test('loadJSON preserves explicit plugin installs', () => {
       const snap = bridge.exportJSON()
-      bridge.loadJSON({ ...snap, installedPlugins: ['pascal:trees'] })
+      bridge.loadJSON({ ...snap, installedPlugins: ['aruct:trees'] })
 
-      expect(bridge.exportJSON().installedPlugins).toEqual(['pascal:trees'])
+      expect(bridge.exportJSON().installedPlugins).toEqual(['aruct:trees'])
     })
 
     test('legacy graphs do not become explicitly uninstalled on export', () => {

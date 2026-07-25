@@ -1,10 +1,10 @@
 ---
 name: review-architecture
-description: Review a PR against the Pascal architectural rules — package boundaries (core/viewer/editor/nodes), the registry-driven composition model (def.geometry / def.renderer / def.system), legacy-dispatch regressions, the slots + world-scale-UV convention for new nodes/geometry, hook hygiene (useEditor/useScene/useViewer), and selector performance. Use when the user asks to review a PR, audit a branch, or check that changes respect the codebase's architecture.
+description: Review a PR against the Aruct architectural rules — package boundaries (core/viewer/editor/nodes), the registry-driven composition model (def.geometry / def.renderer / def.system), legacy-dispatch regressions, the slots + world-scale-UV convention for new nodes/geometry, hook hygiene (useEditor/useScene/useViewer), and selector performance. Use when the user asks to review a PR, audit a branch, or check that changes respect the codebase's architecture.
 allowed-tools: Bash(git *) Bash(gh *) Read Grep Glob
 ---
 
-Architectural review for Pascal PRs. The user will provide a PR URL, branch name, or ask to review the current branch.
+Architectural review for Aruct PRs. The user will provide a PR URL, branch name, or ask to review the current branch.
 
 ## 1. Load the rules (required — do not skip)
 
@@ -62,7 +62,7 @@ Owns: `<Viewer>`, the generic `<NodeRenderer>` / `<ParametricNodeRenderer>` / `<
 **`packages/editor` (and `apps/editor`) — the editing experience.**
 Owns: the tool framework (`useDragAction`, `ParametricInspector`, `<MoveRegistryNodeTool>`, the registry-aware dispatchers in `tool-manager.tsx` / `MoveTool` / `panel-manager.tsx` / `helper-manager.tsx`), `useEditor`, action menus, panels, the floorplan panel and its helpers, paint mode, selection-manager phase/mode logic, cursor badges, command palette, keyboard shortcuts — anything absent from the read-only viewer route. Injects itself into `<Viewer>` via children and props, never the reverse. Must not import from `packages/nodes`.
 
-**`packages/nodes` — the built-in plugin (`pascal:core`).**
+**`packages/nodes` — the built-in plugin (`aruct:core`).**
 Owns: one folder per node kind (`packages/nodes/src/<kind>/`) containing `definition.ts`, `schema.ts`, optionally `geometry.ts` / `renderer.tsx` / `system.tsx` / `floorplan.ts` / `tool.tsx` / `move-tool.tsx` / `panel.tsx` / `parametrics.ts` / `preview.tsx`. Exports `builtinPlugin`. Depends on `editor`, `viewer`, and `core` via their public surfaces — the same surfaces a third-party plugin uses (peer-dep style). **Nothing in `core/`, `viewer/`, or `editor/` may import from `@aruct/nodes`.** The dependency arrow is one-way: framework code consults `nodeRegistry`, never reaches into a specific kind's folder.
 
 ### Triggers that mean "this is probably in the wrong package"

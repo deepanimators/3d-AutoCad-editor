@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document compares the guidance in `Chapter_17_Floor_Plan_Dimensions_and_Notes.pdf` with Pascal's current floor-plan implementation. It records what the chapter teaches, what the editor already supports, and the remaining construction-document gaps.
+This document compares the guidance in `Chapter_17_Floor_Plan_Dimensions_and_Notes.pdf` with Aruct's current floor-plan implementation. It records what the chapter teaches, what the editor already supports, and the remaining construction-document gaps.
 
 The review covered the full 19-page chapter and the floor-plan stack across:
 

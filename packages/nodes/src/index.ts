@@ -63,7 +63,7 @@ import { zoneDefinition } from './zone'
  * gone — every kind dispatches through the registry.
  */
 export const builtinPlugin: Plugin = {
-  id: 'pascal:core',
+  id: 'aruct:core',
   apiVersion: 1,
   nodes: [
     // Stage E-complete (full registry path)

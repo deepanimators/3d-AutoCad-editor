@@ -3,7 +3,7 @@
 A web app that converts IFC building models into Pascal scene-graph JSON and
 previews the result in the real `@aruct/viewer`. Drop in an `.ifc` file
 (or pick a bundled example), inspect what was extracted, and download the
-JSON to load into the Pascal editor.
+JSON to load into the Aruct editor.
 
 > ## ⚠️ Early alpha
 >

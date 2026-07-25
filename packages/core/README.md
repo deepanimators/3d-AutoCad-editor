@@ -1,6 +1,6 @@
 # @aruct/core
 
-Core library for Pascal 3D building editor.
+Core library for Aruct 3D building editor.
 
 ## Installation
 

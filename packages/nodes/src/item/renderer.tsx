@@ -82,7 +82,7 @@ const getAuthoredSlotId = (material: Material): string | null =>
   isSlotMaterialName(material.name) ? deriveSlotId(material.name) : null
 
 function curatedRefFromMaterial(material: Material): string | undefined {
-  const raw = (material.userData as { pascal_material?: unknown }).pascal_material
+  const raw = (material.userData as { aruct_material?: unknown }).aruct_material
   if (typeof raw !== 'string' || raw.length === 0) return undefined
   if (raw.startsWith(LIBRARY_MATERIAL_REF_PREFIX) || raw.startsWith(SCENE_MATERIAL_REF_PREFIX)) {
     return raw

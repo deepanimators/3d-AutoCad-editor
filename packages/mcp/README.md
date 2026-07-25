@@ -249,7 +249,7 @@ stacked height as computed by the level system from accumulated level heights,
 plus the element's own height; slabs additionally carry an absolute
 `elevation`.
 
-**Heads-up when you compute coordinates outside the editor.** Pascal's
+**Heads-up when you compute coordinates outside the editor.** Aruct's
 viewports apply their own rotations on top of the world axes: the 2-D plan
 panel rotates its content by the user's view rotation (north-aligned = 0°,
 `FLOORPLAN_VIEW_ROTATION_DEG` baseline, north = world −Z), and
