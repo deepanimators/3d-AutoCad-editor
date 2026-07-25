@@ -38,11 +38,15 @@ export interface SceneMeta {
   showGuidesPublic?: boolean
 }
 
+function EditorItemsPanel() {
+  return <ItemsPanel showSourceFilter={false} showTagFilters={false} />
+}
+
 const SIDEBAR_TABS: (SidebarTab & { component: React.ComponentType })[] = [
   {
     id: 'site',
     label: 'Scene',
-    component: () => null, // Built-in SitePanel handles this
+    component: () => null,
     mobileDefaultSnap: 0.5,
     mobileIcon: <Layers className="h-5 w-5" />,
     icon: (
@@ -67,6 +71,38 @@ const SIDEBAR_TABS: (SidebarTab & { component: React.ComponentType })[] = [
         className="h-8 w-8 object-contain"
         height={32}
         src="/icons/build.webp"
+        width={32}
+      />
+    ),
+  },
+  {
+    id: 'items',
+    label: 'Items',
+    component: EditorItemsPanel,
+    mobileDefaultSnap: 0.5,
+    mobileIcon: <Package className="h-5 w-5" />,
+    icon: (
+      <Image
+        alt=""
+        className="h-8 w-8 object-contain"
+        height={32}
+        src="/icons/couch.webp"
+        width={32}
+      />
+    ),
+  },
+  {
+    id: 'settings',
+    label: 'Settings',
+    component: () => null,
+    mobileDefaultSnap: 0.5,
+    mobileIcon: <Settings className="h-5 w-5" />,
+    icon: (
+      <Image
+        alt=""
+        className="h-8 w-8 object-contain"
+        height={32}
+        src="/icons/settings.webp"
         width={32}
       />
     ),
