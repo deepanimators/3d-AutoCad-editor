@@ -368,15 +368,18 @@ export function SceneLoader({ initialScene, meta }: SceneLoaderProps) {
         onSaveStatusChange={setSaveStatus}
         onThumbnailCapture={handleThumb}
         projectId={meta.projectId ?? 'default'}
+        railBottomSlot={<RailAccountNav />}
         settingsPanelProps={{
           sceneId: meta.id,
           sceneName,
           saveStatus,
           projectId: meta.projectId ?? undefined,
+          projectVisibility,
+          onVisibilityChange: handleVisibilityChange,
           onRenameScene: handleRenameScene,
           onSaveCloud: () => {
             const currentState = useScene.getState()
-            handleSave({
+            void handleSave({
               nodes: currentState.nodes,
               rootNodeIds: currentState.rootNodeIds,
               collections: currentState.collections,
