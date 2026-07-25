@@ -19,9 +19,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (`export_json`, `export_glb`), validation (`validate_scene`,
   `check_collisions`), plus 2 vision tools (`analyze_floorplan_image`,
   `analyze_room_photo`) backed by MCP sampling.
-- 4 MCP resources: `pascal://scene/current`,
-  `pascal://scene/current/summary`, `pascal://catalog/items`, and
-  `pascal://constraints/{levelId}`.
+- 4 MCP resources: `aruct://scene/current`,
+  `aruct://scene/current/summary`, `aruct://catalog/items`, and
+  `aruct://constraints/{levelId}`.
 - 3 MCP prompts: `from_brief`, `iterate_on_feedback`, and
   `renovation_from_photos`.
 - stdio and Streamable HTTP transports.

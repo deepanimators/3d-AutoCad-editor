@@ -161,7 +161,7 @@ describe('prepareSceneForExport', () => {
     const root = new THREE.Group()
     const siteGround = meshWithNodeMaterial(nodeMaterial())
     const horizonDisc = meshWithNodeMaterial(nodeMaterial())
-    horizonDisc.userData.pascalExport = 'strip'
+    horizonDisc.userData.aructExport = 'strip'
     root.add(siteGround, horizonDisc)
 
     const { scene } = prepareSceneForExport(root, {})

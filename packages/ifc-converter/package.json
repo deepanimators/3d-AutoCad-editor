@@ -1,7 +1,7 @@
 {
   "name": "@aruct/ifc-converter",
   "version": "0.1.2",
-  "description": "IFC → Pascal scene-graph conversion. Pure logic — no DOM, no React.",
+  "description": "IFC → Aruct scene-graph conversion. Pure logic — no DOM, no React.",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

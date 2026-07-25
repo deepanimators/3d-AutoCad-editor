@@ -9,7 +9,7 @@ export const drawingSheetDefinition: NodeDefinition<typeof DrawingSheetNode> = {
   schema: DrawingSheetNode,
   category: 'analysis',
   extensions: {
-    'pascal:editor/floorplan': {
+    'aruct:editor/floorplan': {
       resolveDrawingSheet: ({ node, levelId, drawingType }) =>
         node.placedViews.some(
           (view) =>

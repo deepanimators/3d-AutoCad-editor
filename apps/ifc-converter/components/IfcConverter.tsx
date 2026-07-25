@@ -1,6 +1,6 @@
 'use client'
 
-import { convertIfcToPascal, type PascalSceneGraph } from '@aruct/ifc-converter'
+import { convertIfcToAruct, type AructSceneGraph } from '@aruct/ifc-converter'
 import dynamic from 'next/dynamic'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { availableTestFiles, exampleFileUrl, testFiles } from '@/lib/test-files'
@@ -32,7 +32,7 @@ function meta(node: { metadata?: unknown } | null | undefined): ConverterMetadat
 }
 
 export default function IfcConverter() {
-  const [pascalData, setPascalData] = useState<PascalSceneGraph | null>(null)
+  const [pascalData, setPascalData] = useState<AructSceneGraph | null>(null)
   const [status, setStatus] = useState<Status>('idle')
   const [error, setError] = useState<string | null>(null)
   const [isDragging, setIsDragging] = useState(false)
@@ -136,7 +136,7 @@ export default function IfcConverter() {
     setConversionMessage('Starting conversion...')
 
     try {
-      const result = await convertIfcToPascal(data, (message, percent) => {
+      const result = await convertIfcToAruct(data, (message, percent) => {
         setConversionMessage(message)
         setConversionProgress(percent)
       })

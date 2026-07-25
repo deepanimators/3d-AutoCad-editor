@@ -1,6 +1,6 @@
 # @aruct/mcp
 
-Model Context Protocol server for the Pascal 3D editor. Drives the
+Model Context Protocol server for the Aruct 3D editor. Drives the
 `@aruct/core` scene graph from any MCP-compatible AI host.
 
 The server runs headlessly in Bun with no browser, WebGPU, React, or external
@@ -97,7 +97,7 @@ Edit `~/Library/Application Support/Claude/claude_desktop_config.json`
 ```json
 {
   "mcpServers": {
-    "pascal": {
+    "aruct": {
       "command": "bunx",
       "args": ["aruct-mcp"],
       "env": {
@@ -124,7 +124,7 @@ Or add to `.mcp.json` at the repo root:
 ```json
 {
   "mcpServers": {
-    "pascal": {
+    "aruct": {
       "command": "bunx",
       "args": ["aruct-mcp"],
       "env": {
@@ -141,7 +141,7 @@ the built binary:
 ```json
 {
   "mcpServers": {
-    "pascal": {
+    "aruct": {
       "command": "bun",
       "args": ["/absolute/path/to/editor/packages/mcp/dist/bin/aruct-mcp.js"],
       "env": {
@@ -187,7 +187,7 @@ In Cursor settings (`settings.json`):
 ```json
 {
   "mcp.servers": {
-    "pascal": {
+    "aruct": {
       "command": "bunx",
       "args": ["aruct-mcp"],
       "env": {
@@ -205,13 +205,13 @@ example below runs a full client/server pair inside a single script — useful
 for agent frameworks and tests.
 
 ```ts
-import { createPascalMcpServer, SceneBridge } from '@aruct/mcp'
+import { createAructMcpServer, SceneBridge } from '@aruct/mcp'
 import { Client } from '@modelcontextprotocol/sdk/client/index.js'
 import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js'
 
 const bridge = new SceneBridge()
 bridge.loadDefault()
-const server = createPascalMcpServer({ bridge })
+const server = createAructMcpServer({ bridge })
 
 const [srvT, cliT] = InMemoryTransport.createLinkedPair()
 const client = new Client({ name: 'my-agent', version: '0.1.0' })
@@ -348,11 +348,11 @@ The vision tools require the MCP host to support the sampling capability
 
 | URI | MIME | Purpose |
 | --- | --- | --- |
-| `pascal://scene/current` | `application/json` | Full `{ nodes, rootNodeIds, collections }` snapshot. |
-| `pascal://scene/current/summary` | `text/markdown` | Human-readable summary with node counts, bounding box, and level areas. |
-| `pascal://agent/guide` | `text/markdown` | MCP-first construction workflow, scene invariants, and tool preferences for agents. |
-| `pascal://catalog/items` | `application/json` | Dependency-free built-in catalog subset for common residential furniture and fixtures. |
-| `pascal://constraints/{levelId}` | `application/json` | Slab footprints and wall polygons for the given level — useful as planner context. |
+| `aruct://scene/current` | `application/json` | Full `{ nodes, rootNodeIds, collections }` snapshot. |
+| `aruct://scene/current/summary` | `text/markdown` | Human-readable summary with node counts, bounding box, and level areas. |
+| `aruct://agent/guide` | `text/markdown` | MCP-first construction workflow, scene invariants, and tool preferences for agents. |
+| `aruct://catalog/items` | `application/json` | Dependency-free built-in catalog subset for common residential furniture and fixtures. |
+| `aruct://constraints/{levelId}` | `application/json` | Slab footprints and wall polygons for the given level — useful as planner context. |
 
 ## Prompts
 

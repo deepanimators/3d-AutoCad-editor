@@ -192,13 +192,13 @@ function walkToLevel(node: AnyNode, nodes: Record<string, AnyNode>): string | nu
 }
 
 /**
- * `pascal://scene/current/summary` — human-readable scene overview.
+ * `aruct://scene/current/summary` — human-readable scene overview.
  * MIME `text/markdown`.
  */
 export function registerSceneSummary(server: McpServer, bridge: SceneOperations): void {
   server.registerResource(
     'scene-summary',
-    'pascal://scene/current/summary',
+    'aruct://scene/current/summary',
     {
       title: 'Scene summary (markdown)',
       description:

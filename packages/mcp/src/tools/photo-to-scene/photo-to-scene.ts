@@ -353,9 +353,9 @@ export function registerPhotoToScene(server: McpServer, bridge: SceneOperations)
   server.registerTool(
     'photo_to_scene',
     {
-      title: 'Photo to Pascal scene',
+      title: 'Photo to Aruct scene',
       description:
-        'Orchestrator: analyse a floor-plan photo via MCP sampling, translate the structured vision result into a Pascal SceneGraph (site → building → level with walls and zones), optionally save it, and swap the bridge to the new scene. Requires host support for sampling.',
+        'Orchestrator: analyse a floor-plan photo via MCP sampling, translate the structured vision result into an Aruct SceneGraph (site → building → level with walls and zones), optionally save it, and swap the bridge to the new scene. Requires host support for sampling.',
       inputSchema: photoToSceneInput,
       outputSchema: photoToSceneOutput,
     },

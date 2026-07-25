@@ -253,7 +253,7 @@ const PLACEHOLDER_MATERIAL = new THREE.MeshBasicMaterial({ visible: false })
 /**
  * Strip everything that must not bake into the model:
  *  - Renderer-owned presentation geometry explicitly marked
- *    `userData.pascalExport = 'strip'` (for example the site's 800 m horizon
+ *    `userData.aructExport = 'strip'` (for example the site's 800 m horizon
  *    disc). These meshes make the authoring viewport look grounded but aren't
  *    part of the portable scene artifact.
  *  - Editor overlays on non-scene layers (gizmos, selection handles, ground
@@ -270,7 +270,7 @@ const PLACEHOLDER_MATERIAL = new THREE.MeshBasicMaterial({ visible: false })
 function pruneNonRenderableMeshes(root: THREE.Object3D, identityNodes: Set<THREE.Object3D>) {
   const toRemove: THREE.Object3D[] = []
   root.traverse((object) => {
-    if (object.userData.pascalExport === 'strip') {
+    if (object.userData.aructExport === 'strip') {
       toRemove.push(object)
       return
     }

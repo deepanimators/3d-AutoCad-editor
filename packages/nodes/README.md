@@ -1,6 +1,6 @@
 # @aruct/nodes
 
-Built-in node definitions for the Pascal viewer and editor.
+Built-in node definitions for the Aruct viewer and editor.
 
 ## Installation
 
@@ -13,7 +13,7 @@ dependencies. Install any peers reported by your package manager.
 
 ## Usage
 
-Load `builtinPlugin` once before mounting a Pascal viewer or editor:
+Load `builtinPlugin` once before mounting a Aruct viewer or editor:
 
 ```typescript
 import { loadPlugin } from '@aruct/core'

@@ -47,7 +47,7 @@ import { windowDefinition } from './window'
 import { zoneDefinition } from './zone'
 
 /**
- * Built-in plugin bundling every node kind shipped with the Pascal editor.
+ * Built-in plugin bundling every node kind shipped with the Aruct editor.
  *
  * Apps load this once at bootstrap (`loadPlugin(builtinPlugin)`) before
  * mounting the viewer. New built-in nodes are added by creating a folder

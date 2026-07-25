@@ -174,7 +174,7 @@ packages/mcp/
 ├── tsconfig.json
 ├── src/
 │   ├── index.ts                  # programmatic API re-exports
-│   ├── server.ts                 # createPascalMcpServer() factory
+│   ├── server.ts                 # createAructMcpServer() factory
 │   ├── bridge/
 │   │   ├── node-shims.ts         # RAF polyfill (load FIRST)
 │   │   ├── scene-bridge.ts       # SceneBridge class
@@ -280,10 +280,10 @@ All tools declared with Zod input AND output schemas. Handlers return `{ content
 
 ## 6. Resources (4)
 
-- `pascal://scene/current` — `application/json`, full `{ nodes, rootNodeIds, collections }`
-- `pascal://scene/current/summary` — `text/markdown`, human summary with counts + bbox + areas
-- `pascal://catalog/items` — `application/json`, item catalog if available; else `{ status: 'catalog_unavailable', items: [] }`
-- `pascal://constraints/{levelId}` — `application/json`, slab footprints + wall polygons for that level
+- `aruct://scene/current` — `application/json`, full `{ nodes, rootNodeIds, collections }`
+- `aruct://scene/current/summary` — `text/markdown`, human summary with counts + bbox + areas
+- `aruct://catalog/items` — `application/json`, item catalog if available; else `{ status: 'catalog_unavailable', items: [] }`
+- `aruct://constraints/{levelId}` — `application/json`, slab footprints + wall polygons for that level
 
 Register via `server.registerResource(...)` with `readResource` handlers.
 
@@ -310,7 +310,7 @@ CLI `aruct-mcp` flags:
 {
   "name": "@aruct/mcp",
   "version": "0.1.0",
-  "description": "Model Context Protocol server for Pascal 3D editor",
+  "description": "Model Context Protocol server for Aruct 3D editor",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -399,7 +399,7 @@ The existing `turbo.json` globs `packages/*` implicitly via Bun workspaces and p
 | Root `turbo.json` / CI workflows          | H (only if strictly needed) |
 | `packages/mcp/biome.jsonc` (if any)       | H     |
 
-*Server.ts coordination: **Agent A writes a minimal `server.ts` stub exporting `createPascalMcpServer(bridge)` that returns an empty `McpServer`**. Agents C, D, E each export `register<Tools|Resources|Prompts|VisionTools>(server, bridge)` functions from their subtrees. Integration (me) wires them up in the final `server.ts` during Phase 2.
+*Server.ts coordination: **Agent A writes a minimal `server.ts` stub exporting `createAructMcpServer(bridge)` that returns an empty `McpServer`**. Agents C, D, E each export `register<Tools|Resources|Prompts|VisionTools>(server, bridge)` functions from their subtrees. Integration (me) wires them up in the final `server.ts` during Phase 2.
 
 ## 13. Known limitations (Phase 3 will surface these)
 

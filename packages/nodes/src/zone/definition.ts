@@ -31,7 +31,7 @@ export const zoneDefinition: NodeDefinition<typeof ZoneNode> = {
   schema: ZoneNode,
   category: 'site',
   extensions: {
-    'pascal:editor/floorplan': {
+    'aruct:editor/floorplan': {
       schedule: buildRoomFloorplanSchedule,
     } satisfies FloorplanNodeExtension<ZoneNode>,
   },

@@ -107,7 +107,7 @@ The concrete backend is now `SqliteSceneStore`, backed by built-in SQLite driver
 
 ### Impact
 
-Zero on existing consumers. Purely additive. The `.` entry continues to export `SceneBridge`, `createPascalMcpServer`, etc., exactly as before.
+Zero on existing consumers. Purely additive. The `.` entry continues to export `SceneBridge`, `createAructMcpServer`, etc., exactly as before.
 
 ### Reversibility
 

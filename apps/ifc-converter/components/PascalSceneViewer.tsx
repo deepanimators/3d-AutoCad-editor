@@ -7,7 +7,7 @@
 // overlay instead.
 
 import { type AnyNode, type AnyNodeId, sceneRegistry, useScene } from '@aruct/core'
-import type { PascalSceneGraph } from '@aruct/ifc-converter'
+import type { AructSceneGraph } from '@aruct/ifc-converter'
 import { useViewer, Viewer } from '@aruct/viewer'
 import { CameraControls } from '@react-three/drei'
 import { useThree } from '@react-three/fiber'
@@ -35,7 +35,7 @@ type CameraControlsImpl = {
 import { FitSceneButton, LevelSelector, PreviewToolbar } from './PreviewToolbar'
 
 interface PascalSceneViewerProps {
-  sceneGraph: PascalSceneGraph
+  sceneGraph: AructSceneGraph
   className?: string
   /** Fired when the user clicks a node in the 3D view. */
   onSelectNode?: (nodeId: string | null) => void

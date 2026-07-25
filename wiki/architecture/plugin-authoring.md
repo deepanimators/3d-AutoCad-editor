@@ -126,7 +126,7 @@ export const myHostPanel: EditorHostPanel = {
     name: 'Acme',
     url: 'https://acme.example',
   },
-  pluginUrl: 'https://github.com/acme/pascal-furniture-pack',
+  pluginUrl: 'https://github.com/acme/aruct-furniture-pack',
   icon: { kind: 'iconify', name: 'lucide:armchair' },
   component: () => import('./catalog-panel'),
 }
@@ -162,6 +162,6 @@ The boundary stays narrow on purpose so the contract is shippable. Each "not yet
 
 1. Build your plugin as a normal npm package with `@aruct/*` as peerDependencies.
 2. In a host app that consumes your built-ins (`apps/editor` is the easiest target), wire `setPluginDiscovery` to return your plugin.
-3. The dev-mode `[pascal:registry]` console log shows the loaded plugin id + node count — that's the verification anchor.
+3. The dev-mode `[aruct:registry]` console log shows the loaded plugin id + node count — that's the verification anchor.
 
 The host's own parity test (`packages/nodes/src/index.test.ts`) asserts every `AnyNode` discriminator has a registered kind. Plugin-contributed kinds don't participate in that test (they're not in `AnyNode`); add an equivalent test on your own side if you maintain a hand-typed union elsewhere.

@@ -208,8 +208,8 @@ Response:
 The agent then reads the scene summary for its response to the user:
 
 ```jsonc
-// resource: pascal://scene/current/summary
-{ "uri": "pascal://scene/current/summary" }
+// resource: aruct://scene/current/summary
+{ "uri": "aruct://scene/current/summary" }
 ```
 
 The host displays the returned Markdown: 1 site, 1 building, 1 level, 8

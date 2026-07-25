@@ -2,7 +2,7 @@
 // depend on @types/bun so the import type is unresolved at compile time.
 import { describe, expect, test } from 'bun:test'
 import * as THREE from 'three'
-import { getPascalTextureRef, stampPascalTextureRef } from './texture-reference'
+import { getPascalTextureRef, stampAructTextureRef } from './texture-reference'
 
 // The module reads the storage origin lazily on first use, so setting the env
 // here (before any stamp call) pins it for the whole test file.
@@ -15,7 +15,7 @@ describe('Pascal texture references', () => {
     texture.colorSpace = THREE.SRGBColorSpace
     const src = `${STORAGE_ORIGIN}/storage/v1/object/public/materials/user/mtl_1/oak_basecolor_512.ktx2`
 
-    const ref = stampPascalTextureRef(texture, { kind: 'material', src, slot: 'map' })
+    const ref = stampAructTextureRef(texture, { kind: 'material', src, slot: 'map' })
 
     expect(ref).toEqual({
       v: 1,
@@ -33,14 +33,14 @@ describe('Pascal texture references', () => {
     const texture = new THREE.Texture()
     const src = `${cdnOrigin}/material/concrete/prepared_drywall/prepared_drywall_normal_512.ktx2`
 
-    const ref = stampPascalTextureRef(texture, { kind: 'material', src, slot: 'normalMap' })
+    const ref = stampAructTextureRef(texture, { kind: 'material', src, slot: 'normalMap' })
 
     expect(ref).toEqual({ v: 1, kind: 'app-material', src, map: 'normal', colorSpace: 'linear' })
     expect(getPascalTextureRef(texture)).toEqual(ref)
 
     const foreign = new THREE.Texture()
     expect(
-      stampPascalTextureRef(foreign, {
+      stampAructTextureRef(foreign, {
         kind: 'material',
         src: 'https://example.com/material/concrete/x/x_basecolor_512.ktx2',
         slot: 'map',
@@ -52,7 +52,7 @@ describe('Pascal texture references', () => {
     const texture = new THREE.Texture()
     texture.colorSpace = THREE.SRGBColorSpace
 
-    const ref = stampPascalTextureRef(texture, {
+    const ref = stampAructTextureRef(texture, {
       kind: 'project-asset',
       src: `${STORAGE_ORIGIN}/storage/v1/object/public/project-assets/project/asset.png`,
       slot: 'map',
@@ -76,14 +76,14 @@ describe('Pascal texture references', () => {
       'https://example.com/storage/v1/object/public/project-assets/project/asset.png',
     ]) {
       const texture = new THREE.Texture()
-      expect(stampPascalTextureRef(texture, { kind: 'project-asset', src, slot: 'map' })).toBeNull()
+      expect(stampAructTextureRef(texture, { kind: 'project-asset', src, slot: 'map' })).toBeNull()
       expect(texture.userData.pascalTextureRef).toBeUndefined()
     }
   })
 
   test('includes imageIndex only for item GLB references', () => {
     const texture = new THREE.Texture()
-    const ref = stampPascalTextureRef(texture, {
+    const ref = stampAructTextureRef(texture, {
       kind: 'item-glb',
       src: `${STORAGE_ORIGIN}/storage/v1/object/public/items/system/chair/model.glb`,
       slot: 'normalMap',

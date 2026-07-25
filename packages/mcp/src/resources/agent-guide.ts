@@ -2,7 +2,7 @@ import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import type { SceneOperations } from '../operations'
 
 export const AGENT_GUIDE = [
-  '# Pascal MCP Agent Guide',
+  '# Aruct MCP Agent Guide',
   '',
   'You are editing Pascal architectural projects. Use MCP tools only; do not inspect the Pascal repository unless the user explicitly asks.',
   '',
@@ -62,9 +62,9 @@ export const AGENT_GUIDE = [
 export function registerAgentGuide(server: McpServer, _bridge: SceneOperations): void {
   server.registerResource(
     'agent-guide',
-    'pascal://agent-guide',
+    'aruct://agent-guide',
     {
-      title: 'Pascal MCP agent guide',
+      title: 'Aruct MCP agent guide',
       description:
         'Short MCP-first project creation, save/publish, validation, and output workflow for external agents.',
       mimeType: 'text/markdown',
@@ -82,10 +82,10 @@ export function registerAgentGuide(server: McpServer, _bridge: SceneOperations):
 
   server.registerResource(
     'agent-guide-legacy',
-    'pascal://agent/guide',
+    'aruct://agent/guide',
     {
-      title: 'Pascal MCP agent guide',
-      description: 'Legacy URI for the Pascal MCP agent guide. Prefer pascal://agent-guide.',
+      title: 'Aruct MCP agent guide',
+      description: 'Legacy URI for the Aruct MCP agent guide. Prefer aruct://agent-guide.',
       mimeType: 'text/markdown',
     },
     async (uri) => ({

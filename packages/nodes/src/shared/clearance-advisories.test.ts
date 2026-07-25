@@ -191,7 +191,7 @@ describe('clearance advisories', () => {
       'office-stair-width',
       'office-closet-depth',
     ])
-    expect(advisories.every((advisory) => advisory.source.title.includes('Pascal'))).toBe(true)
+    expect(advisories.every((advisory) => advisory.source.title.includes('Aruct'))).toBe(true)
   })
 
   test('can include disabled profiles for profile preview UIs', () => {

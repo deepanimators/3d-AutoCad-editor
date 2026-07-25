@@ -16,7 +16,7 @@ export const constructionDimensionDefinition: NodeDefinition<typeof Construction
   schema: ConstructionDimensionNode,
   category: 'analysis',
   extensions: {
-    'pascal:editor/floorplan': {
+    'aruct:editor/floorplan': {
       tool: () => import('./floorplan-tool'),
       resolveForDrawing: resolveConstructionDimensionForDrawing,
     } satisfies FloorplanNodeExtension<ConstructionDimensionNode>,

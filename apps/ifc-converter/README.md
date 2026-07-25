@@ -1,6 +1,6 @@
 # IFC → Pascal Converter
 
-A web app that converts IFC building models into Pascal scene-graph JSON and
+A web app that converts IFC building models into Aruct scene-graph JSON and
 previews the result in the real `@aruct/viewer`. Drop in an `.ifc` file
 (or pick a bundled example), inspect what was extracted, and download the
 JSON to load into the Aruct editor.
@@ -44,7 +44,7 @@ fetched from a public bucket at runtime; the small ones are committed under
 
 - Plain `IFCWALL` (Brep/mapped geometry) falls back to a default height — exact
   per-wall heights need geometry-AABB extraction.
-- Items (furniture, etc.) are skipped — Pascal items require a catalog asset.
+- Items (furniture, etc.) are skipped — Aruct items require a catalog asset.
 - Beams have no Pascal node type yet and are skipped.
 - Doors/windows are matched to walls by proximity when the IFC omits fill
   relationships; matching isn't perfect.

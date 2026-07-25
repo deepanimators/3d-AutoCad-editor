@@ -52,7 +52,7 @@ beforeAll(() => {
     defaults: () => ({}) as never,
     capabilities: {},
     extensions: {
-      'pascal:editor/floorplan': drawingSheetExtension,
+      'aruct:editor/floorplan': drawingSheetExtension,
     },
   })
 })
@@ -280,14 +280,14 @@ describe('floor plan export policy', () => {
       isFloorplanExportAnnotationGeometry({
         kind: 'group',
         children: [],
-        metadata: { 'pascal:editor/floorplan': { annotationRole: 'measurement' } },
+        metadata: { 'aruct:editor/floorplan': { annotationRole: 'measurement' } },
       }),
     ).toBe(true)
     expect(
       isFloorplanExportAnnotationGeometry({
         kind: 'group',
         children: [],
-        metadata: { 'pascal:editor/floorplan': { annotationRole: 'manual-dimension' } },
+        metadata: { 'aruct:editor/floorplan': { annotationRole: 'manual-dimension' } },
       }),
     ).toBe(true)
     expect(isFloorplanExportAnnotationGeometry({ kind: 'polygon', points: [] })).toBe(false)

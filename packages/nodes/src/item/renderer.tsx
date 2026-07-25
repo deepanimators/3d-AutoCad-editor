@@ -29,7 +29,7 @@ import {
   type RenderShading,
   resolveCdnUrl,
   resolveMaterialRef,
-  stampPascalTextureRef,
+  stampAructTextureRef,
   useItemLightPool,
   useNodeEvents,
   useViewer,
@@ -72,7 +72,7 @@ type CapturedMultiItemMaterialData = {
 type CapturedItemMaterialData = CapturedSingleItemMaterialData | CapturedMultiItemMaterialData
 
 type ItemMeshUserData = Mesh['userData'] & {
-  pascalItemMaterialCapture?: CapturedItemMaterialData
+  aructItemMaterialCapture?: CapturedItemMaterialData
   slotId?: string | null | (string | null)[]
 }
 
@@ -92,7 +92,7 @@ function curatedRefFromMaterial(material: Material): string | undefined {
 
 const captureItemMeshMaterials = (mesh: Mesh): CapturedItemMaterialData => {
   const userData = mesh.userData as ItemMeshUserData
-  const captured = userData.pascalItemMaterialCapture
+  const captured = userData.aructItemMaterialCapture
   if (captured?.captured) {
     userData.slotId = captured.slotIds
     return captured
@@ -108,7 +108,7 @@ const captureItemMeshMaterials = (mesh: Mesh): CapturedItemMaterialData => {
       curatedRefs,
       slotIds,
     }
-    userData.pascalItemMaterialCapture = next
+    userData.aructItemMaterialCapture = next
     userData.slotId = slotIds
     return next
   }
@@ -121,7 +121,7 @@ const captureItemMeshMaterials = (mesh: Mesh): CapturedItemMaterialData => {
     curatedRefs: curatedRef,
     slotIds: slotId,
   }
-  userData.pascalItemMaterialCapture = next
+  userData.aructItemMaterialCapture = next
   userData.slotId = slotId
   return next
 }
@@ -282,7 +282,7 @@ function stampItemTextureReferences(gltf: LoadedItemGltf, src: string) {
         const imageIndex = getItemTextureImageIndex(gltf, texture)
         if (imageIndex === null) continue
         if (
-          stampPascalTextureRef(texture, {
+          stampAructTextureRef(texture, {
             kind: 'item-glb',
             src,
             slot,

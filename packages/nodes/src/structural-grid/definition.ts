@@ -10,7 +10,7 @@ export const structuralGridDefinition: NodeDefinition<typeof StructuralGridNode>
   schema: StructuralGridNode,
   category: 'structure',
   extensions: {
-    'pascal:editor/floorplan': {
+    'aruct:editor/floorplan': {
       tool: () => import('./floorplan-tool'),
       preferredView: '2d',
     } satisfies FloorplanNodeExtension<StructuralGridNode>,

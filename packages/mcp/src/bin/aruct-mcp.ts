@@ -6,12 +6,12 @@ import { readFileSync } from 'node:fs'
 import { parseArgs } from 'node:util'
 import { SceneBridge } from '../bridge/scene-bridge'
 import { version } from '../index'
-import { createPascalMcpServer } from '../server'
+import { createAructMcpServer } from '../server'
 import { createSceneStore } from '../storage'
 import { connectHttp } from '../transports/http'
 import { connectStdio } from '../transports/stdio'
 
-const HELP = `aruct-mcp — MCP server for the Pascal editor
+const HELP = `aruct-mcp — MCP server for the Aruct editor
 
 USAGE:
   aruct-mcp [--stdio | --http --port <n>] [--scene <path>]
@@ -62,7 +62,7 @@ async function main(): Promise<void> {
   }
 
   const store = await createSceneStore()
-  const server = createPascalMcpServer({ bridge, store })
+  const server = createAructMcpServer({ bridge, store })
 
   if (values.http) {
     const portNum = Number.parseInt(values.port ?? '3917', 10)

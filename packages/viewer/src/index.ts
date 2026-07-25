@@ -142,7 +142,7 @@ export {
   type PascalTextureColorSpace,
   type PascalTextureMap,
   type PascalTextureRef,
-  stampPascalTextureRef,
+  stampAructTextureRef,
   textureMapForSlot,
 } from './lib/texture-reference'
 export { packNormalToRGB, unpackRGBToNormal } from './lib/tsl-compat'

@@ -170,7 +170,7 @@ export const windowDefinition: NodeDefinition<typeof WindowNode> = {
   schema: WindowNode,
   category: 'structure',
   extensions: {
-    'pascal:editor/floorplan': {
+    'aruct:editor/floorplan': {
       schedule: buildWindowFloorplanSchedule,
     } satisfies FloorplanNodeExtension<WindowNodeType>,
   },

@@ -173,7 +173,7 @@ export const doorDefinition: NodeDefinition<typeof DoorNode> = {
   schema: DoorNode,
   category: 'structure',
   extensions: {
-    'pascal:editor/floorplan': {
+    'aruct:editor/floorplan': {
       schedule: buildDoorFloorplanSchedule,
     } satisfies FloorplanNodeExtension<DoorNodeType>,
   },

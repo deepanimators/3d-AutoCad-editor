@@ -4,7 +4,7 @@ import './globals.css'
 
 export const metadata = {
   title: 'IFC → Pascal Converter',
-  description: 'Convert IFC building models into Pascal scene-graph JSON.',
+  description: 'Convert IFC building models into Aruct scene-graph JSON.',
 }
 
 export default function RootLayout({ children }: { children: ReactNode }) {

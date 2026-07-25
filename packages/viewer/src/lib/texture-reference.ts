@@ -100,7 +100,7 @@ function textureColorSpace(texture: THREE.Texture): PascalTextureColorSpace {
   return texture.colorSpace === 'srgb' ? 'srgb' : 'linear'
 }
 
-export function stampPascalTextureRef(
+export function stampAructTextureRef(
   texture: THREE.Texture,
   input:
     | {

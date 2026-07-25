@@ -96,7 +96,7 @@ const ADA_2010: Pick<ClearanceRuleSource, 'title' | 'edition' | 'url'> = {
 }
 
 const OFFICE_STANDARD: Pick<ClearanceRuleSource, 'title' | 'edition'> = {
-  title: 'Pascal construction-document advisory profile',
+  title: 'Aruct construction-document advisory profile',
   edition: '2026-07-21',
 }
 

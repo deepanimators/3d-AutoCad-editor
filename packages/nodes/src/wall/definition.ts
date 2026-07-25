@@ -38,7 +38,7 @@ export const wallDefinition: NodeDefinition<typeof WallNode> = {
   category: 'structure',
   surfaceRole: 'wall',
   extensions: {
-    'pascal:editor/floorplan': {
+    'aruct:editor/floorplan': {
       actionMenu: {
         canCurve: ({ node, nodes }) =>
           !node.children.some((childId) => {
