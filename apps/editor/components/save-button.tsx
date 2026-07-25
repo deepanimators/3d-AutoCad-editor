@@ -33,6 +33,10 @@ export function CreateSceneButton({ label = 'Create new scene' }: { label?: stri
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: 'Untitled scene', graph: EMPTY_GRAPH }),
       })
+      if (response.status === 401) {
+        router.push('/login?next=/scenes')
+        return
+      }
       if (!response.ok) {
         setError(`Failed to create scene (${response.status})`)
         return
