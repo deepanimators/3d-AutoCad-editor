@@ -74,7 +74,7 @@ See `plans.md` for full feature matrix. Summary:
 | Plan | Price | Target | Scene Limit | Key Gate |
 |------|-------|--------|-------------|----------|
 | **Free** | $0 | Individuals, trial | 5 scenes | Basic editor only, watermarked exports |
-| **Pro** | $19/mo | Professionals, freelancers | Unlimited | GLB export, MCP server, no watermark |
+| **Pro** | $29/mo | Professionals, freelancers | Unlimited | GLB export, MCP server, no watermark |
 | **Team** | $79/mo/seat | Studios, firms | Unlimited | Collab, team workspace, SSO, IFC export |
 
 ---

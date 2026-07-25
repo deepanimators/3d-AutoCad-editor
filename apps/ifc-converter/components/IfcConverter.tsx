@@ -8,7 +8,7 @@ import { availableTestFiles, exampleFileUrl, testFiles } from '@/lib/test-files'
 // The viewer uses three's WebGPU renderer + the registry-driven scene
 // store, neither of which run during SSR — dynamic-import with ssr:false
 // so the bundle doesn't hit the server.
-const AructViewer = dynamic(() => import('./AructSceneViewer'), { ssr: false })
+const AructViewer = dynamic(() => import('./PascalSceneViewer'), { ssr: false })
 
 type Status = 'idle' | 'loading' | 'converting' | 'ready' | 'error'
 

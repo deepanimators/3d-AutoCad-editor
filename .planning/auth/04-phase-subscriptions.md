@@ -45,8 +45,8 @@ In Stripe Dashboard or via script:
 ```
 Product: "Arch Construct Pro"
   Prices:
-    - $19.00 / month (recurring) → STRIPE_PRO_MONTHLY_PRICE_ID
-    - $190.00 / year (recurring) → STRIPE_PRO_YEARLY_PRICE_ID
+    - $29.00 / month (recurring) → STRIPE_PRO_MONTHLY_PRICE_ID
+    - $290.00 / year (recurring) → STRIPE_PRO_YEARLY_PRICE_ID
   Trial: 14 days
 
 Product: "Arch Construct Team"
@@ -297,7 +297,7 @@ Key behaviours:
 
 ```
 Current Plan: Pro (Active)
-Next billing: Aug 15, 2026 — $19.00
+Next billing: Aug 15, 2026 — $29.00
 
 [Manage subscription →]   ← opens Stripe portal
 [Upgrade to Team →]

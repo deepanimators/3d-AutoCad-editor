@@ -21,7 +21,7 @@ const PLANS = [
   {
     key: 'pro',
     name: 'Pro',
-    price: '$19',
+    price: '$29',
     period: '/month',
     icon: Crown,
     features: [

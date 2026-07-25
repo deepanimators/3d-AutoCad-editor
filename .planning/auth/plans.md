@@ -4,7 +4,7 @@
 
 ```
 Free ──────→ Pro ──────→ Team
-$0/mo       $19/mo      $79/mo per seat
+$0/mo       $29/mo      $79/mo per seat
 ```
 
 ---
@@ -47,7 +47,7 @@ canUseMCP(user)      => false
 ## Plan 2: Pro
 
 **Target:** Architecture professionals, freelancers, solo designers  
-**Price:** $19/month (or $190/year — 2 months free)  
+**Price:** $29/month (or $290/year — 2 months free)  
 **Conversion goal:** Upsell to Team when they need to share with clients/team
 
 ### Included
@@ -138,22 +138,22 @@ canCollaborateRealtime(u) => user.plan === 'team'
 | **Audit logs** | ❌ | ❌ | ✅ |
 | **Custom domain** | ❌ | ❌ | ✅ |
 | **Support** | Community | Email 48h | Dedicated Slack + SLA |
-| **Price** | $0 | $19/mo | $79/seat/mo |
+| **Price** | $0 | $29/mo | $79/seat/mo |
 
 ---
 
 ## Pricing Rationale
 
 - **Free** is genuinely useful (not crippled) to drive organic growth and word-of-mouth
-- **$19 Pro** is a no-brainer for anyone using this professionally — under an hour of billable time
+- **$29 Pro** is a no-brainer for anyone using this professionally — under an hour of billable time
 - **$79 Team** is justified by IFC export alone (Revit licenses cost thousands); collab + SSO make it a clear enterprise buy
 
 ## Stripe Products to Create
 
 ```
 product: "Arch Construct Pro"
-  price: $19/month (recurring)
-  price: $190/year (recurring)
+  price: $29/month (recurring)
+  price: $290/year (recurring)
 
 product: "Arch Construct Team"
   price: $79/month per seat (recurring, metered or per-quantity)
