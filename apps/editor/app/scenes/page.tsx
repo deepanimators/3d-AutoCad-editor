@@ -2,6 +2,7 @@ import { headers } from 'next/headers'
 import Link from 'next/link'
 import { CreateSceneButton } from '@/components/save-button'
 import type { SceneMeta } from '@/components/scene-loader'
+import { AppShell } from '@/components/app-shell'
 
 export const dynamic = 'force-dynamic'
 
@@ -45,34 +46,23 @@ export default async function ScenesPage() {
   const scenes = await fetchScenes()
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-10 border-border border-b bg-background/95 backdrop-blur">
-        <div className="container mx-auto flex items-center justify-between gap-4 px-6 py-4">
-          <nav className="flex items-center gap-4 text-sm">
-            <Link
-              className="text-muted-foreground transition-colors hover:text-foreground"
-              href="/"
-            >
-              Home
-            </Link>
-            <span className="text-muted-foreground">/</span>
-            <span className="font-medium text-foreground">Scenes</span>
-          </nav>
+    <AppShell>
+      <div className="px-8 py-8">
+        <div className="mb-6 flex items-center justify-between">
+          <div>
+            <h1 className="font-bold text-2xl text-foreground">My Scenes</h1>
+            <p className="mt-1 text-muted-foreground text-sm">
+              {scenes.length === 0
+                ? 'No scenes yet. Create one to get started.'
+                : `${scenes.length} scene${scenes.length === 1 ? '' : 's'}`}
+            </p>
+          </div>
           <CreateSceneButton />
         </div>
-      </header>
-
-      <main className="container mx-auto max-w-5xl px-6 py-12">
-        <h1 className="mb-2 font-bold text-3xl">Your scenes</h1>
-        <p className="mb-8 text-muted-foreground text-sm">
-          {scenes.length === 0
-            ? 'No scenes yet. Create one to get started.'
-            : `${scenes.length} scene${scenes.length === 1 ? '' : 's'}.`}
-        </p>
 
         {scenes.length === 0 ? (
           <div className="rounded-xl border border-border/60 border-dashed bg-background p-12 text-center">
-            <p className="text-muted-foreground text-sm">You haven&apos;t saved any scenes yet.</p>
+            <p className="text-muted-foreground text-sm">No scenes saved yet.</p>
             <div className="mt-4 flex justify-center">
               <CreateSceneButton />
             </div>
@@ -111,7 +101,7 @@ export default async function ScenesPage() {
             ))}
           </ul>
         )}
-      </main>
-    </div>
+      </div>
+    </AppShell>
   )
 }

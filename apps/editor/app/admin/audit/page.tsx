@@ -3,6 +3,7 @@ import { getSession } from '@/lib/auth-server'
 import { db } from '@/lib/db/client'
 import { auditLog } from '@/lib/db/schema'
 import { desc } from 'drizzle-orm'
+import { AppShell } from '@/components/app-shell'
 
 export default async function AuditPage() {
   const session = await getSession()
@@ -12,16 +13,16 @@ export default async function AuditPage() {
   const events = await db.select().from(auditLog).orderBy(desc(auditLog.createdAt)).limit(200)
 
   return (
-    <div className="min-h-screen bg-background px-4 py-10">
-      <div className="mx-auto max-w-6xl">
-        <div className="mb-8 flex items-center gap-4">
-          <a href="/admin" className="text-muted-foreground text-sm hover:text-foreground">← Admin</a>
+    <AppShell>
+      <div className="px-8 py-8">
+        <div className="mb-6">
           <h1 className="font-bold text-2xl text-foreground">Audit Log</h1>
+          <p className="mt-1 text-muted-foreground text-sm">Last {events.length} platform events</p>
         </div>
 
         <div className="rounded-xl border border-border overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="border-b border-border bg-muted/50">
+            <thead className="border-b border-border bg-muted/40">
               <tr>
                 <th className="px-4 py-3 text-left font-medium text-muted-foreground">Action</th>
                 <th className="px-4 py-3 text-left font-medium text-muted-foreground">Resource</th>
@@ -33,18 +34,20 @@ export default async function AuditPage() {
             <tbody className="divide-y divide-border">
               {events.length === 0 && (
                 <tr>
-                  <td className="px-4 py-8 text-center text-muted-foreground" colSpan={5}>No events yet</td>
+                  <td className="px-4 py-10 text-center text-muted-foreground" colSpan={5}>
+                    No events yet
+                  </td>
                 </tr>
               )}
               {events.map((e) => (
-                <tr key={e.id} className="hover:bg-muted/30">
-                  <td className="px-4 py-3 font-mono text-xs">{e.action}</td>
+                <tr key={e.id} className="hover:bg-muted/20">
+                  <td className="px-4 py-3 font-mono text-xs font-medium">{e.action}</td>
                   <td className="px-4 py-3 text-muted-foreground text-xs">
-                    {e.resourceType ? `${e.resourceType}:${e.resourceId ?? ''}` : '—'}
+                    {e.resourceType ? `${e.resourceType}/${e.resourceId?.slice(0, 8) ?? ''}` : '—'}
                   </td>
                   <td className="px-4 py-3 text-muted-foreground text-xs font-mono">{e.userId?.slice(0, 8) ?? '—'}</td>
                   <td className="px-4 py-3 text-muted-foreground text-xs">{e.ipAddress ?? '—'}</td>
-                  <td className="px-4 py-3 text-muted-foreground text-xs">
+                  <td className="px-4 py-3 text-muted-foreground text-xs whitespace-nowrap">
                     {e.createdAt ? new Date(e.createdAt).toLocaleString() : '—'}
                   </td>
                 </tr>
@@ -53,6 +56,6 @@ export default async function AuditPage() {
           </table>
         </div>
       </div>
-    </div>
+    </AppShell>
   )
 }
