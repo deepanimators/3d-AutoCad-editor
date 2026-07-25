@@ -5,9 +5,7 @@ function getAdminApp() {
   if (getApps().length > 0) return getApp()
 
   const raw = process.env.FIREBASE_PRIVATE_KEY ?? ''
-  // dotenv-cli may have already converted \n → real newlines; handle both cases
-  const privateKey = raw.includes('\\n') ? raw.replace(/\\n/g, '\n') : raw
-  console.log('[firebase-admin] key_len:', privateKey.length, 'starts:', JSON.stringify(privateKey.slice(0, 40)))
+  const privateKey = raw.replace(/\\n/g, '\n')
 
   return initializeApp({
     credential: cert({
@@ -18,4 +16,7 @@ function getAdminApp() {
   })
 }
 
-export const adminAuth = getAuth(getAdminApp())
+// Lazy getter — avoids module-level init before env vars are available in Turbopack
+export function getAdminAuth() {
+  return getAuth(getAdminApp())
+}
