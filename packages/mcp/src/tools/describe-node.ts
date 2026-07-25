@@ -1,6 +1,6 @@
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
-import { resolveCeilingHeight } from '@pascal-app/core'
-import type { AnyNode, AnyNodeId } from '@pascal-app/core/schema'
+import { resolveCeilingHeight } from '@aruct/core'
+import type { AnyNode, AnyNodeId } from '@aruct/core/schema'
 import { z } from 'zod'
 import type { SceneOperations } from '../operations'
 import { ErrorCode, throwMcpError } from './errors'

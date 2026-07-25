@@ -1,5 +1,5 @@
-import { type AnyNodeId, type SlabNode, useScene } from '@pascal-app/core'
-import { useViewer } from '@pascal-app/viewer'
+import { type AnyNodeId, type SlabNode, useScene } from '@aruct/core'
+import { useViewer } from '@aruct/viewer'
 import Image from 'next/image'
 import { memo, useCallback, useState } from 'react'
 import { formatAreaLabel } from './../../../../../lib/measurements'

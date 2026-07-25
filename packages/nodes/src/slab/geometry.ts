@@ -3,7 +3,7 @@ import {
   getMaterialPresetByRef,
   type SlabNode,
   slabPolygonContextFromGeometry,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import {
   applyMaterialPresetToMaterials,
   type ColorPreset,
@@ -14,7 +14,7 @@ import {
   type RenderShading,
   resolveMaterialRef,
   resolveSlotDefaultMaterial,
-} from '@pascal-app/viewer'
+} from '@aruct/viewer'
 import {
   BufferGeometry,
   Float32BufferAttribute,

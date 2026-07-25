@@ -5,8 +5,8 @@ import type {
   FloorplanPoint,
   GeometryContext,
   StructuralGridNode,
-} from '@pascal-app/core'
-import { floorplanGeometryMetadata } from '@pascal-app/editor'
+} from '@aruct/core'
+import { floorplanGeometryMetadata } from '@aruct/editor'
 import {
   collectStructuralGridAxes,
   resolveStructuralGridReference,

@@ -1,11 +1,11 @@
 // Side-effect import MUST come first: installs RAF polyfill before core loads.
 import './node-shims'
 
-import type { SceneGraph } from '@pascal-app/core/clone-scene-graph'
-import type { AnyNode } from '@pascal-app/core/schema'
-import { type AnyNodeId, AnyNode as AnyNodeSchema, type AnyNodeType } from '@pascal-app/core/schema'
-// Per PLAN §0.6: `useScene` is the DEFAULT export from `@pascal-app/core/store`.
-import useScene from '@pascal-app/core/store'
+import type { SceneGraph } from '@aruct/core/clone-scene-graph'
+import type { AnyNode } from '@aruct/core/schema'
+import { type AnyNodeId, AnyNode as AnyNodeSchema, type AnyNodeType } from '@aruct/core/schema'
+// Per PLAN §0.6: `useScene` is the DEFAULT export from `@aruct/core/store`.
+import useScene from '@aruct/core/store'
 import type { SceneMeta } from '../storage/types'
 
 export type ValidationError = { nodeId: string; path: string; message: string }
@@ -21,7 +21,7 @@ export type ActiveSceneMeta = Pick<
 >
 
 /**
- * Headless bridge to the `@pascal-app/core` Zustand store.
+ * Headless bridge to the `@aruct/core` Zustand store.
  *
  * All mutation flows through the real core store so undo/redo works via Zundo.
  * No renderer is attached; `dirtyNodes` accumulates and can be drained via

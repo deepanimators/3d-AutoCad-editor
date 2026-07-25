@@ -5,8 +5,8 @@ import {
   LevelNode,
   StairNode,
   StairSegmentNode,
-} from '@pascal-app/core'
-import { readFloorplanGeometryMetadata } from '@pascal-app/editor'
+} from '@aruct/core'
+import { readFloorplanGeometryMetadata } from '@aruct/editor'
 import { buildStairFloorplan } from './floorplan'
 
 function textValues(geometry: FloorplanGeometry | null) {

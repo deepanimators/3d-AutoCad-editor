@@ -1,8 +1,8 @@
 'use client'
 
-import type { SiteNode } from '@pascal-app/core'
-import { sceneRegistry, useLiveNodeOverrides, useScene } from '@pascal-app/core'
-import { getSceneTheme, useViewer } from '@pascal-app/viewer'
+import type { SiteNode } from '@aruct/core'
+import { sceneRegistry, useLiveNodeOverrides, useScene } from '@aruct/core'
+import { getSceneTheme, useViewer } from '@aruct/viewer'
 import { Html } from '@react-three/drei'
 import { createPortal, useFrame, useThree } from '@react-three/fiber'
 import { useCallback, useMemo, useRef, useState } from 'react'

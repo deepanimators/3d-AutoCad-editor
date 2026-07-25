@@ -9,7 +9,7 @@ import {
   PipeFittingNode,
   sceneRegistry,
   useScene,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import {
   DragBoundingBox,
   EDITOR_LAYER,
@@ -20,8 +20,8 @@ import {
   triggerSFX,
   useAlignmentGuides,
   useEditor,
-} from '@pascal-app/editor'
-import { useViewer } from '@pascal-app/viewer'
+} from '@aruct/editor'
+import { useViewer } from '@aruct/viewer'
 import { useEffect, useMemo, useState } from 'react'
 import { Box3, Euler, type Material, type Mesh, MeshBasicMaterial, Vector3 } from 'three'
 import {

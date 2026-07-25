@@ -4,8 +4,8 @@ import {
   type RoofSegmentNode,
   type RoofSegmentTrim,
   useLiveNodeOverrides,
-} from '@pascal-app/core'
-import { clipGeometryBySegmentTrim } from '@pascal-app/viewer'
+} from '@aruct/core'
+import { clipGeometryBySegmentTrim } from '@aruct/viewer'
 import { useEffect, useMemo } from 'react'
 import * as THREE from 'three'
 import { Matrix4 } from 'three'

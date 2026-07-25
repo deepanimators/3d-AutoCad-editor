@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test'
-import type { AnyNode, AnyNodeId } from '@pascal-app/core'
+import type { AnyNode, AnyNodeId } from '@aruct/core'
 import { collectQuickActionNodeScope } from './quick-action-nodes'
 
 function fixtureNode({

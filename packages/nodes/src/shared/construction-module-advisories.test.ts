@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test'
-import { type AnyNode, DoorNode, WallNode, WindowNode } from '@pascal-app/core'
+import { type AnyNode, DoorNode, WallNode, WindowNode } from '@aruct/core'
 import {
   buildConstructionModuleAdvisories,
   type ConstructionModuleProfile,

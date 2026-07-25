@@ -10,7 +10,7 @@ import {
   useLiveNodeOverrides,
   useScene,
   type WallNode,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import {
   alignFloorplanDraftPoint,
   getSegmentGridStep,
@@ -24,7 +24,7 @@ import {
   snapWallDraftPoint,
   useAlignmentGuides,
   type WallPlanPoint,
-} from '@pascal-app/editor'
+} from '@aruct/editor'
 
 /**
  * Floor-plan 2D drag affordances for wall.

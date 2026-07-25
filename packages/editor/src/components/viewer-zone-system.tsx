@@ -1,7 +1,7 @@
 'use client'
 
-import { sceneRegistry, useScene, type ZoneNode } from '@pascal-app/core'
-import { useViewer } from '@pascal-app/viewer'
+import { sceneRegistry, useScene, type ZoneNode } from '@aruct/core'
+import { useViewer } from '@aruct/viewer'
 import { useFrame } from '@react-three/fiber'
 import type { Mesh } from 'three'
 import { resolveOverlayPolicy } from '../lib/interaction/overlay-policy'

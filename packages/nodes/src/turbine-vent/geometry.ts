@@ -1,4 +1,4 @@
-import type { TurbineVentNode } from '@pascal-app/core'
+import type { TurbineVentNode } from '@aruct/core'
 import * as THREE from 'three'
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 

@@ -1,4 +1,4 @@
-import type { FloorplanGeometry } from '@pascal-app/core'
+import type { FloorplanGeometry } from '@aruct/core'
 import { type FloorplanAnnotationRole, readFloorplanGeometryMetadata } from './floorplan-extension'
 
 export type FloorplanAnnotationCategory =

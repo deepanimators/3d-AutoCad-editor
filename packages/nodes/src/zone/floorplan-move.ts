@@ -1,4 +1,4 @@
-import type { FloorplanMoveTarget, ZoneNode } from '@pascal-app/core'
+import type { FloorplanMoveTarget, ZoneNode } from '@aruct/core'
 import { createPolygonCentroidMoveTarget } from '../shared/polygon-centroid-move'
 
 /**

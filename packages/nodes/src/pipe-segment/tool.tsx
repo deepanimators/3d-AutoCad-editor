@@ -1,6 +1,6 @@
 'use client'
 
-import { type AnyNode, emitter, type GridEvent, PipeSegmentNode, useScene } from '@pascal-app/core'
+import { type AnyNode, emitter, type GridEvent, PipeSegmentNode, useScene } from '@aruct/core'
 import {
   CursorSphere,
   DimensionPill,
@@ -12,8 +12,8 @@ import {
   triggerSFX,
   useEditor,
   usePathDraftPreview,
-} from '@pascal-app/editor'
-import { useViewer } from '@pascal-app/viewer'
+} from '@aruct/editor'
+import { useViewer } from '@aruct/viewer'
 import { Html } from '@react-three/drei'
 import { useEffect, useRef, useState } from 'react'
 import { Vector3 } from 'three'

@@ -8,8 +8,8 @@ import {
   sceneRegistry,
   useLiveNodeOverrides,
   useScene,
-} from '@pascal-app/core'
-import { useViewer } from '@pascal-app/viewer'
+} from '@aruct/core'
+import { useViewer } from '@aruct/viewer'
 import { createPortal, useFrame } from '@react-three/fiber'
 import { useMemo, useState } from 'react'
 import { BufferGeometry, type Object3D, Vector3 } from 'three'

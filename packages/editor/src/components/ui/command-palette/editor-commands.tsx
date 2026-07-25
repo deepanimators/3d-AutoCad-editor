@@ -1,8 +1,8 @@
 'use client'
 
-import type { AnyNodeId } from '@pascal-app/core'
-import { DEFAULT_LEVEL_HEIGHT, LevelNode, useScene } from '@pascal-app/core'
-import { useViewer } from '@pascal-app/viewer'
+import type { AnyNodeId } from '@aruct/core'
+import { DEFAULT_LEVEL_HEIGHT, LevelNode, useScene } from '@aruct/core'
+import { useViewer } from '@aruct/viewer'
 import {
   AppWindow,
   ArrowRight,

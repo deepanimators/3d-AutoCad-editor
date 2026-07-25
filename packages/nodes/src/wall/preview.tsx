@@ -1,7 +1,7 @@
 'use client'
 
-import { getWallSurfacePolygon, type WallNode } from '@pascal-app/core'
-import { EDITOR_LAYER } from '@pascal-app/editor'
+import { getWallSurfacePolygon, type WallNode } from '@aruct/core'
+import { EDITOR_LAYER } from '@aruct/editor'
 import { useEffect, useMemo } from 'react'
 import { ExtrudeGeometry, Shape } from 'three'
 

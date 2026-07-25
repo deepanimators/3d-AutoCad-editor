@@ -1,4 +1,4 @@
-import type { SurfaceRole } from '@pascal-app/core'
+import type { SurfaceRole } from '@aruct/core'
 
 export type SceneTheme = {
   id: string

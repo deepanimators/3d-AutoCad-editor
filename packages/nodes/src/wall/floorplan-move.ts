@@ -10,7 +10,7 @@ import {
   useScene,
   type WallNode,
   type WallPlanPoint,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import {
   getFloorplanWallThickness,
   getSegmentGridStep,
@@ -18,8 +18,8 @@ import {
   snapScalarToGrid,
   useWallMoveGhosts,
   type WallMoveGhostBridge,
-} from '@pascal-app/editor'
-import { useViewer } from '@pascal-app/viewer'
+} from '@aruct/editor'
+import { useViewer } from '@aruct/viewer'
 import {
   buildBridgeWallCreates,
   buildBridgeWallPreviews,

@@ -7,8 +7,8 @@ import {
   type PortConnectivity,
   resolveConnectivityUpdates,
   useScene,
-} from '@pascal-app/core'
-import { snapPointToGrid, type WallPlanPoint } from '@pascal-app/editor'
+} from '@aruct/core'
+import { snapPointToGrid, type WallPlanPoint } from '@aruct/editor'
 import {
   detectFittingEndpoint,
   type FittingEndpoint,

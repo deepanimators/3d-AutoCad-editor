@@ -6,7 +6,7 @@ import {
   resolveConnectivityUpdates,
   useLiveNodeOverrides,
   useScene,
-} from '@pascal-app/core'
+} from '@aruct/core'
 
 type Vec3 = [number, number, number]
 

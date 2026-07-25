@@ -9,7 +9,7 @@ import {
   StairNode,
   StairSegmentNode,
   spatialGridManager,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import { stairDefinition } from './definition'
 import { getStairSegmentFloorPlacedFootprints } from './floor-stack'
 

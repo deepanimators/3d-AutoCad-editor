@@ -1,6 +1,6 @@
 'use client'
 
-import { Editor, ItemsPanel } from '@pascal-app/editor'
+import { Editor, ItemsPanel } from '@aruct/editor'
 import { Hammer, Layers, Package, Settings } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'

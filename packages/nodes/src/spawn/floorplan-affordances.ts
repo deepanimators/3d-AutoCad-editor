@@ -3,7 +3,7 @@ import {
   type FloorplanAffordance,
   type SpawnNode,
   useScene,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import { rotateAffordanceDelta } from '../shared/rotate-affordance'
 
 export const spawnRotateAffordance: FloorplanAffordance<SpawnNode> = {

@@ -8,7 +8,7 @@ import {
   type SlabNode,
   type WallNode,
   type ZoneNode,
-} from '@pascal-app/core'
+} from '@aruct/core'
 
 type Point2D = [number, number]
 

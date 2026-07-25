@@ -8,7 +8,7 @@ import {
   type RoofSegmentNode,
   useLiveNodeOverrides,
   useScene,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import {
   cn,
   PanelSection,
@@ -16,8 +16,8 @@ import {
   SliderControl,
   triggerSFX,
   useEditor,
-} from '@pascal-app/editor'
-import { useViewer } from '@pascal-app/viewer'
+} from '@aruct/editor'
+import { useViewer } from '@aruct/viewer'
 import { useCallback, useState } from 'react'
 import { DormerActionsSection } from './panel-actions-section'
 import { DormerPositionSection } from './panel-position-section'

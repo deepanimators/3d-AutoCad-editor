@@ -12,7 +12,7 @@ import {
   sceneRegistry,
   useLiveNodeOverrides,
   useScene,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import {
   ActionButton,
   ActionGroup,
@@ -21,8 +21,8 @@ import {
   SegmentedControl,
   SliderControl,
   triggerSFX,
-} from '@pascal-app/editor'
-import { useViewer } from '@pascal-app/viewer'
+} from '@aruct/editor'
+import { useViewer } from '@aruct/viewer'
 import { Trash2 } from 'lucide-react'
 import { useCallback } from 'react'
 import { Vector3 } from 'three'

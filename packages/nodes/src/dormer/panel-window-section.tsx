@@ -1,7 +1,7 @@
 'use client'
 
-import type { DormerNode } from '@pascal-app/core'
-import { PanelSection, SegmentedControl, SliderControl, ToggleControl } from '@pascal-app/editor'
+import type { DormerNode } from '@aruct/core'
+import { PanelSection, SegmentedControl, SliderControl, ToggleControl } from '@aruct/editor'
 import { useState } from 'react'
 
 type WindowShape = DormerNode['windowShape']

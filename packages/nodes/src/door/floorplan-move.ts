@@ -8,7 +8,7 @@ import {
   useScene,
   type WallNode,
   WallNode as WallNodeSchema,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import {
   isGridSnapActive,
   isMagneticSnapActive,
@@ -16,7 +16,7 @@ import {
   triggerSFX,
   useEditor,
   usePlacementPreview,
-} from '@pascal-app/editor'
+} from '@aruct/editor'
 import { createFloorplanCursorResolver } from '../shared/floorplan-cursor'
 import { getOpeningHostLevelId, getRoofHostedOpeningPlanPoint } from '../shared/roof-opening-host'
 import {

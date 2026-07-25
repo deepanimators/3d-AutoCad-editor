@@ -5,7 +5,7 @@ import {
   measurementAnchorReferenceNodeIds,
   type WallNode,
   type WindowNode,
-} from '@pascal-app/core'
+} from '@aruct/core'
 
 export type DimensionCompletenessIssueKind =
   | 'missing-overall-dimension'

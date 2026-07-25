@@ -4,7 +4,7 @@ import {
   getWallAssemblyFaceOffsets,
   type WallNode,
   type WindowNode,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import { formatConstructionLength } from './construction-length'
 
 const INCH = 0.0254

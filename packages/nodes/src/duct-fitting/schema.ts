@@ -1,1 +1,1 @@
-export { DuctFittingNode } from '@pascal-app/core'
+export { DuctFittingNode } from '@aruct/core'

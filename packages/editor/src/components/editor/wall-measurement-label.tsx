@@ -18,8 +18,8 @@ import {
   useScene,
   type WallMiterData,
   type WallNode,
-} from '@pascal-app/core'
-import { getSceneTheme, useViewer } from '@pascal-app/viewer'
+} from '@aruct/core'
+import { getSceneTheme, useViewer } from '@aruct/viewer'
 import { Html } from '@react-three/drei'
 import { createPortal, useFrame } from '@react-three/fiber'
 import { useMemo, useState } from 'react'

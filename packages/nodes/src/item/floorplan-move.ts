@@ -12,14 +12,14 @@ import {
   type RoofSegmentNode,
   roofFacePointToSegment,
   useScene,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import {
   applyFloorplanAlignment,
   isGridSnapActive,
   isMagneticSnapActive,
   useEditor,
   type WallPlanPoint,
-} from '@pascal-app/editor'
+} from '@aruct/editor'
 import { createFloorplanCursorResolver } from '../shared/floorplan-cursor'
 import { findClosestWallInPlan, snapLocalXToNeighbors } from '../shared/wall-attach-target'
 

@@ -7,7 +7,7 @@ import {
   movingFootprintAnchors,
   type ShelfNode,
   useScene,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import {
   applyFloorplanAlignment,
   getFloorStackPreviewPosition,
@@ -15,7 +15,7 @@ import {
   triggerSFX,
   useEditor,
   type WallPlanPoint,
-} from '@pascal-app/editor'
+} from '@aruct/editor'
 import { createFloorplanCursorResolver } from '../shared/floorplan-cursor'
 
 /**

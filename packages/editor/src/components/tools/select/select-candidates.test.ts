@@ -5,8 +5,8 @@ import {
   nodeRegistry,
   registerNode,
   useScene,
-} from '@pascal-app/core'
-import { useViewer } from '@pascal-app/viewer'
+} from '@aruct/core'
+import { useViewer } from '@aruct/viewer'
 import { z } from 'zod'
 import useEditor from '../../../store/use-editor'
 import { collectSelectableCandidateIds } from './select-candidates'

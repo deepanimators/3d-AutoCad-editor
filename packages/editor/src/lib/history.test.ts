@@ -6,7 +6,7 @@ import {
   clearSceneHistory,
   LevelNode,
   useScene,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import { installHistoryCommandDelegate, runRedo, runUndo } from './history'
 
 type RafFn = (cb: (time: number) => void) => number

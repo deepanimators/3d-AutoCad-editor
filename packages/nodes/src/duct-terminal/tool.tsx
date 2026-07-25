@@ -12,7 +12,7 @@ import {
   sceneRegistry,
   useScene,
   type WallEvent,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import {
   CursorSphere,
   getFloorStackPreviewPosition,
@@ -20,8 +20,8 @@ import {
   isMagneticSnapActive,
   triggerSFX,
   useEditor,
-} from '@pascal-app/editor'
-import { useViewer } from '@pascal-app/viewer'
+} from '@aruct/editor'
+import { useViewer } from '@aruct/viewer'
 import { Html } from '@react-three/drei'
 import { useThree } from '@react-three/fiber'
 import { useEffect, useMemo, useRef, useState } from 'react'

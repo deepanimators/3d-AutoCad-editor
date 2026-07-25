@@ -1,5 +1,5 @@
-import { type AnyNodeId, type StairNode, sceneRegistry, useScene } from '@pascal-app/core'
-import { useViewer } from '@pascal-app/viewer'
+import { type AnyNodeId, type StairNode, sceneRegistry, useScene } from '@aruct/core'
+import { useViewer } from '@aruct/viewer'
 import { useCallback, useEffect, useRef } from 'react'
 
 /**

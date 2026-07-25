@@ -1,5 +1,5 @@
-import { type AnyNode, type CeilingNode, resolveLevelId } from '@pascal-app/core'
-import { resolveCeilingPlanPointSnap } from '@pascal-app/editor'
+import { type AnyNode, type CeilingNode, resolveLevelId } from '@aruct/core'
+import { resolveCeilingPlanPointSnap } from '@aruct/editor'
 import {
   createPolygonAddVertexAffordance,
   createPolygonDeleteVertexAffordance,

@@ -11,7 +11,7 @@ import {
   type SceneCommit,
   subscribeSceneCommits,
   useScene,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import { z } from 'zod'
 import { commitFreshPlacementSubtree, createFreshPlacementSubtree } from './fresh-planar-placement'
 

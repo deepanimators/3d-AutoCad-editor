@@ -15,4 +15,4 @@ export {
   DrawingSheetScale,
   DrawingSheetSchedulePlacement,
   DrawingSheetTitleBlock,
-} from '@pascal-app/core'
+} from '@aruct/core'

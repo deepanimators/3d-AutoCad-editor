@@ -6,8 +6,8 @@ import {
   useLiveNodeOverrides,
   useLiveTransforms,
   useRegistry,
-} from '@pascal-app/core'
-import { createDefaultMaterial, useNodeEvents, useViewer } from '@pascal-app/viewer'
+} from '@aruct/core'
+import { createDefaultMaterial, useNodeEvents, useViewer } from '@aruct/viewer'
 import { useMemo, useRef } from 'react'
 import { Color, type Group, Shape } from 'three'
 
@@ -15,12 +15,12 @@ const SPAWN_COLOR = new Color('#818cf8')
 
 /**
  * Registry-driven spawn renderer. Behaviorally identical to the legacy
- * `@pascal-app/viewer/components/renderers/spawn/spawn-renderer.tsx` — same
+ * `@aruct/viewer/components/renderers/spawn/spawn-renderer.tsx` — same
  * geometry and event surface. When the spawn definition lands
  * in `builtinPlugin.nodes`, the Phase 0 dispatch shims switch the renderer
  * here and the legacy one is short-circuited.
  *
- * Lives in `@pascal-app/nodes` (not viewer) so the kind owns its own render
+ * Lives in `@aruct/nodes` (not viewer) so the kind owns its own render
  * code. Phase 5's batch migration applies the same pattern to every node.
  */
 const SpawnRenderer = ({ node }: { node: SpawnNode }) => {

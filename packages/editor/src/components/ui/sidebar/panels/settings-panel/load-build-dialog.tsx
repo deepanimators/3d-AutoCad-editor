@@ -1,5 +1,5 @@
-import type { BuildStats, SchemaIssue, ValidateBuildJsonResult } from '@pascal-app/core'
-import { useViewer } from '@pascal-app/viewer'
+import type { BuildStats, SchemaIssue, ValidateBuildJsonResult } from '@aruct/core'
+import { useViewer } from '@aruct/viewer'
 import {
   AlertTriangle,
   AppWindow,

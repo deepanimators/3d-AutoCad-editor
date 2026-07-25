@@ -9,7 +9,7 @@ import {
   resolveLevelId,
   useScene,
   type WallNode,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import {
   getSegmentGridStep,
   snapWallDraftPointDetailed,

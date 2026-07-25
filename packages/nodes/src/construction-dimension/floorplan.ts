@@ -8,19 +8,19 @@ import type {
   MeasurementAnchor,
   MeasurementPoint,
   WallNode,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import {
   constructionDimensionRequiredAnchorCount,
   getWallAssemblyFaceOffsets,
   getWallAssemblyThickness,
   getWallCurveFrameAt,
   resolveWallAssemblyDatumReferences,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import {
   readFloorplanContext,
   readFloorplanMetricNotationOverride,
   withFloorplanGeometryMetadata,
-} from '@pascal-app/editor'
+} from '@aruct/editor'
 import { resolveMeasurementAnchor } from '../measurement/resolve'
 import {
   type ConstructionLengthFormatOptions,

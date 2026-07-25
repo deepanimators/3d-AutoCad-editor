@@ -7,8 +7,8 @@ import {
   nodeRegistry,
   registerNode,
   WallNode,
-} from '@pascal-app/core'
-import { createFloorplanContextExtensions } from '@pascal-app/editor'
+} from '@aruct/core'
+import { createFloorplanContextExtensions } from '@aruct/editor'
 import { wallDefinition } from '../wall/definition'
 import { buildConstructionDimensionFloorplan } from './floorplan'
 

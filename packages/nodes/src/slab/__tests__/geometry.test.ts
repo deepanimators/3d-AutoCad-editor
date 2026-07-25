@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test'
-import { SlabNode } from '@pascal-app/core'
+import { SlabNode } from '@aruct/core'
 import { Mesh } from 'three'
 import { buildSlabGeometry } from '../geometry'
 

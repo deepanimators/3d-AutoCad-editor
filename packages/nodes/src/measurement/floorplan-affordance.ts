@@ -8,8 +8,8 @@ import {
   resolveLevelId,
   useLiveNodeOverrides,
   useScene,
-} from '@pascal-app/core'
-import { resolveSurfacePlanPointSnap } from '@pascal-app/editor'
+} from '@aruct/core'
+import { resolveSurfacePlanPointSnap } from '@aruct/editor'
 import {
   constrainMeasurementPlanEditPoint,
   measurementEditAnchor,

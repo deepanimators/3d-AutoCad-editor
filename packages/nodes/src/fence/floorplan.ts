@@ -8,7 +8,7 @@ import {
   isCurvedWall,
   isSplineFence,
   sampleFenceCenterline,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import type { FenceNode } from './schema'
 
 /**

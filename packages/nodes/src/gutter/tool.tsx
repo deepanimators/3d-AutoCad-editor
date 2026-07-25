@@ -7,9 +7,9 @@ import {
   type RoofEvent,
   type RoofNode,
   useScene,
-} from '@pascal-app/core'
-import { triggerSFX } from '@pascal-app/editor'
-import { useViewer } from '@pascal-app/viewer'
+} from '@aruct/core'
+import { triggerSFX } from '@aruct/editor'
+import { useViewer } from '@aruct/viewer'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { RoofAttachmentFallbackPreview } from '../shared/roof-attachment-fallback-preview'
 import { resolveRoofSegmentHit } from '../shared/roof-segment-hit'

@@ -7,8 +7,8 @@ import {
   type GutterEvent,
   type RoofEvent,
   sceneRegistry,
-} from '@pascal-app/core'
-import { DragBoundingBox } from '@pascal-app/editor'
+} from '@aruct/core'
+import { DragBoundingBox } from '@aruct/editor'
 import { type ReactNode, useEffect, useRef, useState } from 'react'
 import { Vector3 } from 'three'
 

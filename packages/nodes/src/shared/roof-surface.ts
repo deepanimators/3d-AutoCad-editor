@@ -6,7 +6,7 @@ import {
   getSegmentSlopeFrame,
   ROOF_SHAPE_DEFAULTS,
   type RoofSegmentNode,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import * as THREE from 'three'
 
 // ─── Roof-surface helpers ────────────────────────────────────────────

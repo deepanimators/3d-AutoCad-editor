@@ -1,6 +1,6 @@
 'use client'
 
-import type { FloorplanPalette } from '@pascal-app/core'
+import type { FloorplanPalette } from '@aruct/core'
 import { createContext, type ReactNode, useContext, useMemo } from 'react'
 
 /**

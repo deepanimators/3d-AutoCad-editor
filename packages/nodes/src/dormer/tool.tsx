@@ -1,8 +1,8 @@
 'use client'
 
-import { type AnyNodeId, DormerNode, useScene } from '@pascal-app/core'
-import { usePlacementPreview } from '@pascal-app/editor'
-import { useViewer } from '@pascal-app/viewer'
+import { type AnyNodeId, DormerNode, useScene } from '@aruct/core'
+import { usePlacementPreview } from '@aruct/editor'
+import { useViewer } from '@aruct/viewer'
 import { useEffect, useMemo } from 'react'
 import { RoofAttachmentFallbackPreview } from '../shared/roof-attachment-fallback-preview'
 import { dormerDefinition } from './definition'

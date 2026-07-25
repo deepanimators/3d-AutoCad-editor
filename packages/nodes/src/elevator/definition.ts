@@ -9,7 +9,7 @@ import {
   type HandleDescriptor,
   type NodeDefinition,
   resolveElevatorLevels,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import { buildElevatorFloorplan } from './floorplan'
 import { elevatorResizeAffordance, elevatorRotateAffordance } from './floorplan-affordances'
 import { elevatorPaint } from './paint'

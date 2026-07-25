@@ -12,7 +12,7 @@ import {
   type MaterialTarget,
   subscribeLibraryMaterials,
   toLibraryMaterialRef,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import { Plus } from 'lucide-react'
 import { useEffect, useMemo, useState, useSyncExternalStore } from 'react'
 import { triggerSFX } from '../../../lib/sfx-bus'

@@ -6,7 +6,7 @@ import {
   type SlabNode as SlabNodeType,
   useScene,
   WallNode,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import { slabMoveEdgeAffordance } from '../floorplan-affordances'
 
 type RafFn = (cb: (t: number) => void) => number

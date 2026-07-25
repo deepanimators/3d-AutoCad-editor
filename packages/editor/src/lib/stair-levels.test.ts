@@ -5,7 +5,7 @@ import {
   BuildingNode,
   LevelNode,
   StairNode,
-} from '@pascal-app/core/schema'
+} from '@aruct/core/schema'
 import {
   getBuildingLevelsForLevel,
   getStairLevelOptions,

@@ -9,7 +9,7 @@ import {
   resumeSceneHistory,
   useLiveNodeOverrides,
   useScene,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import {
   CursorSphere,
   getSegmentGridStep,
@@ -18,8 +18,8 @@ import {
   snapScalarToGrid,
   triggerSFX,
   useInteractionScope,
-} from '@pascal-app/editor'
-import { useViewer } from '@pascal-app/viewer'
+} from '@aruct/editor'
+import { useViewer } from '@aruct/viewer'
 import { useEffect, useState } from 'react'
 
 const TANGENT_HANDLE_ARM_SCALE = 3

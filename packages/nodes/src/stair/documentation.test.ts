@@ -5,12 +5,12 @@ import {
   LevelNode,
   StairNode,
   StairSegmentNode,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import {
   buildFloorplanStairEntry,
   createFloorplanContextExtensions,
   readFloorplanGeometryMetadata,
-} from '@pascal-app/editor'
+} from '@aruct/editor'
 import {
   buildStairDocumentation,
   resolveStairPlanDirection,

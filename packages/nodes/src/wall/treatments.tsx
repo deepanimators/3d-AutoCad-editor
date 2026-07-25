@@ -16,13 +16,13 @@ import {
   type WallSurfaceSlotId,
   type WallTrimConfig,
   type WallTrimProfile,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import {
   baseMaterial,
   createMaterialFromPresetRef,
   type RenderShading,
   resolveMaterialRef,
-} from '@pascal-app/viewer'
+} from '@aruct/viewer'
 import { memo, useEffect, useMemo } from 'react'
 import * as THREE from 'three'
 import { mergeGeometries as mergeBufferGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'

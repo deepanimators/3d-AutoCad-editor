@@ -1,6 +1,6 @@
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
-import type { AnyNodeId, ItemNode } from '@pascal-app/core/schema'
-import { getScaledDimensions } from '@pascal-app/core/schema'
+import type { AnyNodeId, ItemNode } from '@aruct/core/schema'
+import { getScaledDimensions } from '@aruct/core/schema'
 import { z } from 'zod'
 import type { SceneOperations } from '../operations'
 import { NodeIdSchema } from './schemas'

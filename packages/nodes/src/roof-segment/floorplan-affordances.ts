@@ -6,8 +6,8 @@ import {
   type RoofSegmentNode,
   snapScalar,
   useScene,
-} from '@pascal-app/core'
-import { getSegmentGridStep } from '@pascal-app/editor'
+} from '@aruct/core'
+import { getSegmentGridStep } from '@aruct/editor'
 import { createFloorplanCursorResolver } from '../shared/floorplan-cursor'
 import { rotateAffordanceDelta } from '../shared/rotate-affordance'
 

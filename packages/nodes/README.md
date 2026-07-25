@@ -1,11 +1,11 @@
-# @pascal-app/nodes
+# @aruct/nodes
 
 Built-in node definitions for the Pascal viewer and editor.
 
 ## Installation
 
 ```bash
-npm install @pascal-app/core @pascal-app/viewer @pascal-app/editor @pascal-app/nodes
+npm install @aruct/core @aruct/viewer @aruct/editor @aruct/nodes
 ```
 
 The package declares the remaining React, Next.js, Three.js, and UI libraries it needs as peer
@@ -16,8 +16,8 @@ dependencies. Install any peers reported by your package manager.
 Load `builtinPlugin` once before mounting a Pascal viewer or editor:
 
 ```typescript
-import { loadPlugin } from '@pascal-app/core'
-import { builtinPlugin } from '@pascal-app/nodes'
+import { loadPlugin } from '@aruct/core'
+import { builtinPlugin } from '@aruct/nodes'
 
 await loadPlugin(builtinPlugin)
 ```
@@ -26,7 +26,7 @@ The plugin registers the built-in schemas, renderers, geometry builders, tools, 
 can load additional plugins through the same `loadPlugin` API.
 
 See the
-[`@pascal-app/viewer` quick start](https://github.com/pascalorg/editor/tree/main/packages/viewer#usage)
+[`@aruct/viewer` quick start](https://github.com/aruct/editor/tree/main/packages/viewer#usage)
 for bootstrap ordering in a React application.
 
 ## License

@@ -1,6 +1,6 @@
 'use client'
 
-import { useViewer } from '@pascal-app/viewer'
+import { useViewer } from '@aruct/viewer'
 import { useEffect, useMemo } from 'react'
 import type { Material } from 'three'
 import { buildShelfGeometry } from './geometry'

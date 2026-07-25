@@ -7,7 +7,7 @@ import {
   type LinesetNode,
   LiquidLineNode,
   useScene,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import {
   CursorSphere,
   DimensionPill,
@@ -19,8 +19,8 @@ import {
   triggerSFX,
   useEditor,
   usePathDraftPreview,
-} from '@pascal-app/editor'
-import { useViewer } from '@pascal-app/viewer'
+} from '@aruct/editor'
+import { useViewer } from '@aruct/viewer'
 import { Html } from '@react-three/drei'
 import { useEffect, useRef, useState } from 'react'
 import { type Group, Vector3 } from 'three'

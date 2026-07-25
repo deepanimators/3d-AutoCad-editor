@@ -3,7 +3,7 @@ import {
   type ColumnNode,
   type FloorplanAffordance,
   useScene,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import { rotateAffordanceDelta } from '../shared/rotate-affordance'
 
 // Floor minimums — mirror the 3D handles in `column/definition.ts` so a

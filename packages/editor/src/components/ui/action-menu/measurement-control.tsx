@@ -3,7 +3,7 @@
 import type {
   ConstructionDimensionChainMode,
   ConstructionDimensionMode,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import {
   Box,
   Check,

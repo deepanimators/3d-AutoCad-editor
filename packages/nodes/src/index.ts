@@ -1,4 +1,4 @@
-import type { AnyNodeDefinition, Plugin } from '@pascal-app/core'
+import type { AnyNodeDefinition, Plugin } from '@aruct/core'
 import { boxVentDefinition } from './box-vent'
 import { buildingDefinition } from './building'
 import { cabinetDefinition, cabinetModuleDefinition } from './cabinet'

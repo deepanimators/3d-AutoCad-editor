@@ -1,4 +1,4 @@
-import type { AnyNode, BaseNode, BuildingNode, LevelNode, ZoneNode } from '@pascal-app/core'
+import type { AnyNode, BaseNode, BuildingNode, LevelNode, ZoneNode } from '@aruct/core'
 import type { Object3D } from 'three'
 
 type SelectionPath = {

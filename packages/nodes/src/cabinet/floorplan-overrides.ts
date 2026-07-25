@@ -1,4 +1,4 @@
-import type { AnyNode, AnyNodeId, LiveTransformLike } from '@pascal-app/core'
+import type { AnyNode, AnyNodeId, LiveTransformLike } from '@aruct/core'
 
 /**
  * Cabinet floor-plan symbols resolve their full cabinet ancestry through

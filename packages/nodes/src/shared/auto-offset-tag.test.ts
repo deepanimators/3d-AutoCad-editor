@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import type { AnyNode, AnyNodeId } from '@pascal-app/core'
+import type { AnyNode, AnyNodeId } from '@aruct/core'
 import {
   AUTO_OFFSET_KEY,
   type AutoOffsetTag,

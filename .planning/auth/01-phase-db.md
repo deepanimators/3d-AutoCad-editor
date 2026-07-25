@@ -32,7 +32,7 @@ bun add -D drizzle-kit
 DATABASE_URL="postgresql://user:pass@ep-xxx.us-east-2.aws.neon.tech/neondb?sslmode=require"
 
 # Keep for local dev fallback (optional)
-PASCAL_DB_PATH="~/.pascal/data/pascal.db"
+ARUCT_DB_PATH="~/.aruct/data/aruct.db"
 ```
 
 ---
@@ -109,7 +109,7 @@ Create `apps/editor/lib/db/scene-store-pg.ts` — replaces `packages/mcp` SQLite
 import { eq, desc, and } from 'drizzle-orm'
 import { db } from './client'
 import { scenes } from './schema'
-import { generateSceneId } from '@pascal-app/mcp/storage'  // reuse slug generator
+import { generateSceneId } from '@aruct/mcp/storage'  // reuse slug generator
 
 export async function listScenes(opts: { projectId?: string; ownerId?: string; limit?: number }) {
   const conditions = []
@@ -217,7 +217,7 @@ Add to Vercel project:
 ```
 DATABASE_URL = postgresql://...
 ```
-Remove `PASCAL_DB_PATH` from Vercel (keep only in local `.env.local` if you want local SQLite fallback).
+Remove `ARUCT_DB_PATH` from Vercel (keep only in local `.env.local` if you want local SQLite fallback).
 
 ### Step 5 — Deploy and smoke test
 - `GET /api/scenes` returns empty array (new DB)
@@ -239,6 +239,6 @@ Remove `PASCAL_DB_PATH` from Vercel (keep only in local `.env.local` if you want
 ## What Stays the Same
 
 - Scene API URL structure unchanged (`/api/scenes`, `/api/scenes/[id]`)
-- `PASCAL_SCENE_API_TOKEN` auth for programmatic access unchanged
+- `ARUCT_SCENE_API_TOKEN` auth for programmatic access unchanged
 - `packages/mcp` SQLite store unchanged — still used when MCP server runs locally (separate process)
 - No frontend changes required in Phase 0

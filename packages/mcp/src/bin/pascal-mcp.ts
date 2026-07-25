@@ -11,10 +11,10 @@ import { createSceneStore } from '../storage'
 import { connectHttp } from '../transports/http'
 import { connectStdio } from '../transports/stdio'
 
-const HELP = `pascal-mcp — MCP server for the Pascal editor
+const HELP = `aruct-mcp — MCP server for the Pascal editor
 
 USAGE:
-  pascal-mcp [--stdio | --http --port <n>] [--scene <path>]
+  aruct-mcp [--stdio | --http --port <n>] [--scene <path>]
 
 OPTIONS:
   --stdio          Use stdio transport (default)
@@ -74,7 +74,7 @@ async function main(): Promise<void> {
       authToken: values['auth-token'],
       allowedOrigins: values['cors-origin'],
     })
-    console.error(`[pascal-mcp] HTTP server listening on ${handle.host}:${handle.port}`)
+    console.error(`[aruct-mcp] HTTP server listening on ${handle.host}:${handle.port}`)
     const shutdown = async () => {
       try {
         await handle.close()
@@ -87,11 +87,11 @@ async function main(): Promise<void> {
   } else {
     // --stdio is the default when no transport flag is passed.
     await connectStdio(server)
-    console.error('[pascal-mcp] stdio server running')
+    console.error('[aruct-mcp] stdio server running')
   }
 }
 
 main().catch((err) => {
-  console.error('[pascal-mcp] fatal:', err instanceof Error ? (err.stack ?? err.message) : err)
+  console.error('[aruct-mcp] fatal:', err instanceof Error ? (err.stack ?? err.message) : err)
   process.exit(1)
 })

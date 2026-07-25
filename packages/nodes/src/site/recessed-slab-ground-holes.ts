@@ -4,7 +4,7 @@ import {
   type SlabNode,
   type SlabPolygonContext,
   type WallNode,
-} from '@pascal-app/core'
+} from '@aruct/core'
 
 export function getRecessedSlabGroundHoles(
   nodes: Record<string, AnyNode>,

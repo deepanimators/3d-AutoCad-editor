@@ -1,5 +1,5 @@
-import { DrawingSheetNode as DrawingSheetNodeSchema, type NodeDefinition } from '@pascal-app/core'
-import type { FloorplanNodeExtension } from '@pascal-app/editor'
+import { DrawingSheetNode as DrawingSheetNodeSchema, type NodeDefinition } from '@aruct/core'
+import type { FloorplanNodeExtension } from '@aruct/editor'
 import { DrawingSheetNode } from './schema'
 
 export const drawingSheetDefinition: NodeDefinition<typeof DrawingSheetNode> = {

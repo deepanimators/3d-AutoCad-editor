@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test'
-import type { AnyNode, AnyNodeId } from '@pascal-app/core'
-import { getFloorplanNodeExtension } from '@pascal-app/editor'
+import type { AnyNode, AnyNodeId } from '@aruct/core'
+import { getFloorplanNodeExtension } from '@aruct/editor'
 import { wallDefinition } from './definition'
 
 describe('wallDefinition floor-plan extension', () => {

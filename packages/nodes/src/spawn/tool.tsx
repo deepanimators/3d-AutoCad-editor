@@ -7,7 +7,7 @@ import {
   resolveSupportSlabPatch,
   SpawnNode,
   useScene,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import {
   CursorSphere,
   getFloorStackPreviewPosition,
@@ -18,8 +18,8 @@ import {
   triggerSFX,
   useAlignmentGuides,
   useEditor,
-} from '@pascal-app/editor'
-import { useViewer } from '@pascal-app/viewer'
+} from '@aruct/editor'
+import { useViewer } from '@aruct/viewer'
 import { useEffect, useMemo, useRef } from 'react'
 import type { Group } from 'three'
 import {
@@ -38,7 +38,7 @@ function getExistingSpawnIds() {
 /**
  * Registry-driven spawn placement tool. Reads `activeLevelId` from useViewer
  * directly (no props), broadcasts placement via store updates + SFX, and
- * uses the shared CursorSphere from @pascal-app/editor for visual parity
+ * uses the shared CursorSphere from @aruct/editor for visual parity
  * with legacy placement tools. Snapping is mode-driven (grid + Figma-style
  * alignment "lines"), matching the shelf / column build tools.
  */

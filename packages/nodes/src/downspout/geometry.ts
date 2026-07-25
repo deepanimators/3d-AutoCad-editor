@@ -1,4 +1,4 @@
-import type { DownspoutNode } from '@pascal-app/core'
+import type { DownspoutNode } from '@aruct/core'
 import * as THREE from 'three'
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 import type { OutletDims } from '../gutter/profile-geometry'

@@ -1,7 +1,7 @@
 # Generate a 2-bed apartment from a brief
 
 This example walks through a realistic session with an MCP host (Claude
-Desktop, Claude Code, or Cursor) that has `pascal-mcp` configured. The agent
+Desktop, Claude Code, or Cursor) that has `aruct-mcp` configured. The agent
 uses the `from_brief` prompt to turn a short brief into a concrete scene.
 
 ## The brief
@@ -238,5 +238,5 @@ Zustand store, the user can `undo` the change if they dislike it:
   the whole logical change.
 - Zones are not walls — they're polygon annotations that make later queries
   (`find_nodes({ zoneId })`) and planning steps much easier for the agent.
-- The agent never needs to speak to `@pascal-app/viewer`: everything the
+- The agent never needs to speak to `@aruct/viewer`: everything the
   host sees flows through tools + resources + prompts.

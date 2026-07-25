@@ -3,7 +3,7 @@ import type {
   ConstructionDimensionNode,
   FloorplanPoint,
   MeasurementPoint,
-} from '@pascal-app/core'
+} from '@aruct/core'
 
 export type ConstructionDimensionSegmentLayout = {
   dimensionStart: FloorplanPoint

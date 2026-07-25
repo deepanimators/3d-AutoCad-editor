@@ -8,7 +8,7 @@ import {
   type StairNode,
   type StairSegmentNode,
   type ZoneNode,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import { formatConstructionLength } from './construction-length'
 
 export type ClearanceAdvisoryCategory =

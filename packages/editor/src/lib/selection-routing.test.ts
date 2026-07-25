@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test'
-import { type AnyNode, nodeRegistry, registerNode } from '@pascal-app/core'
+import { type AnyNode, nodeRegistry, registerNode } from '@aruct/core'
 import { z } from 'zod'
 import {
   resolveCanvasSelectionNode,

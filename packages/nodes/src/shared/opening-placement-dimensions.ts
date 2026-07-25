@@ -11,8 +11,8 @@ import {
   useScene,
   type WallNode,
   type WindowNode,
-} from '@pascal-app/core'
-import { readFloorplanContext } from '@pascal-app/editor'
+} from '@aruct/core'
+import { readFloorplanContext } from '@aruct/editor'
 import { formatConstructionLength } from './construction-length'
 import { resolveWallOpeningCeiling } from './wall-opening-ceiling'
 

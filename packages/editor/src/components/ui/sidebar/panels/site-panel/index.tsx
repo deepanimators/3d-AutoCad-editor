@@ -10,8 +10,8 @@ import {
   type SiteNode,
   useScene,
   type ZoneNode,
-} from '@pascal-app/core'
-import { useViewer } from '@pascal-app/viewer'
+} from '@aruct/core'
+import { useViewer } from '@aruct/viewer'
 import {
   Camera,
   ChevronDown,
@@ -37,7 +37,7 @@ import {
   buildLevelDuplicateCreateOps,
   type LevelDuplicatePreset,
 } from './../../../../../lib/level-duplication'
-import { getDefaultLevelName } from '@pascal-app/core'
+import { getDefaultLevelName } from '@aruct/core'
 import { deleteLevelWithFallbackSelection } from './../../../../../lib/level-selection'
 import {
   formatAreaLabel,

@@ -4,8 +4,8 @@ import {
   type RoofNode,
   type RoofSegmentNode,
   sceneRegistry,
-} from '@pascal-app/core'
-import { useViewer } from '@pascal-app/viewer'
+} from '@aruct/core'
+import { useViewer } from '@aruct/viewer'
 import * as THREE from 'three'
 import { type RoofSegmentHit, resolveRoofSegmentHit } from './roof-segment-hit'
 import { getSurfaceY } from './roof-surface'

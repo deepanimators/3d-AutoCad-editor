@@ -8,7 +8,7 @@ MCP API.
 ## Load it
 
 ```bash
-pascal-mcp --stdio --scene examples/coordinate-conventions-demo.json
+aruct-mcp --stdio --scene examples/coordinate-conventions-demo.json
 ```
 
 The scene fits in a 50 m × 50 m ground-plane footprint at `level: 0`.

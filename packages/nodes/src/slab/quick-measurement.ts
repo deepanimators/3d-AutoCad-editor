@@ -1,4 +1,4 @@
-import type { QuickMeasurementReport, SlabNode } from '@pascal-app/core'
+import type { QuickMeasurementReport, SlabNode } from '@aruct/core'
 import {
   polygonBoundaryLength,
   polygonReportAnchor,

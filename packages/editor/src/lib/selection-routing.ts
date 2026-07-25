@@ -3,7 +3,7 @@ import {
   type ItemNode,
   nodeRegistry,
   resolveSelectionProxyId,
-} from '@pascal-app/core'
+} from '@aruct/core'
 
 export type SelectionModifierKeys = {
   meta: boolean

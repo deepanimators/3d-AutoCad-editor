@@ -1,5 +1,5 @@
 'use client'
 
-import { ScanSystem } from '@pascal-app/viewer'
+import { ScanSystem } from '@aruct/viewer'
 
 export default ScanSystem

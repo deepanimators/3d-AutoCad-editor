@@ -12,15 +12,15 @@ import {
   resumeSceneHistory,
   sceneRegistry,
   useScene,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import {
   ARROW_COLOR,
   EDITOR_LAYER,
   swallowNextClick,
   triggerSFX,
   useEditor,
-} from '@pascal-app/editor'
-import { useViewer } from '@pascal-app/viewer'
+} from '@aruct/editor'
+import { useViewer } from '@aruct/viewer'
 import { createPortal, type ThreeEvent, useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useMemo, useState } from 'react'
 import {

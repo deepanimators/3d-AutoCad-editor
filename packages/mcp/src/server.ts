@@ -18,7 +18,7 @@ export type CreatePascalMcpServerOptions = {
 
 export function createPascalMcpServer(opts: CreatePascalMcpServerOptions): McpServer {
   const server = new McpServer({
-    name: opts.name ?? 'pascal-mcp',
+    name: opts.name ?? 'aruct-mcp',
     version: opts.version ?? '0.1.0',
   })
   const operations =

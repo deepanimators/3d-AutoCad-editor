@@ -1,11 +1,11 @@
-# @pascal-app/core
+# @aruct/core
 
 Core library for Pascal 3D building editor.
 
 ## Installation
 
 ```bash
-npm install @pascal-app/core
+npm install @aruct/core
 ```
 
 ## Peer Dependencies
@@ -27,7 +27,7 @@ npm install react three @react-three/fiber @react-three/drei
 ## Usage
 
 ```typescript
-import { useScene, WallNode } from '@pascal-app/core'
+import { useScene, WallNode } from '@aruct/core'
 
 // Create a wall
 const wall = WallNode.parse({
@@ -65,17 +65,17 @@ function MyComponent() {
 ## Built-in Node Definitions
 
 Core contains the schemas, scene state, and registry contracts. The built-in node definitions,
-renderers, geometry builders, tools, and systems ship in `@pascal-app/nodes`:
+renderers, geometry builders, tools, and systems ship in `@aruct/nodes`:
 
 ```typescript
-import { loadPlugin } from '@pascal-app/core'
-import { builtinPlugin } from '@pascal-app/nodes'
+import { loadPlugin } from '@aruct/core'
+import { builtinPlugin } from '@aruct/nodes'
 
 await loadPlugin(builtinPlugin)
 ```
 
-Load the plugin before mounting `@pascal-app/viewer`. See the
-[`@pascal-app/viewer` quick start](https://github.com/pascalorg/editor/tree/main/packages/viewer#usage)
+Load the plugin before mounting `@aruct/viewer`. See the
+[`@aruct/viewer` quick start](https://github.com/aruct/editor/tree/main/packages/viewer#usage)
 for a React example.
 
 ## License

@@ -15,7 +15,7 @@ import {
   useScene,
   type WallMiterData,
   type WallNode,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import {
   CursorSphere,
   clearPlacementSurface,
@@ -45,9 +45,9 @@ import {
   useFenceCurveDraft,
   useFloorplanDraftPreview,
   useSegmentDraftChain,
-} from '@pascal-app/editor'
+} from '@aruct/editor'
 
-import { getSceneTheme, useViewer } from '@pascal-app/viewer'
+import { getSceneTheme, useViewer } from '@aruct/viewer'
 import { useThree } from '@react-three/fiber'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import {

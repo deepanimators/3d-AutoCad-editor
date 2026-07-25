@@ -13,7 +13,7 @@ import {
   resolveWallAssemblyDatumReferences,
   type WallNode,
   type WindowNode,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import { getColumnFloorplanFootprint } from '../column/floorplan'
 import {
   type ConstructionDimensionDrawingStandard,

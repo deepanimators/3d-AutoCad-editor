@@ -1,4 +1,4 @@
-import type { ParametricDescriptor } from '@pascal-app/core'
+import type { ParametricDescriptor } from '@aruct/core'
 import type { PipeSegmentNode } from './schema'
 
 export const pipeSegmentParametrics: ParametricDescriptor<PipeSegmentNode> = {

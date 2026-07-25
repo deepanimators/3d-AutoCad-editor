@@ -8,9 +8,9 @@ import {
   generateId,
   type RoofSegmentNode,
   useScene,
-} from '@pascal-app/core'
-import { ActionButton, ActionGroup, PanelSection, triggerSFX } from '@pascal-app/editor'
-import { useViewer } from '@pascal-app/viewer'
+} from '@aruct/core'
+import { ActionButton, ActionGroup, PanelSection, triggerSFX } from '@aruct/editor'
+import { useViewer } from '@aruct/viewer'
 import { useShallow } from 'zustand/react/shallow'
 import { computeEaveY } from './eave-snap'
 import { resolveGutterOutletById } from './outlet-lookup'

@@ -1,7 +1,7 @@
-# @pascal-app/mcp
+# @aruct/mcp
 
 Model Context Protocol server for the Pascal 3D editor. Drives the
-`@pascal-app/core` scene graph from any MCP-compatible AI host.
+`@aruct/core` scene graph from any MCP-compatible AI host.
 
 The server runs headlessly in Bun with no browser, WebGPU, React, or external
 database service. It exposes the same scene mutations used by the editor UI
@@ -11,10 +11,10 @@ and prompts.
 ## Install
 
 ```bash
-bun add @pascal-app/mcp
+bun add @aruct/mcp
 ```
 
-`@pascal-app/core` is a peer dependency; Bun workspaces resolve it automatically.
+`@aruct/core` is a peer dependency; Bun workspaces resolve it automatically.
 The MCP CLI is intended to run with Bun. When the storage package is consumed by
 the Next.js editor server, it opens the same local database through Node's
 built-in SQLite driver.
@@ -24,26 +24,26 @@ built-in SQLite driver.
 Launch the server over stdio in one line:
 
 ```bash
-bunx pascal-mcp
+bunx aruct-mcp
 ```
 
 Load an initial scene from disk:
 
 ```bash
-pascal-mcp --stdio --scene ./my-scene.json
+aruct-mcp --stdio --scene ./my-scene.json
 ```
 
 Expose it over loopback HTTP:
 
 ```bash
-pascal-mcp --http --port 8787
+aruct-mcp --http --port 8787
 ```
 
 Binding a non-loopback host requires a bearer token:
 
 ```bash
-PASCAL_MCP_HTTP_TOKEN="$(openssl rand -hex 32)" \
-  pascal-mcp --http --host 0.0.0.0 --port 8787 --cors-origin https://editor.example
+ARUCT_MCP_HTTP_TOKEN="$(openssl rand -hex 32)" \
+  aruct-mcp --http --host 0.0.0.0 --port 8787 --cors-origin https://editor.example
 ```
 
 ## Local scene storage
@@ -51,11 +51,11 @@ PASCAL_MCP_HTTP_TOKEN="$(openssl rand -hex 32)" \
 Scenes saved through MCP are stored in a local SQLite database:
 
 ```text
-~/.pascal/data/pascal.db
+~/.aruct/data/aruct.db
 ```
 
-Set `PASCAL_DATA_DIR` when you want the MCP server and the running editor to
-share a different directory, or `PASCAL_DB_PATH` when you need an exact database
+Set `ARUCT_DATA_DIR` when you want the MCP server and the running editor to
+share a different directory, or `ARUCT_DB_PATH` when you need an exact database
 file path. The store uses WAL mode and transactional version checks so separate
 local processes can save and open the same scene database.
 
@@ -63,15 +63,15 @@ During workspace development, run both sides with the same data directory:
 
 ```bash
 # Terminal 1: run the editor
-PASCAL_DATA_DIR="$HOME/.pascal/data" bun run dev
+ARUCT_DATA_DIR="$HOME/.aruct/data" bun run dev
 
 # Terminal 2 or an MCP host: run the server
-PASCAL_DATA_DIR="$HOME/.pascal/data" bun packages/mcp/dist/bin/pascal-mcp.js
+ARUCT_DATA_DIR="$HOME/.aruct/data" bun packages/mcp/dist/bin/aruct-mcp.js
 ```
 
 ## Live editor updates
 
-When the editor and MCP server share the same `PASCAL_DATA_DIR`, MCP mutations
+When the editor and MCP server share the same `ARUCT_DATA_DIR`, MCP mutations
 against a loaded saved scene are persisted to SQLite and recorded in a local
 `scene_events` stream. The editor page subscribes to that stream at
 `/api/scenes/:id/events` with server-sent events, so an open browser tab can
@@ -99,9 +99,9 @@ Edit `~/Library/Application Support/Claude/claude_desktop_config.json`
   "mcpServers": {
     "pascal": {
       "command": "bunx",
-      "args": ["pascal-mcp"],
+      "args": ["aruct-mcp"],
       "env": {
-        "PASCAL_DATA_DIR": "/Users/you/.pascal/data"
+        "ARUCT_DATA_DIR": "/Users/you/.aruct/data"
       }
     }
   }
@@ -109,14 +109,14 @@ Edit `~/Library/Application Support/Claude/claude_desktop_config.json`
 ```
 
 If `bunx` is not on your PATH, point `command` at the absolute path to `bun`
-and pass the built `dist/bin/pascal-mcp.js` file as the first arg.
+and pass the built `dist/bin/aruct-mcp.js` file as the first arg.
 
 ## Claude Code config
 
 Via the CLI:
 
 ```bash
-claude mcp add pascal bunx pascal-mcp
+claude mcp add aruct bunx aruct-mcp
 ```
 
 Or add to `.mcp.json` at the repo root:
@@ -126,9 +126,9 @@ Or add to `.mcp.json` at the repo root:
   "mcpServers": {
     "pascal": {
       "command": "bunx",
-      "args": ["pascal-mcp"],
+      "args": ["aruct-mcp"],
       "env": {
-        "PASCAL_DATA_DIR": "/Users/you/.pascal/data"
+        "ARUCT_DATA_DIR": "/Users/you/.aruct/data"
       }
     }
   }
@@ -143,9 +143,9 @@ the built binary:
   "mcpServers": {
     "pascal": {
       "command": "bun",
-      "args": ["/absolute/path/to/editor/packages/mcp/dist/bin/pascal-mcp.js"],
+      "args": ["/absolute/path/to/editor/packages/mcp/dist/bin/aruct-mcp.js"],
       "env": {
-        "PASCAL_DATA_DIR": "/Users/you/.pascal/data"
+        "ARUCT_DATA_DIR": "/Users/you/.aruct/data"
       }
     }
   }
@@ -157,7 +157,7 @@ the built binary:
 Via the CLI:
 
 ```bash
-codex mcp add pascal --env PASCAL_DATA_DIR="$HOME/.pascal/data" -- bunx pascal-mcp
+codex mcp add aruct --env ARUCT_DATA_DIR="$HOME/.aruct/data" -- bunx aruct-mcp
 ```
 
 For local workspace testing before publish:
@@ -165,8 +165,8 @@ For local workspace testing before publish:
 ```bash
 bun run --cwd packages/mcp build
 codex mcp add pascal-dev \
-  --env PASCAL_DATA_DIR="$HOME/.pascal/data" \
-  -- bun "$PWD/packages/mcp/dist/bin/pascal-mcp.js"
+  --env ARUCT_DATA_DIR="$HOME/.aruct/data" \
+  -- bun "$PWD/packages/mcp/dist/bin/aruct-mcp.js"
 ```
 
 This writes an entry like this to `~/.codex/config.toml`:
@@ -174,10 +174,10 @@ This writes an entry like this to `~/.codex/config.toml`:
 ```toml
 [mcp_servers.pascal-dev]
 command = "bun"
-args = ["/absolute/path/to/editor/packages/mcp/dist/bin/pascal-mcp.js"]
+args = ["/absolute/path/to/editor/packages/mcp/dist/bin/aruct-mcp.js"]
 
 [mcp_servers.pascal-dev.env]
-PASCAL_DATA_DIR = "/Users/you/.pascal/data"
+ARUCT_DATA_DIR = "/Users/you/.aruct/data"
 ```
 
 ## Cursor config
@@ -189,9 +189,9 @@ In Cursor settings (`settings.json`):
   "mcp.servers": {
     "pascal": {
       "command": "bunx",
-      "args": ["pascal-mcp"],
+      "args": ["aruct-mcp"],
       "env": {
-        "PASCAL_DATA_DIR": "/Users/you/.pascal/data"
+        "ARUCT_DATA_DIR": "/Users/you/.aruct/data"
       }
     }
   }
@@ -205,7 +205,7 @@ example below runs a full client/server pair inside a single script — useful
 for agent frameworks and tests.
 
 ```ts
-import { createPascalMcpServer, SceneBridge } from '@pascal-app/mcp'
+import { createPascalMcpServer, SceneBridge } from '@aruct/mcp'
 import { Client } from '@modelcontextprotocol/sdk/client/index.js'
 import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js'
 
@@ -272,7 +272,7 @@ external-coordinate gotcha — lives in
 [`examples/coordinate-conventions-demo.md`](./examples/coordinate-conventions-demo.md)
 and [`examples/coordinate-conventions-demo.json`](./examples/coordinate-conventions-demo.json).
 Load the JSON with
-`pascal-mcp --stdio --scene examples/coordinate-conventions-demo.json`.
+`aruct-mcp --stdio --scene examples/coordinate-conventions-demo.json`.
 
 **Example — a 6 × 4 m slab rotated 30° about its first corner** (coordinates
 rounded to 3 dp; sides ≈ 6 m / 4 m; not axis-aligned, so the mapping is
@@ -374,7 +374,7 @@ The vision tools require the MCP host to support the sampling capability
 - Systems (wall mitering, slab triangulation, CSG cutouts, roof / stair
   generation) run inside React hooks in the editor. Headless mode doesn't
   regenerate derived geometry — but all node data remains fully manipulable.
-  Consumers that need rendered geometry run `@pascal-app/viewer` in a browser
+  Consumers that need rendered geometry run `@aruct/viewer` in a browser
   host.
 - Core's `loadAssetUrl` / `saveAsset` are browser-only; items that reference
   `asset://<id>` URLs aren't resolvable in Node. Supply absolute URLs or

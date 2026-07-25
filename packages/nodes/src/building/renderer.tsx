@@ -1,7 +1,7 @@
 'use client'
 
-import { type BuildingNode, useRegistry } from '@pascal-app/core'
-import { NodeRenderer, useNodeEvents } from '@pascal-app/viewer'
+import { type BuildingNode, useRegistry } from '@aruct/core'
+import { NodeRenderer, useNodeEvents } from '@aruct/viewer'
 import { useRef } from 'react'
 import type { Group } from 'three'
 

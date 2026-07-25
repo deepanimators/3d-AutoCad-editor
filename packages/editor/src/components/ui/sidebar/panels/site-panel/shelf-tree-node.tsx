@@ -1,7 +1,7 @@
 'use client'
 
-import { type AnyNodeId, type ShelfNode, useScene } from '@pascal-app/core'
-import { useViewer } from '@pascal-app/viewer'
+import { type AnyNodeId, type ShelfNode, useScene } from '@aruct/core'
+import { useViewer } from '@aruct/viewer'
 import Image from 'next/image'
 import { memo, useCallback, useEffect, useState } from 'react'
 import { useShallow } from 'zustand/react/shallow'

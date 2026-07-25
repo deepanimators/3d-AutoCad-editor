@@ -1,13 +1,13 @@
 'use client'
 
-import { type AnyNodeId, type ItemNode, useScene } from '@pascal-app/core'
+import { type AnyNodeId, type ItemNode, useScene } from '@aruct/core'
 import {
   type PlacementState,
   triggerSFX,
   useDraftNode,
   useEditor,
   usePlacementCoordinator,
-} from '@pascal-app/editor'
+} from '@aruct/editor'
 import { Vector3 } from 'three'
 
 /**
@@ -30,7 +30,7 @@ import { Vector3 } from 'three'
  * time.
  *
  * Placement primitives (`useDraftNode`, `usePlacementCoordinator`,
- * `PlacementState`) are re-exported from `@pascal-app/editor` — same
+ * `PlacementState`) are re-exported from `@aruct/editor` — same
  * hooks the legacy code used. When `ItemTool` (item placement, not
  * move) also ports to `def.tool`, the primitives can be inlined here
  * and dropped from editor.

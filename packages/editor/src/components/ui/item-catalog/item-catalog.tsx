@@ -1,7 +1,7 @@
 'use client'
 
-import type { AssetInput } from '@pascal-app/core'
-import { resolveCdnUrl, useViewer } from '@pascal-app/viewer'
+import type { AssetInput } from '@aruct/core'
+import { resolveCdnUrl, useViewer } from '@aruct/viewer'
 import { useEffect } from 'react'
 import { triggerSFX } from './../../../lib/sfx-bus'
 import { cn } from './../../../lib/utils'

@@ -11,7 +11,7 @@ import {
   useLiveTransforms,
   useScene,
   type WallEvent,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import {
   calculateItemRotation,
   clearPlacementSurface,
@@ -27,8 +27,8 @@ import {
   useAlignmentGuides,
   useEditor,
   useFacingPose,
-} from '@pascal-app/editor'
-import { useViewer } from '@pascal-app/viewer'
+} from '@aruct/editor'
+import { useViewer } from '@aruct/viewer'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { BoxGeometry, EdgesGeometry, type Group, Vector3 } from 'three'
 import { LineBasicNodeMaterial } from 'three/webgpu'

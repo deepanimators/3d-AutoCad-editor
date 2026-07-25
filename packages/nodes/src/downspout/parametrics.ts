@@ -1,4 +1,4 @@
-import type { ParametricDescriptor } from '@pascal-app/core'
+import type { ParametricDescriptor } from '@aruct/core'
 import { DownspoutPositionEditor } from './inspector-editors'
 import type { DownspoutNode } from './schema'
 

@@ -7,8 +7,8 @@ import {
   type StairNode,
   snapScalar,
   useScene,
-} from '@pascal-app/core'
-import { applyFloorplanAlignment, getSegmentGridStep } from '@pascal-app/editor'
+} from '@aruct/core'
+import { applyFloorplanAlignment, getSegmentGridStep } from '@aruct/editor'
 import { createFloorplanCursorResolver } from '../shared/floorplan-cursor'
 
 /**

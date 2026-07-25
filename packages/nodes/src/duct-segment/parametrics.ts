@@ -1,4 +1,4 @@
-import { type DuctFittingNode, type ParametricDescriptor, useScene } from '@pascal-app/core'
+import { type DuctFittingNode, type ParametricDescriptor, useScene } from '@aruct/core'
 import { Vector3 } from 'three'
 import { getDuctFittingPorts } from '../duct-fitting/ports'
 import { rollToContinueAcrossElbow } from './geometry'

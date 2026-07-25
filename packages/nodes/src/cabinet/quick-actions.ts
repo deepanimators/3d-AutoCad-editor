@@ -5,7 +5,7 @@ import type {
   CabinetNode,
   IconRef,
   NodeQuickAction,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import { moduleSideOpen, sideInsertX } from './run-layout'
 import {
   addCabinetModuleSide,

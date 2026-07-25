@@ -1,7 +1,7 @@
 'use client'
 
-import { emitter, useScene } from '@pascal-app/core'
-import { useViewer } from '@pascal-app/viewer'
+import { emitter, useScene } from '@aruct/core'
+import { useViewer } from '@aruct/viewer'
 import { useThree } from '@react-three/fiber'
 import { useEffect } from 'react'
 import * as THREE from 'three'

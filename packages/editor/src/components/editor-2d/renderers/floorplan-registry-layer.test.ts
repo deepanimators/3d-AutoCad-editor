@@ -5,8 +5,8 @@ import type {
   FloorplanAffordanceSession,
   FloorplanGeometry,
   LiveNodeOverrides,
-} from '@pascal-app/core'
-import { type AnyNodeDefinition, emitter, nodeRegistry, registerNode } from '@pascal-app/core'
+} from '@aruct/core'
+import { type AnyNodeDefinition, emitter, nodeRegistry, registerNode } from '@aruct/core'
 import { createElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { z } from 'zod'

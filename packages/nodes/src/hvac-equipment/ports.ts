@@ -1,4 +1,4 @@
-import type { NodePort } from '@pascal-app/core'
+import type { NodePort } from '@aruct/core'
 import { Vector3 } from 'three'
 import { equivalentDiameterIn, ovalEquivalentDiameterIn } from '../duct-segment/geometry'
 import type { HvacEquipmentNode } from './schema'

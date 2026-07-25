@@ -7,7 +7,7 @@ import type {
   GeometryContext,
   NodeDefinition,
   SceneApi,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import type { ComponentType } from 'react'
 
 export const FLOORPLAN_NODE_EXTENSION_KEY = 'pascal:editor/floorplan'

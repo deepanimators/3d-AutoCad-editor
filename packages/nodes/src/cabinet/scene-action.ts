@@ -1,5 +1,5 @@
-import type { AnyNode, AnyNodeId, SceneActionCapability, SceneApi } from '@pascal-app/core'
-import { getEffectiveNode, useLiveNodeOverrides } from '@pascal-app/core'
+import type { AnyNode, AnyNodeId, SceneActionCapability, SceneApi } from '@aruct/core'
+import { getEffectiveNode, useLiveNodeOverrides } from '@aruct/core'
 import {
   type CabinetCompartment,
   compartmentCooktopActiveBurners,

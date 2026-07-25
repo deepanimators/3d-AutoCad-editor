@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, test } from 'bun:test'
 import * as fs from 'node:fs/promises'
 import * as os from 'node:os'
 import * as path from 'node:path'
-import type { SceneGraph } from '@pascal-app/core/clone-scene-graph'
+import type { SceneGraph } from '@aruct/core/clone-scene-graph'
 import {
   resolveDefaultDatabasePath,
   SqliteSceneStore,
@@ -46,32 +46,32 @@ async function rmrf(p: string): Promise<void> {
 
 function createStore(rootDir: string, opts: Partial<SqliteSceneStoreOptions> = {}) {
   return new SqliteSceneStore({
-    databasePath: path.join(rootDir, 'pascal.db'),
+    databasePath: path.join(rootDir, 'aruct.db'),
     ...opts,
   })
 }
 
 describe('resolveDefaultDatabasePath', () => {
-  test('respects PASCAL_DB_PATH when set', () => {
-    expect(resolveDefaultDatabasePath({ PASCAL_DB_PATH: '/tmp/custom.db' })).toBe('/tmp/custom.db')
+  test('respects ARUCT_DB_PATH when set', () => {
+    expect(resolveDefaultDatabasePath({ ARUCT_DB_PATH: '/tmp/custom.db' })).toBe('/tmp/custom.db')
   })
 
-  test('resolves PASCAL_DATA_DIR to pascal.db', () => {
-    expect(resolveDefaultDatabasePath({ PASCAL_DATA_DIR: '/tmp/pascal-data' })).toBe(
-      path.join('/tmp/pascal-data', 'pascal.db'),
+  test('resolves ARUCT_DATA_DIR to aruct.db', () => {
+    expect(resolveDefaultDatabasePath({ ARUCT_DATA_DIR: '/tmp/pascal-data' })).toBe(
+      path.join('/tmp/pascal-data', 'aruct.db'),
     )
   })
 
   test('falls back to XDG_DATA_HOME on Unix', () => {
     if (process.platform === 'win32') return
     expect(resolveDefaultDatabasePath({ XDG_DATA_HOME: '/xdg/share' })).toBe(
-      path.join('/xdg/share', 'pascal', 'data', 'pascal.db'),
+      path.join('/xdg/share', 'pascal', 'data', 'aruct.db'),
     )
   })
 
-  test('falls back to homedir + .pascal/data/pascal.db', () => {
+  test('falls back to homedir + .pascal/data/aruct.db', () => {
     if (process.platform === 'win32') return
-    expect(resolveDefaultDatabasePath({}).endsWith(path.join('.pascal', 'data', 'pascal.db'))).toBe(
+    expect(resolveDefaultDatabasePath({}).endsWith(path.join('.pascal', 'data', 'aruct.db'))).toBe(
       true,
     )
   })
@@ -202,7 +202,7 @@ describe('SqliteSceneStore', () => {
     await store.save({ id: 'rev', name: 'Rev', graph: makeGraph() })
     await store.rename('rev', 'Renamed', { expectedVersion: 1 })
 
-    const dbPath = path.join(rootDir, 'pascal.db')
+    const dbPath = path.join(rootDir, 'aruct.db')
     const db = new Database(dbPath)
     try {
       const beforeDelete = db
@@ -295,7 +295,7 @@ describe('SqliteSceneStore', () => {
   test('load returns null for missing scenes and errors on corrupt graph rows', async () => {
     expect(await store.load('missing')).toBeNull()
 
-    const db = new Database(path.join(rootDir, 'pascal.db'), { create: true })
+    const db = new Database(path.join(rootDir, 'aruct.db'), { create: true })
     try {
       db.exec(`
         CREATE TABLE IF NOT EXISTS scenes (

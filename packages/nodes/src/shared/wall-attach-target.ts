@@ -8,7 +8,7 @@ import {
   useScene,
   WALL_SNAP_DISTANCE_M,
   type WallNode,
-} from '@pascal-app/core'
+} from '@aruct/core'
 
 /**
  * Shared helpers for the kinds whose 2D move snaps onto a wall in plan

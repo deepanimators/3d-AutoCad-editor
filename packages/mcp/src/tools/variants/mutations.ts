@@ -1,5 +1,5 @@
-import type { SceneGraph } from '@pascal-app/core/clone-scene-graph'
-import type { AnyNode, AnyNodeId } from '@pascal-app/core/schema'
+import type { SceneGraph } from '@aruct/core/clone-scene-graph'
+import type { AnyNode, AnyNodeId } from '@aruct/core/schema'
 
 /** Mutation kinds handled by `applyMutation`. */
 export type MutationKind =

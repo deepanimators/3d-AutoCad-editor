@@ -5,7 +5,7 @@ import {
   type FloorplanAffordanceSession,
   useScene,
   type WallNode,
-} from '@pascal-app/core'
+} from '@aruct/core'
 
 const MIN_DOOR_WIDTH = 0.3
 

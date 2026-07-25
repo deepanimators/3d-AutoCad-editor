@@ -1,4 +1,4 @@
-import type { IconRef, LazyComponent } from '@pascal-app/core'
+import type { IconRef, LazyComponent } from '@aruct/core'
 
 export type EditorHostPanelWorkspace = string & {}
 

@@ -1,5 +1,5 @@
-import { measurementAnchorReferenceNodeIds, type NodeDefinition } from '@pascal-app/core'
-import type { FloorplanNodeExtension } from '@pascal-app/editor'
+import { measurementAnchorReferenceNodeIds, type NodeDefinition } from '@aruct/core'
+import type { FloorplanNodeExtension } from '@aruct/editor'
 import { resolveConstructionDimensionForDrawing } from './drawing-coordination'
 import { buildConstructionDimensionFloorplan } from './floorplan'
 import {

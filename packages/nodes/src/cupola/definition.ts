@@ -3,7 +3,7 @@ import {
   type CupolaNode as CupolaNodeType,
   type HandleDescriptor,
   type NodeDefinition,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import { surfacePaintCapability } from '../shared/surface-paint'
 import { buildCupolaFloorplan } from './floorplan'
 import { cupolaParametrics } from './parametrics'

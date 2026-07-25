@@ -7,7 +7,7 @@ import {
   StairNode,
   StairSegmentNode,
   ZoneNode,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import {
   buildClearanceAdvisories,
   type ClearanceProfile,

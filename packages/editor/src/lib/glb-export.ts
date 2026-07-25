@@ -11,14 +11,14 @@ import {
   sceneRegistry,
   type WindowNode,
   type ZoneNode,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import {
   getPascalTextureRef,
   poseDoorMovingParts,
   poseWindowMovingParts,
   SCENE_LAYER,
   snapLevelsToTruePositions,
-} from '@pascal-app/viewer'
+} from '@aruct/viewer'
 import type { Object3D } from 'three'
 import * as THREE from 'three'
 import {

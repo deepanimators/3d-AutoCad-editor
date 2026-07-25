@@ -1,5 +1,5 @@
 'use client'
 
-import { StairSystem } from '@pascal-app/viewer'
+import { StairSystem } from '@aruct/viewer'
 
 export default StairSystem

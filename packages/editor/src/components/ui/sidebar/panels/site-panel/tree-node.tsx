@@ -1,5 +1,5 @@
-import { type AnyNode, type AnyNodeId, emitter, nodeRegistry, useScene } from '@pascal-app/core'
-import { useViewer } from '@pascal-app/viewer'
+import { type AnyNode, type AnyNodeId, emitter, nodeRegistry, useScene } from '@aruct/core'
+import { useViewer } from '@aruct/viewer'
 import { ChevronRight } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 import { forwardRef, memo, useEffect, useRef } from 'react'

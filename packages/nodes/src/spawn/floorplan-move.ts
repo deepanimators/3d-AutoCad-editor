@@ -5,8 +5,8 @@ import {
   type SpawnNode,
   snapScalar,
   useScene,
-} from '@pascal-app/core'
-import { getSegmentGridStep } from '@pascal-app/editor'
+} from '@aruct/core'
+import { getSegmentGridStep } from '@aruct/editor'
 
 export const spawnFloorplanMoveTarget: FloorplanMoveTarget<SpawnNode> = ({ node }) => {
   const spawnId = node.id as AnyNodeId

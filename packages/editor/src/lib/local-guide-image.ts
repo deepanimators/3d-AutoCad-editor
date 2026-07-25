@@ -3,7 +3,7 @@ import {
   GuideNode,
   type GuideNode as GuideNodeType,
   saveAsset,
-} from '@pascal-app/core'
+} from '@aruct/core'
 
 export function getGuideImageName(filename: string) {
   const trimmed = filename.trim()

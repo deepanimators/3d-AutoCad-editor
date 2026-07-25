@@ -4,7 +4,7 @@ import {
   normalizeRoofSegmentTrim,
   type RidgeVentNode,
   type RoofSegmentNode,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import * as THREE from 'three'
 import { getRoofTopSurfaceY } from '../shared/roof-surface'
 

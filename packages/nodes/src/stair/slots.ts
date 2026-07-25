@@ -1,4 +1,4 @@
-import type { SlotDeclaration, StairNode } from '@pascal-app/core'
+import type { SlotDeclaration, StairNode } from '@aruct/core'
 
 export type StairSlotId = 'treads' | 'body' | 'railing'
 

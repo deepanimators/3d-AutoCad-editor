@@ -6,8 +6,8 @@ import {
   snapPointAlongAngleRay,
   useScene,
   ZoneNode,
-} from '@pascal-app/core'
-import { useViewer } from '@pascal-app/viewer'
+} from '@aruct/core'
+import { useViewer } from '@aruct/viewer'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { BufferGeometry, DoubleSide, type Group, type Line, Shape, Vector3 } from 'three'
 import { EDITOR_LAYER } from './../../../lib/constants'

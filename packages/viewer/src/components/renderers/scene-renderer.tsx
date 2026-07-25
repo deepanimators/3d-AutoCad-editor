@@ -1,6 +1,6 @@
 'use client'
 
-import { useScene } from '@pascal-app/core'
+import { useScene } from '@aruct/core'
 import { NodeRenderer } from './node-renderer'
 
 export const SceneRenderer = () => {

@@ -1,6 +1,6 @@
 'use client'
 
-import { type AnyNode, type SpawnNode, useLiveTransforms, useScene } from '@pascal-app/core'
+import { type AnyNode, type SpawnNode, useLiveTransforms, useScene } from '@aruct/core'
 import {
   ActionButton,
   ActionGroup,
@@ -9,8 +9,8 @@ import {
   SliderControl,
   triggerSFX,
   useEditor,
-} from '@pascal-app/editor'
-import { useViewer } from '@pascal-app/viewer'
+} from '@aruct/editor'
+import { useViewer } from '@aruct/viewer'
 import { Move, Trash2 } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
 

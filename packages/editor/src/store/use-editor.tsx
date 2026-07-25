@@ -1,6 +1,6 @@
 'use client'
 
-import type { AssetInput } from '@pascal-app/core'
+import type { AssetInput } from '@aruct/core'
 import {
   type AnyNode,
   type AnyNodeId,
@@ -32,8 +32,8 @@ import {
   type WallNode,
   type WallSurfaceSide,
   type WindowNode,
-} from '@pascal-app/core'
-import { useViewer } from '@pascal-app/viewer'
+} from '@aruct/core'
+import { useViewer } from '@aruct/viewer'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import {

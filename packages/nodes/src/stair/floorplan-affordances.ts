@@ -5,7 +5,7 @@ import {
   type StairNode,
   type StairSegmentNode,
   useScene,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import { rotateAffordanceDelta } from '../shared/rotate-affordance'
 
 // Minimums + max sweep mirror the 3D handles in

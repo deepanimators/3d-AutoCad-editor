@@ -5,8 +5,8 @@ import type {
   DuctSegmentNode,
   PipeFittingNode,
   PipeSegmentNode,
-} from '@pascal-app/core'
-import { EDITOR_LAYER } from '@pascal-app/editor'
+} from '@aruct/core'
+import { EDITOR_LAYER } from '@aruct/editor'
 import { useMemo } from 'react'
 import { Mesh, MeshBasicMaterial } from 'three'
 import { buildDuctFittingGeometry } from '../duct-fitting/geometry'

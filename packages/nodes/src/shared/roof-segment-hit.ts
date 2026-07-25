@@ -5,7 +5,7 @@ import {
   type RoofSegmentNode,
   sceneRegistry,
   useScene,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import * as THREE from 'three'
 
 const worldPoint = new THREE.Vector3()

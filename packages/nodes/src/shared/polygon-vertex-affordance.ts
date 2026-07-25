@@ -5,13 +5,13 @@ import {
   type FloorplanAffordanceModifiers,
   type FloorplanAffordanceSession,
   useScene,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import {
   getSegmentGridStep,
   snapPointToGrid,
   snapScalarToGrid,
   type WallPlanPoint,
-} from '@pascal-app/editor'
+} from '@aruct/editor'
 
 /**
  * Shared "edit polygon" floor-plan affordances. Used by kinds whose

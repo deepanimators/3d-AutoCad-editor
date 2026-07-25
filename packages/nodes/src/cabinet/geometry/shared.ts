@@ -4,7 +4,7 @@ import {
   type GeometryContext,
   getMaterialPresetByRef,
   type MaterialSchema,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import {
   applyMaterialPresetToMaterials,
   applyWorldScaleBoxUVs,
@@ -16,7 +16,7 @@ import {
   type RenderShading,
   resolveMaterialRef,
   resolveSlotDefaultMaterial,
-} from '@pascal-app/viewer'
+} from '@aruct/viewer'
 import {
   BoxGeometry,
   CylinderGeometry,

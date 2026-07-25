@@ -5,9 +5,9 @@ import {
   getWallPlaneTop,
   resolveStairTotalRise,
   resolveWallEffectiveHeight,
-} from '@pascal-app/core'
-import type { AnyNode, AnyNodeId } from '@pascal-app/core/schema'
-import { computeWallSlabSupport } from '@pascal-app/core/spatial-grid'
+} from '@aruct/core'
+import type { AnyNode, AnyNodeId } from '@aruct/core/schema'
+import { computeWallSlabSupport } from '@aruct/core/spatial-grid'
 import { z } from 'zod'
 import type { SceneOperations } from '../operations'
 import {

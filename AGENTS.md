@@ -1,6 +1,6 @@
-# Agent Instructions — `pascalorg/editor`
+# Agent Instructions — `aruct/editor`
 
-Public, open-source home of `@pascal-app/{core,viewer,editor,mcp}` and the standalone editor app. Consumed both as npm packages and (in `pascalorg/private-editor`) as a git submodule.
+Public, open-source home of `@aruct/{core,viewer,editor,mcp}` and the standalone editor app. Consumed both as npm packages and (in `aruct/private-editor`) as a git submodule.
 
 ## Repo Shape
 

@@ -1,1 +1,1 @@
-export { ZoneNode } from '@pascal-app/core'
+export { ZoneNode } from '@aruct/core'

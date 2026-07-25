@@ -8,7 +8,7 @@ import {
   Editor,
   type SceneGraph,
   type SidebarTab,
-} from '@pascal-app/editor'
+} from '@aruct/editor'
 import { Hammer, Layers } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'

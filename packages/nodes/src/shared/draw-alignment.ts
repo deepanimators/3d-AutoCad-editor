@@ -1,6 +1,6 @@
 'use client'
 
-import { alignFloorplanDraftPoint, useAlignmentGuides } from '@pascal-app/editor'
+import { alignFloorplanDraftPoint, useAlignmentGuides } from '@aruct/editor'
 
 type Vec3 = [number, number, number]
 

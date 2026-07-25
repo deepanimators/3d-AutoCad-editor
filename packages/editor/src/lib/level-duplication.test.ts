@@ -6,7 +6,7 @@ import {
   LevelNode,
   SpawnNode,
   WallNode,
-} from '@pascal-app/core/schema'
+} from '@aruct/core/schema'
 import { buildLevelDuplicateCreateOps } from './level-duplication'
 
 describe('buildLevelDuplicateCreateOps', () => {

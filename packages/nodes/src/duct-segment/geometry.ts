@@ -1,11 +1,11 @@
-import type { GeometryContext } from '@pascal-app/core'
+import type { GeometryContext } from '@aruct/core'
 import {
   type ColorPreset,
   createSurfaceRoleMaterial,
   type RenderShading,
   resolveMaterialRef,
   resolveSlotDefaultMaterial,
-} from '@pascal-app/viewer'
+} from '@aruct/viewer'
 import {
   BoxGeometry,
   CatmullRomCurve3,

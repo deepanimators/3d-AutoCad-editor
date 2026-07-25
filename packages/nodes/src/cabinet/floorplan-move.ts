@@ -11,14 +11,14 @@ import {
   type SceneApi,
   useLiveNodeOverrides,
   useScene,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import {
   isAlignmentGuideActive,
   isGridSnapActive,
   isMagneticSnapActive,
   useAlignmentGuides,
   useEditor,
-} from '@pascal-app/editor'
+} from '@aruct/editor'
 import { cabinetModuleParentFrame } from './move-frame'
 import { bumpCabinetRunLayoutRevision, syncCornerRunsFromSourceModule } from './run-ops'
 import { resolveCabinetModuleWallSnapLocal } from './wall-snap'

@@ -1,4 +1,4 @@
-import { useLiveNodeOverrides, useLiveTransforms, useScene } from '@pascal-app/core'
+import { useLiveNodeOverrides, useLiveTransforms, useScene } from '@aruct/core'
 
 export type HistoryCommandDelegate = {
   undo: () => void

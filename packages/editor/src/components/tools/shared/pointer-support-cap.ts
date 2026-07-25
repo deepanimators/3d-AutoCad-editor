@@ -1,5 +1,5 @@
-import { type AnyNodeId, sceneRegistry, spatialGridManager } from '@pascal-app/core'
-import { useViewer } from '@pascal-app/viewer'
+import { type AnyNodeId, sceneRegistry, spatialGridManager } from '@aruct/core'
+import { useViewer } from '@aruct/viewer'
 import { type Camera, Vector3 } from 'three'
 
 const originScratch = new Vector3()

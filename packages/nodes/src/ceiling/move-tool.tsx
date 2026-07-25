@@ -13,7 +13,7 @@ import {
   snapScalar,
   useLiveTransforms,
   useScene,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import {
   CursorSphere,
   consumePlacementDragRelease,
@@ -23,8 +23,8 @@ import {
   triggerSFX,
   useAlignmentGuides,
   useEditor,
-} from '@pascal-app/editor'
-import { useViewer } from '@pascal-app/viewer'
+} from '@aruct/editor'
+import { useViewer } from '@aruct/viewer'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type * as THREE from 'three'
 import { BufferGeometry, DoubleSide, Path, Shape, ShapeGeometry, Vector3 } from 'three'

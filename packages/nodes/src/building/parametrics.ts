@@ -1,4 +1,4 @@
-import type { BuildingNode, ParametricDescriptor } from '@pascal-app/core'
+import type { BuildingNode, ParametricDescriptor } from '@aruct/core'
 
 export const buildingParametrics: ParametricDescriptor<BuildingNode> = {
   groups: [],

@@ -1,7 +1,7 @@
 'use client'
 
-import { getLinearUnitLabel, linearUnitToMeters, metersToLinearUnit } from '@pascal-app/editor'
-import { useViewer } from '@pascal-app/viewer'
+import { getLinearUnitLabel, linearUnitToMeters, metersToLinearUnit } from '@aruct/editor'
+import { useViewer } from '@aruct/viewer'
 
 type OpeningDocumentationPatch = {
   mark?: string

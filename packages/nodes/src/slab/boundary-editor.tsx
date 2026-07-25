@@ -1,6 +1,6 @@
 'use client'
 
-import { resolveLevelId, type SlabNode, useLiveNodeOverrides, useScene } from '@pascal-app/core'
+import { resolveLevelId, type SlabNode, useLiveNodeOverrides, useScene } from '@aruct/core'
 import {
   boundaryReshapeScope,
   clearSlabSnapFeedback,
@@ -11,8 +11,8 @@ import {
   resolveSlabPlanPointSnap,
   snapScalarToGrid,
   useInteractionScope,
-} from '@pascal-app/editor'
-import { useViewer } from '@pascal-app/viewer'
+} from '@aruct/editor'
+import { useViewer } from '@aruct/viewer'
 import { useCallback, useEffect } from 'react'
 
 /**

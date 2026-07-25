@@ -9,13 +9,13 @@ import {
   type RoofSegmentNode,
   sceneRegistry,
   useScene,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import {
   consumePlacementDragRelease,
   markToolCancelConsumed,
   triggerSFX,
   useEditor,
-} from '@pascal-app/editor'
+} from '@aruct/editor'
 import { useCallback, useEffect, useState } from 'react'
 import * as THREE from 'three'
 import {

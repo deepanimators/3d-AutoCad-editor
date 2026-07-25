@@ -15,7 +15,7 @@ import type {
   StairSegmentNode,
   WallNode,
   WindowNode,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import { useCallback } from 'react'
 import {
   getFloorplanHitNodeId,

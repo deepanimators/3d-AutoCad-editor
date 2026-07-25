@@ -10,7 +10,7 @@ import {
   type GridEvent,
   sceneRegistry,
   useScene,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import {
   consumePlacementDragRelease,
   DragBoundingBox,
@@ -23,8 +23,8 @@ import {
   triggerSFX,
   useAlignmentGuides,
   useEditor,
-} from '@pascal-app/editor'
-import { useViewer } from '@pascal-app/viewer'
+} from '@aruct/editor'
+import { useViewer } from '@aruct/viewer'
 import { useEffect, useRef, useState } from 'react'
 import { Matrix4, Vector3 } from 'three'
 import {

@@ -11,8 +11,8 @@ import {
   type WallAssemblyLayer,
   type WallMiterData,
   type WallNode,
-} from '@pascal-app/core'
-import { floorplanGeometryMetadata, readFloorplanContext } from '@pascal-app/editor'
+} from '@aruct/core'
+import { floorplanGeometryMetadata, readFloorplanContext } from '@aruct/editor'
 import { constructionDimensionStandard } from '../shared/construction-dimension-standards'
 import {
   buildCurvedWallConstructionDimensions,

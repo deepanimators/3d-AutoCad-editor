@@ -5,8 +5,8 @@ import {
   type GeometryContext,
   WallNode,
   ZoneNode,
-} from '@pascal-app/core'
-import { createFloorplanContextExtensions } from '@pascal-app/editor'
+} from '@aruct/core'
+import { createFloorplanContextExtensions } from '@aruct/editor'
 import { buildRoomClearDimensions } from './room-clear-dimensions'
 
 function enclosure(points: Array<[number, number]>) {

@@ -8,9 +8,9 @@ import {
   type RoofNode,
   sceneRegistry,
   useScene,
-} from '@pascal-app/core'
-import { triggerSFX } from '@pascal-app/editor'
-import { useViewer } from '@pascal-app/viewer'
+} from '@aruct/core'
+import { triggerSFX } from '@aruct/editor'
+import { useViewer } from '@aruct/viewer'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import * as THREE from 'three'
 import { resolveRidgeSnap } from '../shared/ridge-snap'

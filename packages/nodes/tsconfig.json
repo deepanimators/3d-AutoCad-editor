@@ -1,5 +1,5 @@
 {
-  "extends": "@pascal/typescript-config/base.json",
+  "extends": "@aruct/typescript-config/base.json",
   "compilerOptions": {
     "outDir": "dist",
     "rootDir": "src",

@@ -1,7 +1,7 @@
 'use client'
 
-import { createSceneApi, nodeRegistry, useScene } from '@pascal-app/core'
-import { useViewer } from '@pascal-app/viewer'
+import { createSceneApi, nodeRegistry, useScene } from '@aruct/core'
+import { useViewer } from '@aruct/viewer'
 import { type ComponentType, lazy, Suspense, useCallback, useMemo } from 'react'
 import {
   type FloorplanToolContext,

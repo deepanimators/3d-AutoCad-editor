@@ -6,13 +6,13 @@ import {
   resolveStairTotalRise,
   type StairNode,
   useScene,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import type {
   FloorplanStairArrowEntry,
   FloorplanStairEntry,
   FloorplanStairSegmentEntry,
-} from '@pascal-app/editor'
-import { floorplanGeometryMetadata, readFloorplanContext } from '@pascal-app/editor'
+} from '@aruct/editor'
+import { floorplanGeometryMetadata, readFloorplanContext } from '@aruct/editor'
 import {
   type ConstructionLengthProfile,
   type ConstructionMetricNotation,

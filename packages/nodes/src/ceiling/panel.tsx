@@ -6,7 +6,7 @@ import {
   getCeilingClampBound,
   resolveCeilingHeight,
   useScene,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import {
   ActionButton,
   ActionGroup,
@@ -20,8 +20,8 @@ import {
   useEditingHole,
   useEditor,
   useInteractionScope,
-} from '@pascal-app/editor'
-import { useViewer } from '@pascal-app/viewer'
+} from '@aruct/editor'
+import { useViewer } from '@aruct/viewer'
 import { Edit, Move, Plus, Trash2 } from 'lucide-react'
 import { useCallback, useEffect, useRef } from 'react'
 

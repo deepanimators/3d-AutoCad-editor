@@ -1,7 +1,7 @@
 'use client'
 
-import { EDITOR_LAYER } from '@pascal-app/editor'
-import { buildDoorPreviewMesh } from '@pascal-app/viewer'
+import { EDITOR_LAYER } from '@aruct/editor'
+import { buildDoorPreviewMesh } from '@aruct/viewer'
 import { useEffect, useMemo } from 'react'
 import { applyGhost } from '../shared/ghost-materials'
 import type { DoorNode } from './schema'

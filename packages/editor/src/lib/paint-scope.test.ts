@@ -6,7 +6,7 @@ import {
   type SlabNode,
   type Space,
   type WallNode,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import {
   availablePaintScopes,
   cyclePaintScope,

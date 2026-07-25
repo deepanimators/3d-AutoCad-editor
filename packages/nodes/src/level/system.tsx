@@ -1,5 +1,5 @@
 'use client'
 
-import { LevelSystem } from '@pascal-app/viewer'
+import { LevelSystem } from '@aruct/viewer'
 
 export default LevelSystem

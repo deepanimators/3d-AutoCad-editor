@@ -8,9 +8,9 @@ import {
   SolarPanelNode,
   sceneRegistry,
   useScene,
-} from '@pascal-app/core'
-import { triggerSFX, usePlacementPreview } from '@pascal-app/editor'
-import { useViewer } from '@pascal-app/viewer'
+} from '@aruct/core'
+import { triggerSFX, usePlacementPreview } from '@aruct/editor'
+import { useViewer } from '@aruct/viewer'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import * as THREE from 'three'
 import { RoofAttachmentFallbackPreview } from '../shared/roof-attachment-fallback-preview'

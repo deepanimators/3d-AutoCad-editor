@@ -7,7 +7,7 @@ import {
   getWallCurveLength,
   useScene,
   type WallNode,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import {
   CursorSphere,
   type FencePlanPoint,
@@ -19,8 +19,8 @@ import {
   useAlignmentGuides,
   useDragAction,
   useInteractionScope,
-} from '@pascal-app/editor'
-import { useViewer } from '@pascal-app/viewer'
+} from '@aruct/editor'
+import { useViewer } from '@aruct/viewer'
 import { Html } from '@react-three/drei'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { moveFenceEndpointDragAction } from './actions/move-endpoint'

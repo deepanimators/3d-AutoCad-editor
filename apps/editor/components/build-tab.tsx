@@ -1,13 +1,13 @@
 'use client'
 
-import { nodeRegistry } from '@pascal-app/core'
+import { nodeRegistry } from '@aruct/core'
 import {
   getFloorplanNodeExtension,
   MaterialPaintPanel,
   triggerSFX,
   useEditor,
-} from '@pascal-app/editor'
-import { useLiquidLineToolOptions } from '@pascal-app/nodes'
+} from '@aruct/editor'
+import { useLiquidLineToolOptions } from '@aruct/nodes'
 import Image from 'next/image'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import {

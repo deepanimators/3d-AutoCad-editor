@@ -1,5 +1,5 @@
-import type { AnyNodeId, NodeDefinition } from '@pascal-app/core'
-import type { FloorplanNodeExtension } from '@pascal-app/editor'
+import type { AnyNodeId, NodeDefinition } from '@aruct/core'
+import type { FloorplanNodeExtension } from '@aruct/editor'
 import { buildWallFloorplan, computeWallFloorplanLevelData } from './floorplan'
 import { wallCurveAffordance, wallMoveEndpointAffordance } from './floorplan-affordances'
 import { wallFloorplanMoveTarget } from './floorplan-move'

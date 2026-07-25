@@ -14,9 +14,9 @@ import {
   spatialGridManager,
   useScene,
   type WallNode,
-} from '@pascal-app/core'
-import { useWallSnapIndicator, type WallSnapKind } from '@pascal-app/editor'
-import { useViewer } from '@pascal-app/viewer'
+} from '@aruct/core'
+import { useWallSnapIndicator, type WallSnapKind } from '@aruct/editor'
+import { useViewer } from '@aruct/viewer'
 import { useFrame } from '@react-three/fiber'
 import { memo, useMemo, useRef } from 'react'
 import { BoxGeometry, CircleGeometry, CylinderGeometry, type Group } from 'three'

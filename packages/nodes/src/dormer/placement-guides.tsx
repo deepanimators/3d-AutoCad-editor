@@ -1,8 +1,8 @@
 'use client'
 
-import type { RoofSegmentNode } from '@pascal-app/core'
-import { EDITOR_LAYER, formatMeasurement } from '@pascal-app/editor'
-import { useViewer } from '@pascal-app/viewer'
+import type { RoofSegmentNode } from '@aruct/core'
+import { EDITOR_LAYER, formatMeasurement } from '@aruct/editor'
+import { useViewer } from '@aruct/viewer'
 import { Html } from '@react-three/drei'
 import { useEffect, useMemo } from 'react'
 import { BufferGeometry, Float32BufferAttribute, Line as ThreeLine } from 'three'

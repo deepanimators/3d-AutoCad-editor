@@ -3,7 +3,7 @@ import {
   type ElevatorNode,
   type FloorplanAffordance,
   useScene,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import { rotateAffordanceDelta } from '../shared/rotate-affordance'
 
 const MIN_ELEVATOR_DIM = 0.6

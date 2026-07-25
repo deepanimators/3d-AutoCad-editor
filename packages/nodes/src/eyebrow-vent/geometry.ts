@@ -1,4 +1,4 @@
-import type { EyebrowVentNode } from '@pascal-app/core'
+import type { EyebrowVentNode } from '@aruct/core'
 import * as THREE from 'three'
 
 /**

@@ -20,7 +20,7 @@ import {
   useScene,
   type WallEvent,
   type WallNode,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import {
   clearPlacementSurface,
   getFloorStackPreviewPosition,
@@ -38,8 +38,8 @@ import {
   useEditor,
   useFacingPose,
   usePlacementPreview,
-} from '@pascal-app/editor'
-import { useViewer } from '@pascal-app/viewer'
+} from '@aruct/editor'
+import { useViewer } from '@aruct/viewer'
 import { Html } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'

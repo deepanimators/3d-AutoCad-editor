@@ -6,8 +6,8 @@ import {
   useRegistry,
   useScene,
   type WallNode,
-} from '@pascal-app/core'
-import { getVisibleWallMaterials, NodeRenderer, useNodeEvents, useViewer } from '@pascal-app/viewer'
+} from '@aruct/core'
+import { getVisibleWallMaterials, NodeRenderer, useNodeEvents, useViewer } from '@aruct/viewer'
 import { useEffect, useLayoutEffect, useMemo, useRef } from 'react'
 import type { Mesh } from 'three'
 import { useShallow } from 'zustand/react/shallow'
@@ -24,7 +24,7 @@ import { createWallExtraSlotMaterials, WallTreatments } from './treatments'
  * items) inside the wall's local frame.
  *
  * Behaviorally identical to the legacy `WallRenderer` in
- * `@pascal-app/viewer/components/renderers/wall/wall-renderer.tsx`.
+ * `@aruct/viewer/components/renderers/wall/wall-renderer.tsx`.
  * Phase 6 deletes the legacy file; until then both coexist and the Phase 0
  * shims pick which one renders based on `nodeRegistry.has('wall')`.
  *

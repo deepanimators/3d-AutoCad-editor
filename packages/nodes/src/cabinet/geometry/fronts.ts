@@ -4,7 +4,7 @@ import {
   csgGeometry,
   prepareBrushForCSG,
   SUBTRACTION,
-} from '@pascal-app/viewer'
+} from '@aruct/viewer'
 import {
   BoxGeometry,
   type BufferGeometry,

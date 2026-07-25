@@ -6,7 +6,7 @@ import {
   type ColumnNode,
   type ColumnPresetId,
   useScene,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import {
   ActionButton,
   ActionGroup,
@@ -17,8 +17,8 @@ import {
   ToggleControl,
   triggerSFX,
   useEditor,
-} from '@pascal-app/editor'
-import { useViewer } from '@pascal-app/viewer'
+} from '@aruct/editor'
+import { useViewer } from '@aruct/viewer'
 import { Move, Trash2 } from 'lucide-react'
 import { useCallback } from 'react'
 

@@ -1,4 +1,4 @@
-import type { FloorplanGeometry, GeometryContext } from '@pascal-app/core'
+import type { FloorplanGeometry, GeometryContext } from '@aruct/core'
 import { sanitizeShelfDimensions } from './dimensions'
 import type { ShelfResizePayload } from './floorplan-affordances'
 import type { ShelfNode } from './schema'

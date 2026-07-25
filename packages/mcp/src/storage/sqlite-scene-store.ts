@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto'
 import { mkdirSync } from 'node:fs'
 import * as os from 'node:os'
 import * as path from 'node:path'
-import type { SceneGraph } from '@pascal-app/core/clone-scene-graph'
+import type { SceneGraph } from '@aruct/core/clone-scene-graph'
 import { z } from 'zod'
 import { generateSlug, isValidSlug, sanitizeSlug } from './slug'
 import { openSqliteDatabase, type SqliteDatabase } from './sqlite-driver'
@@ -80,31 +80,31 @@ const GraphSchema = z.object({
  * Resolves Pascal's local SQLite database path.
  *
  * Precedence:
- * 1. `PASCAL_DB_PATH`
- * 2. `PASCAL_DATA_DIR/pascal.db`
- * 3. On Windows: `%APPDATA%/Pascal/data/pascal.db`
- * 4. `$XDG_DATA_HOME/pascal/data/pascal.db`
- * 5. `$HOME/.pascal/data/pascal.db`
+ * 1. `ARUCT_DB_PATH`
+ * 2. `ARUCT_DATA_DIR/aruct.db`
+ * 3. On Windows: `%APPDATA%/Pascal/data/aruct.db`
+ * 4. `$XDG_DATA_HOME/pascal/data/aruct.db`
+ * 5. `$HOME/.aruct/data/aruct.db`
  */
 export function resolveDefaultDatabasePath(env: NodeJS.ProcessEnv = process.env): string {
-  if (env.PASCAL_DB_PATH && env.PASCAL_DB_PATH.length > 0) {
-    return env.PASCAL_DB_PATH
+  if (env.ARUCT_DB_PATH && env.ARUCT_DB_PATH.length > 0) {
+    return env.ARUCT_DB_PATH
   }
-  if (env.PASCAL_DATA_DIR && env.PASCAL_DATA_DIR.length > 0) {
-    return path.join(env.PASCAL_DATA_DIR, 'pascal.db')
+  if (env.ARUCT_DATA_DIR && env.ARUCT_DATA_DIR.length > 0) {
+    return path.join(env.ARUCT_DATA_DIR, 'aruct.db')
   }
   if (process.platform === 'win32') {
     const appData = env.APPDATA
     if (appData && appData.length > 0) {
-      return path.join(appData, 'Pascal', 'data', 'pascal.db')
+      return path.join(appData, 'Pascal', 'data', 'aruct.db')
     }
-    return path.join(os.homedir(), '.pascal', 'data', 'pascal.db')
+    return path.join(os.homedir(), '.pascal', 'data', 'aruct.db')
   }
   const xdg = env.XDG_DATA_HOME
   if (xdg && xdg.length > 0) {
-    return path.join(xdg, 'pascal', 'data', 'pascal.db')
+    return path.join(xdg, 'pascal', 'data', 'aruct.db')
   }
-  return path.join(os.homedir(), '.pascal', 'data', 'pascal.db')
+  return path.join(os.homedir(), '.pascal', 'data', 'aruct.db')
 }
 
 function resolveMaxSceneBytes(
@@ -118,11 +118,11 @@ function resolveMaxSceneBytes(
     return explicit
   }
 
-  const raw = env?.PASCAL_MAX_SCENE_BYTES
+  const raw = env?.ARUCT_MAX_SCENE_BYTES
   if (raw === undefined || raw === '') return DEFAULT_MAX_SCENE_BYTES
   const parsed = Number.parseInt(raw, 10)
   if (!Number.isInteger(parsed) || parsed <= 0) {
-    throw new SceneInvalidError('PASCAL_MAX_SCENE_BYTES must be a positive integer')
+    throw new SceneInvalidError('ARUCT_MAX_SCENE_BYTES must be a positive integer')
   }
   return parsed
 }

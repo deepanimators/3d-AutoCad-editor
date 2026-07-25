@@ -1,5 +1,5 @@
-import type { RoofSegmentNode, SkylightNode } from '@pascal-app/core'
-import { getRoofOuterSurfaceFrameAtPoint } from '@pascal-app/viewer'
+import type { RoofSegmentNode, SkylightNode } from '@aruct/core'
+import { getRoofOuterSurfaceFrameAtPoint } from '@aruct/viewer'
 import * as THREE from 'three'
 
 /**

@@ -4,7 +4,7 @@ import {
   type HandleDescriptor,
   type ItemNode as ItemNodeType,
   type NodeDefinition,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import { buildItemFloorplan } from './floorplan'
 import { itemFloorplanMoveTarget } from './floorplan-move'
 import { itemPaint } from './paint'

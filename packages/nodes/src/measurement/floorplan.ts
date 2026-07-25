@@ -10,7 +10,7 @@ import {
   measurementDistance,
   measurementPerimeter,
   measurementPrismVolume,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import {
   buildMeasurementAngleArcPoints,
   formatAngleRadians,
@@ -21,7 +21,7 @@ import {
   measurementPolygonLabelAnchor,
   readFloorplanContext,
   withFloorplanGeometryMetadata,
-} from '@pascal-app/editor'
+} from '@aruct/editor'
 import { measurementResolvedEditPoints } from './edit'
 import { resolveMeasurementNode } from './resolve'
 

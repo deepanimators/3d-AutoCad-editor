@@ -1,5 +1,5 @@
-import type { AnyNode, MaterialSchema, PaintCapability } from '@pascal-app/core'
-import { createMaterial, createMaterialFromPresetRef } from '@pascal-app/viewer'
+import type { AnyNode, MaterialSchema, PaintCapability } from '@aruct/core'
+import { createMaterial, createMaterialFromPresetRef } from '@aruct/viewer'
 import type { Material, Mesh, Object3D } from 'three'
 
 /**

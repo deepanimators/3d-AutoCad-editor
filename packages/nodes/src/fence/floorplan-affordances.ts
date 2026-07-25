@@ -11,7 +11,7 @@ import {
   useLiveNodeOverrides,
   useScene,
   type WallNode,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import {
   alignFloorplanDraftPoint,
   type FencePlanPoint,
@@ -25,7 +25,7 @@ import {
   snapFenceDraftPoint,
   snapScalarToGrid,
   useAlignmentGuides,
-} from '@pascal-app/editor'
+} from '@aruct/editor'
 
 /**
  * Floor-plan 2D drag affordances for fence — sister to the 3D

@@ -4,7 +4,7 @@ import {
   nodeRegistry,
   resolveBuildingForLevel,
   sceneRegistry,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import { Box3, Matrix4 } from 'three'
 
 // Shared plumbing for the group transform gizmos (rotate + move). Both operate

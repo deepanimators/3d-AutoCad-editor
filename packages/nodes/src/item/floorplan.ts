@@ -10,7 +10,7 @@ import {
   type RoofSegmentNode,
   roofFacePointToSegment,
   useLiveTransforms,
-} from '@pascal-app/core'
+} from '@aruct/core'
 
 /**
  * Stage C floor-plan builder for item.

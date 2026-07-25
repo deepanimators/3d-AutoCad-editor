@@ -1,5 +1,5 @@
-import type { NodeDefinition } from '@pascal-app/core'
-import type { FloorplanNodeExtension } from '@pascal-app/editor'
+import type { NodeDefinition } from '@aruct/core'
+import type { FloorplanNodeExtension } from '@aruct/editor'
 import { buildStructuralGridFloorplan } from './floorplan'
 import { StructuralGridNode } from './schema'
 

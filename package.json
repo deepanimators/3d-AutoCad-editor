@@ -27,6 +27,7 @@
     "@biomejs/biome": "^2.4.16",
     "@typescript/native-preview": "7.0.0-dev.20260624.1",
     "dotenv-cli": "^11.0.0",
+    "drizzle-kit": "^0.31.10",
     "turbo": "^2.9.17",
     "typescript": "6.0.3",
     "ultracite": "^7.8.2"
@@ -55,5 +56,9 @@
     "apps/*",
     "packages/*",
     "tooling/*"
-  ]
+  ],
+  "dependencies": {
+    "@neondatabase/serverless": "^1.1.0",
+    "drizzle-orm": "^0.45.2"
+  }
 }

@@ -1,4 +1,4 @@
-import { getLevelElevations, type LevelNode, sceneRegistry, useScene } from '@pascal-app/core'
+import { getLevelElevations, type LevelNode, sceneRegistry, useScene } from '@aruct/core'
 
 /**
  * Instantly snaps all level Objects3D to their true stacked Y positions

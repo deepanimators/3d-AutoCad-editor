@@ -4,8 +4,8 @@ import type {
   FloorplanPoint,
   GeometryContext,
   WallNode,
-} from '@pascal-app/core'
-import { readFloorplanGeometryMetadata, withFloorplanGeometryMetadata } from '@pascal-app/editor'
+} from '@aruct/core'
+import { readFloorplanGeometryMetadata, withFloorplanGeometryMetadata } from '@aruct/editor'
 import {
   buildOpeningMarkAnnotation,
   type OpeningFloorplanLevelData,

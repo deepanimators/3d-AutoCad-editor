@@ -9,14 +9,14 @@ import {
   type RoofSegmentSurfaceMaterialRole,
   useRegistry,
   useScene,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import {
   createMaterial,
   createMaterialFromPresetRef,
   getRoofMaterialArray,
   useNodeEvents,
   useViewer,
-} from '@pascal-app/viewer'
+} from '@aruct/viewer'
 import { useEffect, useMemo, useRef } from 'react'
 import * as THREE from 'three'
 import { getRoofDebugMaterials, getRoofMaterials } from '../roof/roof-materials'

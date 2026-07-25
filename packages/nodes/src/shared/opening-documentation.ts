@@ -5,8 +5,8 @@ import type {
   LevelNode,
   WallNode,
   WindowNode,
-} from '@pascal-app/core'
-import { type FloorplanSchedule, withFloorplanGeometryMetadata } from '@pascal-app/editor'
+} from '@aruct/core'
+import { type FloorplanSchedule, withFloorplanGeometryMetadata } from '@aruct/editor'
 import {
   type ConstructionLengthProfile,
   type ConstructionLinearUnit,

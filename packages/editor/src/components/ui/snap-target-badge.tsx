@@ -1,4 +1,4 @@
-import type { AnyNode, AssetInput } from '@pascal-app/core'
+import type { AnyNode, AssetInput } from '@aruct/core'
 import type { ReactNode } from 'react'
 import { cn } from '../../lib/utils'
 

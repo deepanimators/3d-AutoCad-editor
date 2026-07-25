@@ -1,7 +1,7 @@
 /**
  * Wall schema re-export.
  *
- * Wall's Zod schema lives in `@pascal-app/core` because doors, windows, and
+ * Wall's Zod schema lives in `@aruct/core` because doors, windows, and
  * items still need to type-check their `parentId` against `WallNode.shape.id`
  * before the migration to a `relations.hosts`-driven model is complete. The
  * registry definition consumes it from here so the rest of the bundle
@@ -13,7 +13,7 @@ export type {
   WallAssemblyDatumSide,
   WallAssemblyLayer,
   WallNode as WallNodeType,
-} from '@pascal-app/core'
+} from '@aruct/core'
 export {
   getWallAssemblyDatumReferenceId,
   getWallAssemblyLayers,
@@ -24,4 +24,4 @@ export {
   WallAssemblyLayerRole,
   WallDimensionDatum,
   WallNode,
-} from '@pascal-app/core'
+} from '@aruct/core'

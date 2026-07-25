@@ -16,7 +16,7 @@ import {
   type SolarPanelNode,
   type TurbineVentNode,
   useScene,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import {
   ActionButton,
   ActionGroup,
@@ -27,8 +27,8 @@ import {
   SliderControl,
   triggerSFX,
   useEditor,
-} from '@pascal-app/editor'
-import { useViewer } from '@pascal-app/viewer'
+} from '@aruct/editor'
+import { useViewer } from '@aruct/viewer'
 import { Copy, Move, Plus, Trash2 } from 'lucide-react'
 import { useCallback, useState } from 'react'
 import { useShallow } from 'zustand/react/shallow'

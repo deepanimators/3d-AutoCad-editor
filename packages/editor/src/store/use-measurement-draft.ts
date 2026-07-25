@@ -9,8 +9,8 @@ import {
   type MeasurementSnapKind,
   measurementNormal,
   useScene,
-} from '@pascal-app/core'
-import { useViewer } from '@pascal-app/viewer'
+} from '@aruct/core'
+import { useViewer } from '@aruct/viewer'
 import { create } from 'zustand'
 
 export type MeasurementKind = 'distance' | 'angle' | 'area' | 'perimeter' | 'volume'

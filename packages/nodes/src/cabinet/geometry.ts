@@ -1,5 +1,5 @@
-import type { CabinetNode, GeometryContext } from '@pascal-app/core'
-import type { ColorPreset, RenderShading } from '@pascal-app/viewer'
+import type { CabinetNode, GeometryContext } from '@aruct/core'
+import type { ColorPreset, RenderShading } from '@aruct/viewer'
 import { Group } from 'three'
 import { addCooktopCompartment } from './geometry/cooktop'
 import { addDishwasherCompartment } from './geometry/dishwasher'

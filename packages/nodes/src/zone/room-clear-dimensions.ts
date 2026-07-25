@@ -8,8 +8,8 @@ import {
   type SpaceBoundaryFace,
   type WallNode,
   type ZoneNode,
-} from '@pascal-app/core'
-import { readFloorplanContext } from '@pascal-app/editor'
+} from '@aruct/core'
+import { readFloorplanContext } from '@aruct/editor'
 import {
   type ConstructionLengthProfile,
   type ConstructionMetricNotation,

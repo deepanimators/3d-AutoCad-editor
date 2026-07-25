@@ -1,7 +1,7 @@
 'use client'
 
-import { type SpawnNode, useScene } from '@pascal-app/core'
-import { useViewer } from '@pascal-app/viewer'
+import { type SpawnNode, useScene } from '@aruct/core'
+import { useViewer } from '@aruct/viewer'
 import Image from 'next/image'
 import { memo, useCallback, useState } from 'react'
 import useEditor from './../../../../../store/use-editor'

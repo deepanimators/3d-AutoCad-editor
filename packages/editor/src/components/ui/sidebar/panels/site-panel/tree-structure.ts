@@ -1,4 +1,4 @@
-import { type AnyNode, type AnyNodeId, nodeRegistry } from '@pascal-app/core'
+import { type AnyNode, type AnyNodeId, nodeRegistry } from '@aruct/core'
 
 /**
  * Child ids the sidebar tree renders under a node: the kind's

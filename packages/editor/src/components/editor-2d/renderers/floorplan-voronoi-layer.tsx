@@ -1,7 +1,7 @@
 'use client'
 
-import { collectLevelWallSegments, useScene, WALL_SNAP_DISTANCE_M } from '@pascal-app/core'
-import { useViewer } from '@pascal-app/viewer'
+import { collectLevelWallSegments, useScene, WALL_SNAP_DISTANCE_M } from '@aruct/core'
+import { useViewer } from '@aruct/viewer'
 import { memo, useMemo } from 'react'
 import useEditor from '../../../store/use-editor'
 

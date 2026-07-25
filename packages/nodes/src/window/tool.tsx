@@ -13,7 +13,7 @@ import {
   type WallNode,
   WallNode as WallNodeSchema,
   WindowNode,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import {
   calculateCursorRotation,
   calculateItemRotation,
@@ -27,8 +27,8 @@ import {
   useEditor,
   useFacingPose,
   usePlacementPreview,
-} from '@pascal-app/editor'
-import { useViewer } from '@pascal-app/viewer'
+} from '@aruct/editor'
+import { useViewer } from '@aruct/viewer'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { BoxGeometry, EdgesGeometry, type Group, type LineSegments, Vector3 } from 'three'
 import { LineBasicNodeMaterial } from 'three/webgpu'

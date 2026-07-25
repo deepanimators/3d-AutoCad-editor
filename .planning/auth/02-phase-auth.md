@@ -351,6 +351,6 @@ This component appears in `<Editor>` toolbar via the existing `viewerToolbarRigh
 
 ## What Does NOT Change in This Phase
 
-- Scene API authentication (`PASCAL_SCENE_API_TOKEN`) unchanged — programmatic/MCP access still token-based
+- Scene API authentication (`ARUCT_SCENE_API_TOKEN`) unchanged — programmatic/MCP access still token-based
 - Editor functionality unchanged
 - Scene data unchanged — `ownerId` column exists but is still nullable (set in Phase 2)

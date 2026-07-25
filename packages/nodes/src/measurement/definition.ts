@@ -1,4 +1,4 @@
-import { measurementReferenceNodeIds, type NodeDefinition } from '@pascal-app/core'
+import { measurementReferenceNodeIds, type NodeDefinition } from '@aruct/core'
 import { buildMeasurementFloorplan } from './floorplan'
 import { measurementMoveVertexAffordance } from './floorplan-affordance'
 import { MeasurementNode } from './schema'

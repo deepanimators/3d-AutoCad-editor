@@ -2,8 +2,8 @@ import {
   type NodeDefinition,
   resolveAutoZonePolygon,
   ZoneNode as ZoneNodeSchema,
-} from '@pascal-app/core'
-import type { FloorplanNodeExtension } from '@pascal-app/editor'
+} from '@aruct/core'
+import type { FloorplanNodeExtension } from '@aruct/editor'
 import { polygonMeasurementFeatures } from '../shared/polygon-measurement'
 import { buildZoneFloorplan } from './floorplan'
 import {

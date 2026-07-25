@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, test } from 'bun:test'
-import type { AnyNode } from '@pascal-app/core'
+import type { AnyNode } from '@aruct/core'
 import {
   type ActiveInteractionScope,
   editingHoleInfo,

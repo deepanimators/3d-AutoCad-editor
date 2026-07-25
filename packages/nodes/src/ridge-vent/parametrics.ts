@@ -1,4 +1,4 @@
-import type { ParametricDescriptor } from '@pascal-app/core'
+import type { ParametricDescriptor } from '@aruct/core'
 import type { RidgeVentNode } from './schema'
 
 export const ridgeVentParametrics: ParametricDescriptor<RidgeVentNode> = {

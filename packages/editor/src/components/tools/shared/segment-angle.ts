@@ -4,7 +4,7 @@ import {
   getWallCurveLength,
   isCurvedWall,
   type WallNode,
-} from '@pascal-app/core'
+} from '@aruct/core'
 
 export type PlanPoint = [number, number]
 

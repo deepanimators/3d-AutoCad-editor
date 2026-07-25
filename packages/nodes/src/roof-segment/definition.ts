@@ -5,7 +5,7 @@ import {
   type NodeDefinition,
   RoofSegmentNode as RoofSegmentNodeSchema,
   type RoofSegmentNode as RoofSegmentNodeType,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import { buildRoofSegmentFloorplan } from './floorplan'
 import {
   roofSegmentMoveTarget,

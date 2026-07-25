@@ -1,5 +1,5 @@
-import type { AnyNodeId, ElevatorNode, SpawnNode } from '@pascal-app/core'
-import { nodeRegistry } from '@pascal-app/core'
+import type { AnyNodeId, ElevatorNode, SpawnNode } from '@aruct/core'
+import { nodeRegistry } from '@aruct/core'
 import { Suspense } from 'react'
 import { useMovingNode } from '../../../store/use-interaction-scope'
 import { MoveElevatorTool } from '../elevator/move-elevator-tool'

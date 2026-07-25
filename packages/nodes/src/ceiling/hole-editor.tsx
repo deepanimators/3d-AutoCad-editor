@@ -6,9 +6,9 @@ import {
   resolveLevelId,
   useLiveNodeOverrides,
   useScene,
-} from '@pascal-app/core'
-import { PolygonEditor } from '@pascal-app/editor'
-import { useViewer } from '@pascal-app/viewer'
+} from '@aruct/core'
+import { PolygonEditor } from '@aruct/editor'
+import { useViewer } from '@aruct/viewer'
 import { useCallback, useEffect } from 'react'
 
 /**

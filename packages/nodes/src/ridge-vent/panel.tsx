@@ -6,7 +6,7 @@ import {
   RidgeVentNode as RidgeVentSchema,
   type RoofSegmentNode,
   useScene,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import {
   ActionButton,
   ActionGroup,
@@ -16,8 +16,8 @@ import {
   SliderControl,
   triggerSFX,
   useEditor,
-} from '@pascal-app/editor'
-import { useViewer } from '@pascal-app/viewer'
+} from '@aruct/editor'
+import { useViewer } from '@aruct/viewer'
 import { Copy, Move, Trash2 } from 'lucide-react'
 import { useCallback } from 'react'
 import type { RidgeVentNode } from './schema'

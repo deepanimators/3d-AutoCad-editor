@@ -298,7 +298,7 @@ Admin dashboard (Phase 4) will expose a UI for this.
 
 ## API Token (MCP / Programmatic Access)
 
-The existing `PASCAL_SCENE_API_TOKEN` flow stays but is now scoped:
+The existing `ARUCT_SCENE_API_TOKEN` flow stays but is now scoped:
 
 - Token requests still pass `guardSceneApiRequest`
 - But no session → no user → routes that require user fall through to 401

@@ -3,7 +3,7 @@ import {
   type PlanarCursorPlacementMode,
   type PlanarPoint,
   resolvePlanarCursorPosition,
-} from '@pascal-app/editor'
+} from '@aruct/editor'
 
 type FloorplanCursorResolverOptions = {
   snap?: (value: number) => number

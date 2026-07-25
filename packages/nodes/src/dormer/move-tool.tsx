@@ -7,9 +7,9 @@ import {
   type RoofSegmentNode,
   sceneRegistry,
   useScene,
-} from '@pascal-app/core'
-import { useEditor } from '@pascal-app/editor'
-import { useViewer } from '@pascal-app/viewer'
+} from '@aruct/core'
+import { useEditor } from '@aruct/editor'
+import { useViewer } from '@aruct/viewer'
 import { useEffect, useMemo } from 'react'
 import { DormerPlacementGuides } from './placement-guides'
 import DormerPreview from './preview'

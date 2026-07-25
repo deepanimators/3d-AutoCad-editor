@@ -3,10 +3,10 @@
 A 3D building editor built with React Three Fiber and WebGPU.
 
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![npm @pascal-app/core](https://img.shields.io/npm/v/@pascal-app/core?label=%40pascal-app%2Fcore)](https://www.npmjs.com/package/@pascal-app/core)
-[![npm @pascal-app/viewer](https://img.shields.io/npm/v/@pascal-app/viewer?label=%40pascal-app%2Fviewer)](https://www.npmjs.com/package/@pascal-app/viewer)
+[![npm @aruct/core](https://img.shields.io/npm/v/@aruct/core?label=%40aruct%2Fcore)](https://www.npmjs.com/package/@aruct/core)
+[![npm @aruct/viewer](https://img.shields.io/npm/v/@aruct/viewer?label=%40aruct%2Fviewer)](https://www.npmjs.com/package/@aruct/viewer)
 [![Discord](https://img.shields.io/badge/Discord-Join%20Server-5865F2?logo=discord&logoColor=white)](https://discord.gg/SaBRA9t2)
-[![X (Twitter)](https://img.shields.io/badge/follow-%40pascal__app-black?logo=x&logoColor=white)](https://x.com/pascal_app)
+[![X (Twitter)](https://img.shields.io/badge/follow-%40pascal__app-black?logo=x&logoColor=white)](https://x.com/aruct_app)
 
 https://github.com/user-attachments/assets/8b50e7cf-cebe-4579-9cf3-8786b35f7b6b
 
@@ -16,17 +16,17 @@ The viewer runtime and built-in node definitions are separate packages. Install 
 viewer set, then load the built-in plugin once before mounting `<Viewer>`:
 
 ```bash
-npm install @pascal-app/core @pascal-app/viewer @pascal-app/editor @pascal-app/nodes
+npm install @aruct/core @aruct/viewer @aruct/editor @aruct/nodes
 ```
 
 ```typescript
-import { loadPlugin } from '@pascal-app/core'
-import { builtinPlugin } from '@pascal-app/nodes'
+import { loadPlugin } from '@aruct/core'
+import { builtinPlugin } from '@aruct/nodes'
 
 await loadPlugin(builtinPlugin)
 ```
 
-See the [`@pascal-app/viewer` quick start](packages/viewer/README.md#usage) for a React example.
+See the [`@aruct/viewer` quick start](packages/viewer/README.md#usage) for a React example.
 
 
 ## Repository Architecture
@@ -49,10 +49,10 @@ editor/
 
 | Package | Responsibility |
 |---------|---------------|
-| **@pascal-app/core** | Node schemas, scene state (Zustand), registry contracts, spatial queries, and event bus |
-| **@pascal-app/viewer** | 3D rendering via React Three Fiber, shared render systems, default camera/controls, and post-processing |
-| **@pascal-app/editor** | Editing tools, panels, selection, and direct-manipulation UI |
-| **@pascal-app/nodes** | Built-in registry plugin with node definitions, renderers, geometry, and systems |
+| **@aruct/core** | Node schemas, scene state (Zustand), registry contracts, spatial queries, and event bus |
+| **@aruct/viewer** | 3D rendering via React Three Fiber, shared render systems, default camera/controls, and post-processing |
+| **@aruct/editor** | Editing tools, panels, selection, and direct-manipulation UI |
+| **@aruct/nodes** | Built-in registry plugin with node definitions, renderers, geometry, and systems |
 | **apps/editor** | Standalone Next.js host for the editor packages |
 
 The **viewer** renders the scene with sensible defaults. The **editor** extends it with interactive tools, selection management, and editing capabilities.
@@ -63,8 +63,8 @@ Each package has its own Zustand store for managing state:
 
 | Store | Package | Responsibility |
 |-------|---------|----------------|
-| `useScene` | `@pascal-app/core` | Scene data: nodes, root IDs, dirty nodes, CRUD operations. Persisted to IndexedDB with undo/redo via Zundo. |
-| `useViewer` | `@pascal-app/viewer` | Viewer state: current selection (building/level/zone IDs), level display mode (stacked/exploded/solo), camera mode. |
+| `useScene` | `@aruct/core` | Scene data: nodes, root IDs, dirty nodes, CRUD operations. Persisted to IndexedDB with undo/redo via Zundo. |
+| `useViewer` | `@aruct/viewer` | Viewer state: current selection (building/level/zone IDs), level display mode (stacked/exploded/solo), camera mode. |
 | `useEditor` | `apps/editor` | Editor state: active tool, structure layer visibility, panel states, editor-specific preferences. |
 
 **Access patterns:**
@@ -120,7 +120,7 @@ Nodes are stored in a **flat dictionary** (`Record<id, Node>`), not a nested tre
 
 ### Scene State (Zustand Store)
 
-The scene is managed by a Zustand store in `@pascal-app/core`:
+The scene is managed by a Zustand store in `@aruct/core`:
 
 ```typescript
 useScene.getState() = {
@@ -210,7 +210,7 @@ const WallRenderer = ({ node }) => {
 
 Systems are React components that run in the render loop (`useFrame`) to update geometry and transforms. They process **dirty nodes** marked by the store.
 
-**Core Systems (in `@pascal-app/core`):**
+**Core Systems (in `@aruct/core`):**
 
 | System | Responsibility |
 |--------|---------------|
@@ -220,7 +220,7 @@ Systems are React components that run in the render loop (`useFrame`) to update 
 | `RoofSystem` | Generates roof geometry |
 | `ItemSystem` | Positions items on walls, ceilings, or floors (slab elevation) |
 
-**Viewer Systems (in `@pascal-app/viewer`):**
+**Viewer Systems (in `@aruct/viewer`):**
 
 | System | Responsibility |
 |--------|---------------|
@@ -360,8 +360,8 @@ Clears dirty flag
 
 The editor is extensible: a plugin ships node kinds (schema, 3D/2D rendering, placement tools, inspector parametrics) and left-rail panels through the same `Plugin` manifest the built-ins use — there is no separate internal API.
 
-- **Developer guide** — [Create a plugin](https://editor.pascal.app/docs/developers/plugins): the `Plugin` shape, panel contributions, discovery, lifecycle, and what's in/out of v1.
-- **Worked example** — [`pascalorg/plugin-trees`](https://github.com/pascalorg/plugin-trees): a standalone plugin with procedural trees, flowers, grass, and a presets panel. Clone it as a starting point.
+- **Developer guide** — [Create a plugin](https://editor.aruct.app/docs/developers/plugins): the `Plugin` shape, panel contributions, discovery, lifecycle, and what's in/out of v1.
+- **Worked example** — [`aruct/plugin-trees`](https://github.com/aruct/plugin-trees): a standalone plugin with procedural trees, flowers, grass, and a presets panel. Clone it as a starting point.
 
 ---
 
@@ -393,7 +393,7 @@ bun install
 bun dev
 
 # This will:
-# 1. Build @pascal-app/core and @pascal-app/viewer
+# 1. Build @aruct/core and @aruct/viewer
 # 2. Start watching both packages for changes
 # 3. Start the Next.js editor dev server
 # Open http://localhost:3002
@@ -408,18 +408,18 @@ bun dev
 turbo build
 
 # Build specific package
-turbo build --filter=@pascal-app/core
+turbo build --filter=@aruct/core
 ```
 
 ### Publishing Packages
 
 ```bash
 # Build packages
-turbo build --filter=@pascal-app/core --filter=@pascal-app/viewer
+turbo build --filter=@aruct/core --filter=@aruct/viewer
 
 # Publish to npm
-npm publish --workspace=@pascal-app/core --access public
-npm publish --workspace=@pascal-app/viewer --access public
+npm publish --workspace=@aruct/core --access public
+npm publish --workspace=@aruct/viewer --access public
 ```
 
 ---
@@ -447,4 +447,4 @@ npm publish --workspace=@pascal-app/viewer --access public
 
 ---
 
-<a href="https://trendshift.io/repositories/23831" target="_blank"><img src="https://trendshift.io/api/badge/repositories/23831" alt="pascalorg/editor | Trendshift" width="250" height="55"/></a>
+<a href="https://trendshift.io/repositories/23831" target="_blank"><img src="https://trendshift.io/api/badge/repositories/23831" alt="aruct/editor | Trendshift" width="250" height="55"/></a>

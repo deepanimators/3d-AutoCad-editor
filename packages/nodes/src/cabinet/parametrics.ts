@@ -1,4 +1,4 @@
-import type { CabinetModuleNode, CabinetNode, ParametricDescriptor } from '@pascal-app/core'
+import type { CabinetModuleNode, CabinetNode, ParametricDescriptor } from '@aruct/core'
 import { cabinetCornerUnlinkPatchesOnDelete, cabinetEmptyRunCascadeDeleteIds } from './run-ops'
 
 export const cabinetParametrics: ParametricDescriptor<CabinetNode> = {

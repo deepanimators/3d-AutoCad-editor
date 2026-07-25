@@ -1,4 +1,4 @@
-import { snapScalar } from '@pascal-app/core'
+import { snapScalar } from '@aruct/core'
 
 export function resolveResizeSnapValue({
   rawValue,

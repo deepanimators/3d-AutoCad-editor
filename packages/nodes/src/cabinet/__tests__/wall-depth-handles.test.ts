@@ -7,7 +7,7 @@ import type {
   HandleDescriptor,
   LinearResizeHandle,
   SceneApi,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import { cabinetDefinition, cabinetModuleDefinition } from '../definition'
 import { addCornerRun } from '../run-ops'
 import { CabinetModuleNode, CabinetNode } from '../schema'

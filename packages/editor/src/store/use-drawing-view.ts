@@ -4,7 +4,7 @@ import {
   CONSTRUCTION_DRAWING_TYPES,
   type ConstructionDrawingType,
   type DrawingSheetScale,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 

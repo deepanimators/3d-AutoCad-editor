@@ -15,7 +15,7 @@ import {
   useScene,
   type WallMoveAxis,
   type WallNode,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import {
   CursorSphere,
   consumePlacementDragRelease,
@@ -26,8 +26,8 @@ import {
   snapFenceDraftPoint,
   triggerSFX,
   useEditor,
-} from '@pascal-app/editor'
-import { useViewer } from '@pascal-app/viewer'
+} from '@aruct/editor'
+import { useViewer } from '@aruct/viewer'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 /**

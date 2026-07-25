@@ -3,9 +3,9 @@ import type {
   DormerSurfaceMaterialRole,
   MaterialSchema,
   PaintCapability,
-} from '@pascal-app/core'
-import { getEffectiveDormerSurfaceMaterial } from '@pascal-app/core'
-import { createMaterial, createMaterialFromPresetRef } from '@pascal-app/viewer'
+} from '@aruct/core'
+import { getEffectiveDormerSurfaceMaterial } from '@aruct/core'
+import { createMaterial, createMaterialFromPresetRef } from '@aruct/viewer'
 import type { Material, Mesh } from 'three'
 
 /**

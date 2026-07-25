@@ -16,14 +16,14 @@ import {
   useFloorplanAnnotationVisibility,
   useSidebarStore,
   type ViewMode,
-} from '@pascal-app/editor'
+} from '@aruct/editor'
 import {
   CLAY_PALETTE,
   type EdgeMode,
   getSceneTheme,
   SCENE_THEMES,
   useViewer,
-} from '@pascal-app/viewer'
+} from '@aruct/viewer'
 import {
   Box,
   Check,

@@ -1,7 +1,7 @@
 'use client'
 
-import { type AnyNodeId, useLiveNodeOverrides, useScene, type WallNode } from '@pascal-app/core'
-import { WallCutout, WallSystem } from '@pascal-app/viewer'
+import { type AnyNodeId, useLiveNodeOverrides, useScene, type WallNode } from '@aruct/core'
+import { WallCutout, WallSystem } from '@aruct/viewer'
 import { useFrame } from '@react-three/fiber'
 import { buildWallTreatmentLevelData, useWallTreatmentLevelData } from './treatment-level-data'
 import { wallTreatmentProudOffsets } from './treatments'

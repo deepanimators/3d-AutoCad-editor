@@ -3,7 +3,7 @@ import {
   type FloorplanAffordance,
   type ShelfNode,
   useScene,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import { rotateAffordanceDelta } from '../shared/rotate-affordance'
 
 // Mirror the 3D handles in `shelf/definition.ts` so a drag can't push a

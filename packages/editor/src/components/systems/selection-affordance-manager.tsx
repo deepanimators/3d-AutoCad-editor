@@ -1,7 +1,7 @@
 'use client'
 
-import { type AnyNodeId, useScene } from '@pascal-app/core'
-import { useViewer } from '@pascal-app/viewer'
+import { type AnyNodeId, useScene } from '@aruct/core'
+import { useViewer } from '@aruct/viewer'
 import { type ComponentType, Suspense, useMemo } from 'react'
 import { getRegistryAffordanceTool } from '../tools/shared/affordance-dispatch'
 

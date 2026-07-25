@@ -7,7 +7,7 @@ import {
   StairNode,
   WallNode,
   WindowNode,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import { buildDimensionCompletenessAudit } from './dimension-completeness-audit'
 
 function nodes(...items: AnyNode[]): Record<string, AnyNode> {

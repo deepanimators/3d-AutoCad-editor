@@ -4,16 +4,16 @@ import type {
   AnyNodeId,
   CabinetModuleNode as CabinetModuleNodeType,
   CabinetNode as CabinetNodeType,
-} from '@pascal-app/core'
-import { createSceneApi, useScene } from '@pascal-app/core'
+} from '@aruct/core'
+import { createSceneApi, useScene } from '@aruct/core'
 import {
   ActionButton,
   PanelSection,
   PanelWrapper,
   SegmentedControl,
   SliderControl,
-} from '@pascal-app/editor'
-import { useViewer } from '@pascal-app/viewer'
+} from '@aruct/editor'
+import { useViewer } from '@aruct/viewer'
 import { Pause, Play, Plus } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
 import { useShallow } from 'zustand/react/shallow'

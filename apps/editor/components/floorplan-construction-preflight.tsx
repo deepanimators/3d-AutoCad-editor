@@ -1,12 +1,12 @@
 'use client'
 
-import { useScene } from '@pascal-app/core'
-import { useFloorplanPreflight } from '@pascal-app/editor'
+import { useScene } from '@aruct/core'
+import { useFloorplanPreflight } from '@aruct/editor'
 import {
   buildClearanceAdvisories,
   buildConstructionModuleAdvisories,
   buildDimensionCompletenessAudit,
-} from '@pascal-app/nodes'
+} from '@aruct/nodes'
 import { useEffect, useMemo, useState } from 'react'
 
 export function FloorplanConstructionPreflight() {

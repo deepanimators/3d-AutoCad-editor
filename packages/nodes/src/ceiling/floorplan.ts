@@ -3,7 +3,7 @@ import type {
   FloorplanGeometry,
   FloorplanPoint,
   GeometryContext,
-} from '@pascal-app/core'
+} from '@aruct/core'
 
 /**
  * Stage C floor-plan builder for ceiling. Dashed boundary (ceilings sit

@@ -4,7 +4,7 @@ import {
   type FloorplanGeometry,
   nodeRegistry,
   registerNode,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import { splitFloorplanOverlay } from '../../components/editor-2d/renderers/floorplan-registry-layer'
 import {
   filterFloorplanExportOverlay,

@@ -1,4 +1,4 @@
-import type { FloorplanAffordancePoint } from '@pascal-app/core'
+import type { FloorplanAffordancePoint } from '@aruct/core'
 
 /**
  * Convert client (screen) coordinates into floor-plan plan coordinates via

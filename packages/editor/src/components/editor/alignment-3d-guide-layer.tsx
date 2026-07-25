@@ -1,7 +1,7 @@
 'use client'
 
-import { type AlignmentGuide, sceneRegistry } from '@pascal-app/core'
-import { useViewer } from '@pascal-app/viewer'
+import { type AlignmentGuide, sceneRegistry } from '@aruct/core'
+import { useViewer } from '@aruct/viewer'
 import { Html } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import { memo, useMemo, useRef } from 'react'

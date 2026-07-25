@@ -9,7 +9,7 @@ import {
   spatialGridManager,
   useScene,
   type WallNode,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import { useFrame } from '@react-three/fiber'
 import { useEffect, useRef } from 'react'
 import type { Material } from 'three'

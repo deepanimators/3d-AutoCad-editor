@@ -1,14 +1,14 @@
 'use client'
 
-// Renders an IFC-derived scene graph through the real `@pascal-app/viewer`
-// (the same one the editor uses). The full `@pascal-app/editor` shell was
+// Renders an IFC-derived scene graph through the real `@aruct/viewer`
+// (the same one the editor uses). The full `@aruct/editor` shell was
 // tried but its CSS expects a full-page layout that doesn't sit cleanly
 // inside the converter page; we use the bare Viewer + a custom toolbar
 // overlay instead.
 
-import { type AnyNode, type AnyNodeId, sceneRegistry, useScene } from '@pascal-app/core'
-import type { PascalSceneGraph } from '@pascal-app/ifc-converter'
-import { useViewer, Viewer } from '@pascal-app/viewer'
+import { type AnyNode, type AnyNodeId, sceneRegistry, useScene } from '@aruct/core'
+import type { PascalSceneGraph } from '@aruct/ifc-converter'
+import { useViewer, Viewer } from '@aruct/viewer'
 import { CameraControls } from '@react-three/drei'
 import { useThree } from '@react-three/fiber'
 import { useCallback, useEffect, useRef, useState } from 'react'

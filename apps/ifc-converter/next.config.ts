@@ -6,10 +6,10 @@ const nextConfig: NextConfig = {
   },
   transpilePackages: [
     'three',
-    '@pascal-app/core',
-    '@pascal-app/ifc-converter',
-    '@pascal-app/nodes',
-    '@pascal-app/viewer',
+    '@aruct/core',
+    '@aruct/ifc-converter',
+    '@aruct/nodes',
+    '@aruct/viewer',
   ],
   turbopack: {
     resolveAlias: {

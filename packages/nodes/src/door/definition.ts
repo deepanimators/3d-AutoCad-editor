@@ -5,8 +5,8 @@ import type {
   NodeDefinition,
   RoofSegmentNode,
   WallNode,
-} from '@pascal-app/core'
-import type { FloorplanNodeExtension } from '@pascal-app/editor'
+} from '@aruct/core'
+import type { FloorplanNodeExtension } from '@aruct/editor'
 import {
   buildDoorFloorplanSchedule,
   computeDoorFloorplanLevelData,

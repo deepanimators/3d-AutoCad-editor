@@ -1,4 +1,4 @@
-import type { CabinetModuleNode, CabinetNode } from '@pascal-app/core'
+import type { CabinetModuleNode, CabinetNode } from '@aruct/core'
 import {
   COOKTOP_STANDARD_WIDTH,
   cooktopCabinetStack,

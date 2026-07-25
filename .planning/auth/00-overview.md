@@ -11,7 +11,7 @@
 | Area | Status |
 |------|--------|
 | Auth | None — editor is fully public |
-| Scene API security | Static shared token (`PASCAL_SCENE_API_TOKEN`) |
+| Scene API security | Static shared token (`ARUCT_SCENE_API_TOKEN`) |
 | Database | SQLite (per-server file, no user concept) |
 | Billing | None |
 | Multi-user | None — all scenes in one bucket |

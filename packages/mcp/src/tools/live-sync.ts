@@ -1,5 +1,5 @@
-import type { SceneGraph } from '@pascal-app/core/clone-scene-graph'
-import { syncAutoStairOpenings } from '@pascal-app/core/stair-openings'
+import type { SceneGraph } from '@aruct/core/clone-scene-graph'
+import { syncAutoStairOpenings } from '@aruct/core/stair-openings'
 import type { SceneOperations } from '../operations'
 import { SceneVersionConflictError } from '../storage/types'
 import { ErrorCode, throwMcpError } from './errors'

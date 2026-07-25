@@ -1,8 +1,8 @@
 'use client'
 
-import type { AnyNode, AnyNodeId } from '@pascal-app/core'
-import { useScene } from '@pascal-app/core'
-import { useViewer } from '@pascal-app/viewer'
+import type { AnyNode, AnyNodeId } from '@aruct/core'
+import { useScene } from '@aruct/core'
+import { useViewer } from '@aruct/viewer'
 
 /**
  * Resolved current selection — selected node IDs plus a convenience

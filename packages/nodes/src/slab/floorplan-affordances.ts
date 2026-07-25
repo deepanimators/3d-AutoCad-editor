@@ -1,5 +1,5 @@
-import { type AnyNode, resolveLevelId, type SlabNode } from '@pascal-app/core'
-import { resolveSlabEdgeBandSnap, resolveSlabPlanPointSnap } from '@pascal-app/editor'
+import { type AnyNode, resolveLevelId, type SlabNode } from '@aruct/core'
+import { resolveSlabEdgeBandSnap, resolveSlabPlanPointSnap } from '@aruct/editor'
 import {
   createPolygonAddVertexAffordance,
   createPolygonDeleteVertexAffordance,

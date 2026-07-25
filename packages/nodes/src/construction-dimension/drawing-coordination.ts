@@ -4,7 +4,7 @@ import {
   type ConstructionDrawingType,
   resolveConstructionDimensionDrawingOverride,
   resolveConstructionDimensionDrawingPresentation,
-} from '@pascal-app/core'
+} from '@aruct/core'
 
 export function resolveConstructionDimensionForDrawing(args: {
   node: ConstructionDimensionNode

@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test'
-import { type AnyNode, type AnyNodeId, LevelNode, WallNode } from '@pascal-app/core'
+import { type AnyNode, type AnyNodeId, LevelNode, WallNode } from '@aruct/core'
 import type { WallHit } from '../../shared/wall-attach-target'
 import { CabinetModuleNode, CabinetNode } from '../schema'
 import {

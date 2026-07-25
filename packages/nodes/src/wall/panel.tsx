@@ -20,7 +20,7 @@ import {
   type WallDimensionDatum,
   type WallNode,
   type WallTrimProfile,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import {
   ActionButton,
   ActionGroup,
@@ -35,8 +35,8 @@ import {
   SliderControl,
   triggerSFX,
   useInteractionScope,
-} from '@pascal-app/editor'
-import { useViewer } from '@pascal-app/viewer'
+} from '@aruct/editor'
+import { useViewer } from '@aruct/viewer'
 import { Plus, Spline, Trash2 } from 'lucide-react'
 import { useCallback, useMemo, useRef } from 'react'
 import { resolveWallOpeningCeiling } from '../shared/wall-opening-ceiling'

@@ -6,14 +6,14 @@ import {
   resolveFenceSupportSlabPatch,
   useLiveNodeOverrides,
   useScene,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import {
   getSegmentGridStep,
   isGridSnapActive,
   isSegmentLongEnough,
   snapPointToGrid,
-} from '@pascal-app/editor'
-import { useViewer } from '@pascal-app/viewer'
+} from '@aruct/editor'
+import { useViewer } from '@aruct/viewer'
 
 type PlanPoint = [number, number]
 

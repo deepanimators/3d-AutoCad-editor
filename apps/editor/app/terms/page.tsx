@@ -40,7 +40,7 @@ export default function TermsPage() {
             <h2 className="font-semibold text-xl">1. Introduction</h2>
             <p className="text-foreground/90 leading-relaxed">
               Welcome to Aruct Editor (&quot;Editor&quot;) and the Aruct platform at aruct.app
-              (&quot;Platform&quot;), operated by Pascal Group Inc. (&quot;we,&quot; &quot;us,&quot;
+              (&quot;Platform&quot;), operated by Aruct Inc. (&quot;we,&quot; &quot;us,&quot;
               or &quot;our&quot;). By accessing or using our services, you agree to these Terms of
               Service.
             </p>
@@ -56,7 +56,7 @@ export default function TermsPage() {
             <p className="text-foreground/90 leading-relaxed">
               The Aruct platform (aruct.app) and its associated services, including user accounts,
               cloud storage, and project hosting, are proprietary services owned and operated by
-              Pascal Group Inc. These Terms govern your use of the Platform.
+              Aruct Inc. These Terms govern your use of the Platform.
             </p>
           </section>
 
@@ -120,9 +120,9 @@ export default function TermsPage() {
               may also delete your account at any time by contacting us at{' '}
               <a
                 className="text-foreground underline hover:text-foreground/80"
-                href="mailto:support@pascal.app"
+                href="mailto:support@aruct.app"
               >
-                support@pascal.app
+                support@aruct.app
               </a>
               .
             </p>
@@ -166,9 +166,9 @@ export default function TermsPage() {
               If you have questions about these Terms, please contact us at{' '}
               <a
                 className="text-foreground underline hover:text-foreground/80"
-                href="mailto:support@pascal.app"
+                href="mailto:support@aruct.app"
               >
-                support@pascal.app
+                support@aruct.app
               </a>
               .
             </p>

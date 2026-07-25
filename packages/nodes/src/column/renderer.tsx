@@ -6,7 +6,7 @@ import {
   useLiveTransforms,
   useRegistry,
   useScene,
-} from '@pascal-app/core'
+} from '@aruct/core'
 import {
   baseMaterial,
   type ColorPreset,
@@ -22,7 +22,7 @@ import {
   resolveSlotDefaultMaterial,
   useNodeEvents,
   useViewer,
-} from '@pascal-app/viewer'
+} from '@aruct/viewer'
 import { createContext, type ReactNode, useContext, useEffect, useMemo, useRef } from 'react'
 import { BufferGeometry, Float32BufferAttribute, type Group, type Material } from 'three'
 import {

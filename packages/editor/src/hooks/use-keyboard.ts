@@ -6,8 +6,8 @@ import {
   pauseSpaceDetection,
   resumeSpaceDetection,
   useScene,
-} from '@pascal-app/core'
-import { useViewer } from '@pascal-app/viewer'
+} from '@aruct/core'
+import { useViewer } from '@aruct/viewer'
 import { useEffect } from 'react'
 import { Vector3 } from 'three'
 import {

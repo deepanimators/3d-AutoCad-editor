@@ -9,8 +9,8 @@ import {
   type StairSegmentNode,
   stairFootprintAABB,
   useScene,
-} from '@pascal-app/core'
-import type { FloorplanNodeExtension } from '@pascal-app/editor'
+} from '@aruct/core'
+import type { FloorplanNodeExtension } from '@aruct/editor'
 
 const MIN_CURVED_RISE = 0.3
 const MIN_CURVED_WIDTH = 0.4

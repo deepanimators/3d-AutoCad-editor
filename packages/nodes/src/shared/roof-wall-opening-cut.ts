@@ -1,6 +1,6 @@
-import type { DoorNode, RoofSegmentNode, WindowNode } from '@pascal-app/core'
-import { getRoofWallFaceFrame, roofFacePointToSegment } from '@pascal-app/core'
-import { buildOpeningCutoutGeometry, getOpeningCutoutBottomPadding } from '@pascal-app/viewer'
+import type { DoorNode, RoofSegmentNode, WindowNode } from '@aruct/core'
+import { getRoofWallFaceFrame, roofFacePointToSegment } from '@aruct/core'
+import { buildOpeningCutoutGeometry, getOpeningCutoutBottomPadding } from '@aruct/viewer'
 import * as THREE from 'three'
 
 /**
