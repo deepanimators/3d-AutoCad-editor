@@ -21,7 +21,8 @@ export async function POST(request: Request) {
   let decoded: Awaited<ReturnType<typeof adminAuth.verifyIdToken>>
   try {
     decoded = await adminAuth.verifyIdToken(idToken, true)
-  } catch {
+  } catch (err) {
+    console.error('[session] verifyIdToken failed:', err)
     return Response.json({ error: 'invalid_token' }, { status: 401 })
   }
 
