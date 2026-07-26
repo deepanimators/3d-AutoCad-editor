@@ -134,10 +134,8 @@ try {
   // Sprint 3: Drop users.role enum constraint → allow custom roles
   await sql`ALTER TABLE users ALTER COLUMN role TYPE text USING role::text`
   // Remove old CHECK constraint if exists (idempotent via try/catch)
-  try {
-    await sql`ALTER TABLE users DROP CONSTRAINT IF EXISTS users_role_check`
-  } catch {}
-  await sql`ALTER TABLE users ADD CONSTRAINT users_role_nonempty CHECK (length(role) > 0)`
+  try { await sql`ALTER TABLE users DROP CONSTRAINT IF EXISTS users_role_check` } catch {}
+  try { await sql`ALTER TABLE users ADD CONSTRAINT users_role_nonempty CHECK (length(role) > 0)` } catch {}
   console.log('✓ users.role enum constraint dropped, allows custom roles')
 
   // Sprint 1: Coupons table
