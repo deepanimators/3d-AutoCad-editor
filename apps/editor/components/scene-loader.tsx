@@ -7,6 +7,7 @@ import { useScene } from '@aruct/core'
 import {
   applySceneGraphToEditor,
   Editor,
+  type ExternalResult,
   ItemsPanel,
   type ProjectVisibility,
   type SaveStatus,
@@ -38,7 +39,38 @@ export interface SceneMeta {
 }
 
 function EditorItemsPanel() {
-  return <ItemsPanel showSourceFilter={false} showTagFilters={false} />
+  const [externalResults, setExternalResults] = useState<ExternalResult[] | null | undefined>(
+    undefined,
+  )
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const handleSearchChange = (q: string) => {
+    if (debounceRef.current) clearTimeout(debounceRef.current)
+    if (!q.trim()) {
+      setExternalResults(undefined)
+      return
+    }
+    setExternalResults(null)
+    debounceRef.current = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/catalog/external?q=${encodeURIComponent(q)}&limit=12`)
+        if (!res.ok) throw new Error('fetch failed')
+        const data = (await res.json()) as { results: ExternalResult[] }
+        setExternalResults(data.results ?? [])
+      } catch {
+        setExternalResults([])
+      }
+    }, 400)
+  }
+
+  return (
+    <ItemsPanel
+      externalResults={externalResults}
+      onSearchChange={handleSearchChange}
+      showSourceFilter={false}
+      showTagFilters={false}
+    />
+  )
 }
 
 const SIDEBAR_TABS: (SidebarTab & { component: React.ComponentType })[] = [
