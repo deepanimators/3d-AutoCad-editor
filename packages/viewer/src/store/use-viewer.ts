@@ -176,6 +176,11 @@ type ViewerState = {
    */
   inputDragging: boolean
   setInputDragging: (dragging: boolean) => void
+
+  /** URL of an HDRI equirectangular image to use as the scene environment.
+   * null = use the procedural gradient sky fallback. Transient (never persisted). */
+  hdriUrl: string | null
+  setHdriUrl: (url: string | null) => void
 }
 
 type PersistedViewerState = Partial<
@@ -538,6 +543,9 @@ const useViewer = create<ViewerState>()(
       setCameraDragging: (dragging) => set({ cameraDragging: dragging }),
       inputDragging: false,
       setInputDragging: (dragging) => set({ inputDragging: dragging }),
+
+      hdriUrl: null,
+      setHdriUrl: (url) => set({ hdriUrl: url }),
     }),
     {
       name: 'viewer-preferences',

@@ -1,25 +1,38 @@
 import { redirect } from 'next/navigation'
 import { getSession } from '@/lib/auth-server'
 import { db } from '@/lib/db/client'
-import { users } from '@/lib/db/schema'
-import { desc } from 'drizzle-orm'
+import { users, roles, planConfig } from '@/lib/db/schema'
+import { desc, eq } from 'drizzle-orm'
 import { AppShell } from '@/components/app-shell'
 import { AdminClient } from './admin-client'
+
+export const dynamic = 'force-dynamic'
 
 export default async function AdminPage() {
   const session = await getSession()
   if (!session) redirect('/login?next=/admin')
   if (session.role !== 'admin') redirect('/')
 
-  const allUsers = await db.select({
-    id: users.id,
-    email: users.email,
-    name: users.name,
-    plan: users.plan,
-    role: users.role,
-    subscriptionStatus: users.subscriptionStatus,
-    createdAt: users.createdAt,
-  }).from(users).orderBy(desc(users.createdAt))
+  const [allUsers, allRoles, allPlans] = await Promise.all([
+    db.select({
+      id: users.id,
+      email: users.email,
+      name: users.name,
+      plan: users.plan,
+      role: users.role,
+      subscriptionStatus: users.subscriptionStatus,
+      createdAt: users.createdAt,
+    }).from(users).orderBy(desc(users.createdAt)),
+    db.select({ name: roles.name }).from(roles),
+    db.select({ planKey: planConfig.planKey }).from(planConfig).where(eq(planConfig.active, true)),
+  ])
+
+  const availableRoles = allRoles.map((r) => r.name)
+  const availablePlans = allPlans.map((p) => p.planKey)
+
+  // Fallback to standard values if DB not yet seeded
+  const roleList = availableRoles.length > 0 ? availableRoles : ['user', 'admin']
+  const planList = availablePlans.length > 0 ? availablePlans : ['free', 'pro', 'team']
 
   return (
     <AppShell>
@@ -31,7 +44,7 @@ export default async function AdminPage() {
           </div>
           <p className="text-muted-foreground text-xs">Click Plan, Status, or Role to edit inline</p>
         </div>
-        <AdminClient users={allUsers} />
+        <AdminClient users={allUsers} availableRoles={roleList} availablePlans={planList} />
       </div>
     </AppShell>
   )

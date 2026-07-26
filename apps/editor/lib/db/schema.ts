@@ -14,6 +14,10 @@ export const users = pgTable('users', {
   paymentGateway: text('payment_gateway', { enum: ['stripe', 'razorpay'] }),
   subscriptionStatus: text('subscription_status'),
   planExpiresAt: timestamp('plan_expires_at', { mode: 'string' }),
+  aiGenerationsThisMonth: integer('ai_generations_this_month').notNull().default(0),
+  aiGenerationsResetAt: timestamp('ai_generations_reset_at', { mode: 'string' }),
+  visionCallsThisMonth: integer('vision_calls_this_month').notNull().default(0),
+  visionCallsResetAt: timestamp('vision_calls_reset_at', { mode: 'string' }),
   createdAt: timestamp('created_at', { mode: 'string' }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { mode: 'string' }).notNull().defaultNow(),
 })
@@ -170,3 +174,20 @@ export const roles = pgTable('roles', {
 
 export type RoleRow = typeof roles.$inferSelect
 export type NewRoleRow = typeof roles.$inferInsert
+
+// Custom team asset catalog — GLB objects shared within a workspace
+export const customItems = pgTable('custom_items', {
+  id: text('id').primaryKey(),
+  orgId: text('org_id'),
+  uploadedBy: text('uploaded_by').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  name: text('name').notNull(),
+  description: text('description'),
+  glbUrl: text('glb_url').notNull(),
+  thumbnailUrl: text('thumbnail_url'),
+  tags: text('tags').notNull().default('[]'),
+  category: text('category', { enum: ['furniture', 'kitchen', 'bathroom', 'structure', 'other'] }).notNull().default('other'),
+  createdAt: timestamp('created_at', { mode: 'string' }).notNull().defaultNow(),
+})
+
+export type CustomItemRow = typeof customItems.$inferSelect
+export type NewCustomItemRow = typeof customItems.$inferInsert

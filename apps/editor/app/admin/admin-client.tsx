@@ -37,7 +37,7 @@ async function updateUser(id: string, patch: Record<string, unknown>) {
   return res.json()
 }
 
-function RoleSelect({ userId, value }: { userId: string; value: string }) {
+function RoleSelect({ userId, value, availableRoles }: { userId: string; value: string; availableRoles: string[] }) {
   const [role, setRole] = useState(value)
   const [saving, setSaving] = useState(false)
 
@@ -59,13 +59,14 @@ function RoleSelect({ userId, value }: { userId: string; value: string }) {
         role === 'admin' ? 'text-orange-600 bg-orange-50' : 'text-muted-foreground bg-transparent'
       }`}
     >
-      <option value="user">user</option>
-      <option value="admin">admin</option>
+      {availableRoles.map((r) => (
+        <option key={r} value={r}>{r}</option>
+      ))}
     </select>
   )
 }
 
-function PlanSelect({ userId, value }: { userId: string; value: string }) {
+function PlanSelect({ userId, value, availablePlans }: { userId: string; value: string; availablePlans: string[] }) {
   const [plan, setPlan] = useState(value)
   const [saving, setSaving] = useState(false)
 
@@ -85,9 +86,9 @@ function PlanSelect({ userId, value }: { userId: string; value: string }) {
       disabled={saving}
       className={`rounded-full px-2.5 py-0.5 text-xs font-semibold border border-transparent cursor-pointer focus:outline-none focus:ring-1 focus:ring-ring disabled:opacity-50 ${PLAN_COLORS[plan] ?? 'bg-muted text-muted-foreground'}`}
     >
-      <option value="free">Free</option>
-      <option value="pro">Pro</option>
-      <option value="team">Team</option>
+      {availablePlans.map((p) => (
+        <option key={p} value={p}>{p.charAt(0).toUpperCase() + p.slice(1)}</option>
+      ))}
     </select>
   )
 }
@@ -105,7 +106,6 @@ function StatusSelect({ userId, value }: { userId: string; value: string | null 
     setSaving(false)
   }
 
-  const display = status || 'free tier'
   return (
     <select
       value={status}
@@ -171,7 +171,15 @@ function ImpersonateButton({ userId }: { userId: string }) {
   )
 }
 
-export function AdminClient({ users }: { users: UserRow[] }) {
+export function AdminClient({
+  users,
+  availableRoles,
+  availablePlans,
+}: {
+  users: UserRow[]
+  availableRoles: string[]
+  availablePlans: string[]
+}) {
   return (
     <div className="rounded-xl border border-border overflow-hidden">
       <table className="w-full text-sm">
@@ -193,13 +201,13 @@ export function AdminClient({ users }: { users: UserRow[] }) {
                 <div className="text-muted-foreground text-xs">{u.email}</div>
               </td>
               <td className="px-4 py-3">
-                <PlanSelect userId={u.id} value={u.plan} />
+                <PlanSelect userId={u.id} value={u.plan} availablePlans={availablePlans} />
               </td>
               <td className="px-4 py-3">
                 <StatusSelect userId={u.id} value={u.subscriptionStatus} />
               </td>
               <td className="px-4 py-3">
-                <RoleSelect userId={u.id} value={u.role} />
+                <RoleSelect userId={u.id} value={u.role} availableRoles={availableRoles} />
               </td>
               <td className="px-4 py-3 text-muted-foreground text-xs">
                 {u.createdAt ? new Date(u.createdAt).toLocaleDateString() : '—'}

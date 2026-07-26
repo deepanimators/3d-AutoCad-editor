@@ -1,8 +1,9 @@
 'use client'
 
 import { useThree } from '@react-three/fiber'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import * as THREE from 'three/webgpu'
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js'
 import { getSceneTheme } from '../../lib/scene-themes'
 import useViewer from '../../store/use-viewer'
 
@@ -16,6 +17,9 @@ import useViewer from '../../store/use-viewer'
  * same directionless warm wash. Exported as an opt-in <Viewer> child so
  * embed / thumbnail surfaces that don't want IBL simply don't mount it.
  * Only affects `rendered` shading (Lambert ignores env maps).
+ *
+ * When `hdriUrl` is set in the viewer store, an HDRI equirectangular image is
+ * loaded via RGBELoader and used instead. The gradient sky remains the fallback.
  */
 
 // Linear-space gradient stops.
@@ -67,20 +71,42 @@ function buildGradientSky(): THREE.DataTexture {
 
 export function SceneEnvironment() {
   const scene = useThree((state) => state.scene)
-  const texture = useMemo(buildGradientSky, [])
+  const gl = useThree((state) => state.gl)
+  const gradientTexture = useMemo(buildGradientSky, [])
   const appearance = useViewer((state) => getSceneTheme(state.sceneTheme).appearance)
+  const hdriUrl = useViewer((state) => state.hdriUrl)
+  const hdriTextureRef = useRef<THREE.DataTexture | null>(null)
 
   useEffect(() => {
     const prevEnvironment = scene.environment
     const prevIntensity = scene.environmentIntensity
-    scene.environment = texture
-    scene.environmentIntensity = appearance === 'dark' ? ENV_INTENSITY_DARK : ENV_INTENSITY
+
+    if (hdriUrl) {
+      const loader = new RGBELoader()
+      const pmremGenerator = new THREE.PMREMGenerator(gl as unknown as THREE.WebGLRenderer)
+      pmremGenerator.compileEquirectangularShader()
+
+      loader.load(hdriUrl, (texture) => {
+        const envMap = pmremGenerator.fromEquirectangular(texture).texture
+        texture.dispose()
+        pmremGenerator.dispose()
+        hdriTextureRef.current = envMap as unknown as THREE.DataTexture
+        scene.environment = envMap as unknown as THREE.Texture
+        scene.environmentIntensity = 1.0
+      })
+    } else {
+      scene.environment = gradientTexture
+      scene.environmentIntensity = appearance === 'dark' ? ENV_INTENSITY_DARK : ENV_INTENSITY
+    }
+
     return () => {
       scene.environment = prevEnvironment
       scene.environmentIntensity = prevIntensity
-      texture.dispose()
+      if (!hdriUrl) gradientTexture.dispose()
+      hdriTextureRef.current?.dispose()
+      hdriTextureRef.current = null
     }
-  }, [scene, texture, appearance])
+  }, [scene, gl, gradientTexture, appearance, hdriUrl])
 
   return null
 }

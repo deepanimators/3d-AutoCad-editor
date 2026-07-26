@@ -47,3 +47,33 @@ export function getSceneLimit(user: AppUser): number | null {
   if (isAdmin(user) || (planAtLeast(user, 'pro') && isPlanActive(user))) return null
   return 5
 }
+
+export function canUseAIGeneration(user: AppUser): boolean {
+  return isAdmin(user) || (planAtLeast(user, 'pro') && isPlanActive(user))
+}
+
+export function getAIGenerationLimit(user: AppUser): number | null {
+  if (isAdmin(user)) return null
+  if (planAtLeast(user, 'team') && isPlanActive(user)) return null
+  if (planAtLeast(user, 'pro') && isPlanActive(user)) return 20
+  return 0
+}
+
+export function canUseVision(user: AppUser): boolean {
+  return isAdmin(user) || (planAtLeast(user, 'pro') && isPlanActive(user))
+}
+
+export function getVisionLimit(user: AppUser): number | null {
+  if (isAdmin(user)) return null
+  if (planAtLeast(user, 'team') && isPlanActive(user)) return null
+  if (planAtLeast(user, 'pro') && isPlanActive(user)) return 5
+  return 0
+}
+
+export function canUploadCustomItems(user: AppUser): boolean {
+  return isAdmin(user) || (planAtLeast(user, 'pro') && isPlanActive(user))
+}
+
+export function canAccessTeamCatalog(user: AppUser): boolean {
+  return isAdmin(user) || (planAtLeast(user, 'team') && isPlanActive(user))
+}

@@ -295,6 +295,38 @@ export const MCP_CATALOG_ITEMS: AssetInput[] = [
   },
 ]
 
+export type ExternalCatalogItem = {
+  id: string
+  name: string
+  description?: string
+  glbUrl: string
+  thumbnailUrl?: string
+  tags: string[]
+  category: string
+}
+
+/**
+ * Fetch custom catalog items from a host application's API.
+ * Called at server bootstrap when `ARUCT_CATALOG_API_URL` is set.
+ * Returns an empty array on any network or parse error so the built-in
+ * catalog always works standalone.
+ */
+export async function fetchExternalCatalogItems(
+  catalogApiUrl: string,
+  authToken?: string,
+): Promise<ExternalCatalogItem[]> {
+  try {
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' }
+    if (authToken) headers['Authorization'] = `Bearer ${authToken}`
+    const res = await fetch(`${catalogApiUrl}/api/items`, { headers })
+    if (!res.ok) return []
+    const data = (await res.json()) as { items?: ExternalCatalogItem[] }
+    return data.items ?? []
+  } catch {
+    return []
+  }
+}
+
 export function findCatalogItem(id: string): AssetInput | undefined {
   return MCP_CATALOG_ITEMS.find((item) => item.id === id)
 }
