@@ -23,6 +23,7 @@ export const scenes = pgTable('scenes', {
   name: text('name').notNull(),
   projectId: text('project_id'),
   ownerId: text('owner_id'),
+  orgId: text('org_id'),
   graphJson: text('graph_json').notNull(),
   thumbnailUrl: text('thumbnail_url'),
   version: integer('version').notNull().default(1),
@@ -66,3 +67,43 @@ export const auditLog = pgTable('audit_log', {
 })
 
 export type AuditLogRow = typeof auditLog.$inferSelect
+
+// Phase 4A: Team workspaces
+export const organizations = pgTable('organizations', {
+  id: text('id').primaryKey(),
+  name: text('name').notNull(),
+  slug: text('slug').notNull().unique(),
+  logoUrl: text('logo_url'),
+  ownerId: text('owner_id').notNull(),
+  createdAt: timestamp('created_at', { mode: 'string' }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { mode: 'string' }).notNull().defaultNow(),
+})
+
+export type OrgRow = typeof organizations.$inferSelect
+export type NewOrgRow = typeof organizations.$inferInsert
+
+export const orgMembers = pgTable('org_members', {
+  id: text('id').primaryKey(),
+  orgId: text('org_id').notNull(),
+  userId: text('user_id').notNull(),
+  role: text('role', { enum: ['owner', 'admin', 'member'] }).notNull().default('member'),
+  createdAt: timestamp('created_at', { mode: 'string' }).notNull().defaultNow(),
+}, (t) => [unique().on(t.orgId, t.userId)])
+
+export type OrgMemberRow = typeof orgMembers.$inferSelect
+export type NewOrgMemberRow = typeof orgMembers.$inferInsert
+
+export const orgInvitations = pgTable('org_invitations', {
+  id: text('id').primaryKey(),
+  orgId: text('org_id').notNull(),
+  email: text('email').notNull(),
+  role: text('role', { enum: ['admin', 'member'] }).notNull().default('member'),
+  token: text('token').notNull().unique(),
+  status: text('status', { enum: ['pending', 'accepted', 'expired'] }).notNull().default('pending'),
+  invitedBy: text('invited_by').notNull(),
+  expiresAt: timestamp('expires_at', { mode: 'string' }).notNull(),
+  createdAt: timestamp('created_at', { mode: 'string' }).notNull().defaultNow(),
+})
+
+export type OrgInvitationRow = typeof orgInvitations.$inferSelect
+export type NewOrgInvitationRow = typeof orgInvitations.$inferInsert

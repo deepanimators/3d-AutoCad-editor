@@ -164,6 +164,7 @@ export class PgSceneStore implements SceneStore {
         nodeCount: scenes.nodeCount,
         graphHash: scenes.graphHash,
         graphJson: scenes.graphJson,
+        orgId: scenes.orgId,
         isPublic: scenes.isPublic,
         showScansPublic: scenes.showScansPublic,
         showGuidesPublic: scenes.showGuidesPublic,

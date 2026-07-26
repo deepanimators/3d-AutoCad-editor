@@ -53,6 +53,7 @@ try {
   `
   await sql`ALTER TABLE scenes ADD COLUMN IF NOT EXISTS "show_scans_public" boolean DEFAULT true NOT NULL`
   await sql`ALTER TABLE scenes ADD COLUMN IF NOT EXISTS "show_guides_public" boolean DEFAULT true NOT NULL`
+  await sql`ALTER TABLE scenes ADD COLUMN IF NOT EXISTS "org_id" text`
   console.log('✓ scenes table ready')
 
   await sql`
@@ -83,6 +84,46 @@ try {
     )
   `
   console.log('✓ audit_log table ready')
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS "organizations" (
+      "id" text PRIMARY KEY NOT NULL,
+      "name" text NOT NULL,
+      "slug" text NOT NULL UNIQUE,
+      "logo_url" text,
+      "owner_id" text NOT NULL,
+      "created_at" timestamptz DEFAULT now() NOT NULL,
+      "updated_at" timestamptz DEFAULT now() NOT NULL
+    )
+  `
+  console.log('✓ organizations table ready')
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS "org_members" (
+      "id" text PRIMARY KEY NOT NULL,
+      "org_id" text NOT NULL,
+      "user_id" text NOT NULL,
+      "role" text DEFAULT 'member' NOT NULL CHECK (role IN ('owner','admin','member')),
+      "created_at" timestamptz DEFAULT now() NOT NULL,
+      UNIQUE ("org_id", "user_id")
+    )
+  `
+  console.log('✓ org_members table ready')
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS "org_invitations" (
+      "id" text PRIMARY KEY NOT NULL,
+      "org_id" text NOT NULL,
+      "email" text NOT NULL,
+      "role" text DEFAULT 'member' NOT NULL CHECK (role IN ('admin','member')),
+      "token" text NOT NULL UNIQUE,
+      "status" text DEFAULT 'pending' NOT NULL CHECK (status IN ('pending','accepted','expired')),
+      "invited_by" text NOT NULL,
+      "expires_at" timestamptz NOT NULL,
+      "created_at" timestamptz DEFAULT now() NOT NULL
+    )
+  `
+  console.log('✓ org_invitations table ready')
 
   const u = await sql`SELECT COUNT(*) as count FROM users`
   const s = await sql`SELECT COUNT(*) as count FROM scenes`
