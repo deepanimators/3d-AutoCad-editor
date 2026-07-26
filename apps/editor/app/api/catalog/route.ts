@@ -39,8 +39,10 @@ export async function GET(request: NextRequest) {
 
   const models = rows.map((m) => ({
     ...m,
-    glbUrl: `${S3_BASE}/${m.s3Key}`,
-    thumbnailUrl: m.s3Thumbnail ? `${S3_BASE}/${m.s3Thumbnail}` : null,
+    glbUrl: m.s3Key.startsWith('http') ? m.s3Key : `${S3_BASE}/${m.s3Key}`,
+    thumbnailUrl: m.s3Thumbnail
+      ? m.s3Thumbnail.startsWith('http') ? m.s3Thumbnail : `${S3_BASE}/${m.s3Thumbnail}`
+      : null,
     isNew: new Date(m.addedAt) > new Date(Date.now() - 10 * 24 * 60 * 60 * 1000),
     tags: (() => { try { return JSON.parse(m.tags) as string[] } catch { return [] } })(),
   }))

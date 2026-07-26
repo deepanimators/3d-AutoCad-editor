@@ -10,13 +10,18 @@ export type PolyHavenAsset = {
 }
 
 export type PolyHavenFile = {
-  gltf: {
+  gltf?: {
     [resolution: string]: {
       gltf: {
         include: Record<string, { url: string; size: number }>
         url?: string
         size?: number
       }
+    }
+  }
+  glb?: {
+    [resolution: string]: {
+      glb: { url: string; size: number }
     }
   }
 }
@@ -39,11 +44,22 @@ export async function getPolyHavenFiles(id: string): Promise<PolyHavenFile> {
 }
 
 export function getBestGltfUrl(files: PolyHavenFile): string | null {
+  // Prefer GLB (single packed file — no external texture refs, no CDN 404s)
+  if (files.glb) {
+    for (const res of ['2k', '1k', '4k']) {
+      const url = files.glb[res]?.glb?.url
+      if (url) return url
+    }
+  }
+
   const gltf = files.gltf
   if (!gltf) return null
   for (const res of ['2k', '1k', '4k']) {
     const entry = gltf[res]?.gltf
     if (entry) {
+      // Also check if include map has a packed GLB
+      const glbEntry = Object.entries(entry.include ?? {}).find(([k]) => k.endsWith('.glb'))
+      if (glbEntry) return glbEntry[1].url
       if (entry.url) return entry.url
       const gltfFile = Object.entries(entry.include ?? {}).find(([k]) => k.endsWith('.gltf'))
       if (gltfFile) return gltfFile[1].url

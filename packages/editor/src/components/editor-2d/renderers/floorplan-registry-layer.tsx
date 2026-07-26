@@ -2962,7 +2962,6 @@ function applyPositionLiveTransform(
     ...node,
     position: live.position,
     ...(rotation !== undefined ? { rotation } : {}),
-    parentId: null,
   } as AnyNode
 }
 

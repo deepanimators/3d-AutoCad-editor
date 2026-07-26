@@ -221,9 +221,37 @@ try {
   `
   console.log('✓ roles table ready + seeded')
 
+  // Global model catalog (Poly Haven, Poly Pizza, AI-generated via Tripo3D)
+  await sql`
+    CREATE TABLE IF NOT EXISTS "global_models" (
+      "id" text PRIMARY KEY NOT NULL,
+      "slug" text UNIQUE NOT NULL,
+      "name" text NOT NULL,
+      "description" text,
+      "source" text NOT NULL,
+      "source_id" text,
+      "source_url" text,
+      "license" text NOT NULL,
+      "attribution" text,
+      "s3_key" text NOT NULL,
+      "s3_thumbnail" text,
+      "file_size_bytes" integer,
+      "poly_count" integer,
+      "tags" text NOT NULL DEFAULT '[]',
+      "category" text,
+      "added_at" timestamp DEFAULT now() NOT NULL,
+      "added_by" text
+    )
+  `
+  await sql`CREATE INDEX IF NOT EXISTS "idx_global_models_added_at" ON "global_models"("added_at" DESC)`
+  await sql`CREATE INDEX IF NOT EXISTS "idx_global_models_category" ON "global_models"("category")`
+  await sql`CREATE INDEX IF NOT EXISTS "idx_global_models_source" ON "global_models"("source")`
+  console.log('✓ global_models table ready')
+
   const u = await sql`SELECT COUNT(*) as count FROM users`
   const s = await sql`SELECT COUNT(*) as count FROM scenes`
-  console.log(`✓ done — ${u[0].count} users, ${s[0].count} scenes`)
+  const g = await sql`SELECT COUNT(*) as count FROM global_models`
+  console.log(`✓ done — ${u[0].count} users, ${s[0].count} scenes, ${g[0].count} global_models`)
 } catch (err) {
   console.error('Migration failed:', err.message)
   process.exit(1)
