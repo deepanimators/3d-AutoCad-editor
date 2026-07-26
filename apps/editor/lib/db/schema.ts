@@ -191,3 +191,26 @@ export const customItems = pgTable('custom_items', {
 
 export type CustomItemRow = typeof customItems.$inferSelect
 export type NewCustomItemRow = typeof customItems.$inferInsert
+
+export const globalModels = pgTable('global_models', {
+  id: text('id').primaryKey(),
+  slug: text('slug').notNull().unique(),
+  name: text('name').notNull(),
+  description: text('description'),
+  source: text('source').notNull(),
+  sourceId: text('source_id'),
+  sourceUrl: text('source_url'),
+  license: text('license').notNull(),
+  attribution: text('attribution'),
+  s3Key: text('s3_key').notNull(),
+  s3Thumbnail: text('s3_thumbnail'),
+  fileSizeBytes: integer('file_size_bytes'),
+  polyCount: integer('poly_count'),
+  tags: text('tags').notNull().default('[]'),
+  category: text('category'),
+  addedAt: timestamp('added_at', { mode: 'string' }).notNull().defaultNow(),
+  addedBy: text('added_by'),
+})
+
+export type GlobalModelRow = typeof globalModels.$inferSelect
+export type NewGlobalModelRow = typeof globalModels.$inferInsert

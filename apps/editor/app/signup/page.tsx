@@ -81,7 +81,7 @@ export default function SignupPage() {
     setLoading(true)
     try {
       await signInWithGoogle()
-      router.push('/')
+      router.push('/scenes')
     } catch {
       setError('Google sign-in failed. Try again.')
     } finally {
@@ -94,7 +94,7 @@ export default function SignupPage() {
     setLoading(true)
     try {
       await signInWithGitHub()
-      router.push('/')
+      router.push('/scenes')
     } catch {
       setError('GitHub sign-in failed. Try again.')
     } finally {

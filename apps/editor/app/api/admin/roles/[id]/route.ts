@@ -14,12 +14,13 @@ const updateSchema = z.object({
   permissions: z.array(z.enum(ALL_PERMISSIONS)).optional(),
 })
 
-export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const session = await getSession()
   if (!session) return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
   if (session.role !== 'admin') return NextResponse.json({ error: 'forbidden' }, { status: 403 })
 
-  const [role] = await db.select().from(roles).where(eq(roles.id, params.id))
+  const [role] = await db.select().from(roles).where(eq(roles.id, id))
   if (!role) return NextResponse.json({ error: 'not_found' }, { status: 404 })
   if (role.isSystem) return NextResponse.json({ error: 'cannot_modify_system_role' }, { status: 400 })
 
@@ -32,16 +33,17 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
   if (parsed.data.description !== undefined) patch.description = parsed.data.description
   if (parsed.data.permissions !== undefined) patch.permissions = JSON.stringify(parsed.data.permissions)
 
-  const [updated] = await db.update(roles).set(patch).where(eq(roles.id, params.id)).returning()
+  const [updated] = await db.update(roles).set(patch).where(eq(roles.id, id)).returning()
   return NextResponse.json(updated)
 }
 
-export async function DELETE(_request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(_request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const session = await getSession()
   if (!session) return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
   if (session.role !== 'admin') return NextResponse.json({ error: 'forbidden' }, { status: 403 })
 
-  const [role] = await db.select().from(roles).where(eq(roles.id, params.id))
+  const [role] = await db.select().from(roles).where(eq(roles.id, id))
   if (!role) return NextResponse.json({ error: 'not_found' }, { status: 404 })
   if (role.isSystem) return NextResponse.json({ error: 'cannot_delete_system_role' }, { status: 400 })
 
@@ -53,6 +55,6 @@ export async function DELETE(_request: NextRequest, { params }: { params: { id: 
     )
   }
 
-  await db.delete(roles).where(and(eq(roles.id, params.id), eq(roles.isSystem, false)))
+  await db.delete(roles).where(and(eq(roles.id, id), eq(roles.isSystem, false)))
   return NextResponse.json({ ok: true })
 }

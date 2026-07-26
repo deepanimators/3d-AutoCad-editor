@@ -15,6 +15,8 @@ import {
   Moon,
   X,
   Package,
+  Globe,
+  Plug,
 } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import { useTheme } from 'next-themes'
@@ -44,6 +46,8 @@ type NavItem = {
 const NAV: NavItem[] = [
   { href: '/scenes', label: 'My Scenes', icon: LayoutGrid },
   { href: '/items', label: 'My Items', icon: Package },
+  { href: '/catalog', label: 'Model Catalog', icon: Globe },
+  { href: '/dcc-bridge', label: 'DCC Bridge', icon: Plug },
   { href: '/pricing', label: 'Pricing', icon: Tag },
   { href: '/account', label: 'Account', icon: Settings },
   { href: '/account#billing', label: 'Billing', icon: CreditCard },

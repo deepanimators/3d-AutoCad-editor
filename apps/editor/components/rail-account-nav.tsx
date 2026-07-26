@@ -1,9 +1,10 @@
 'use client'
 
-import { BarChart3, CreditCard, LayoutDashboard, LogOut, Shield, User } from 'lucide-react'
+import { BarChart3, CreditCard, LayoutDashboard, LogOut, Moon, Shield, Sun, User } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
+import { useTheme } from 'next-themes'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/toolbar-tooltip'
 import { signOut } from 'firebase/auth'
 import { firebaseAuth } from '@/lib/firebase/client'
@@ -59,6 +60,7 @@ export function RailAccountNav() {
   const pathname = usePathname()
   const router = useRouter()
   const [user, setUser] = useState<MeResponse | null>(null)
+  const { resolvedTheme, setTheme } = useTheme()
 
   useEffect(() => {
     fetch('/api/me')
@@ -109,6 +111,11 @@ export function RailAccountNav() {
           />
         </>
       )}
+      <RailNavButton
+        icon={resolvedTheme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+        label={resolvedTheme === 'dark' ? 'Light mode' : 'Dark mode'}
+        onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
+      />
       <RailNavButton
         icon={<LogOut className="h-4 w-4" />}
         label="Sign out"

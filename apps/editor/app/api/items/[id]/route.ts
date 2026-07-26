@@ -8,14 +8,15 @@ export const dynamic = 'force-dynamic'
 
 export async function DELETE(
   _request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params
   const session = await getSession()
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const [deleted] = await db
     .delete(customItems)
-    .where(and(eq(customItems.id, params.id), eq(customItems.uploadedBy, session.id)))
+    .where(and(eq(customItems.id, id), eq(customItems.uploadedBy, session.id)))
     .returning({ id: customItems.id })
 
   if (!deleted) return NextResponse.json({ error: 'Not found' }, { status: 404 })
