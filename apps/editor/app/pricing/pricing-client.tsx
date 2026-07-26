@@ -57,9 +57,10 @@ const PLANS = [
 type Props = {
   currentPlan: 'free' | 'pro' | 'team' | null
   isSignedIn: boolean
+  hasStripeSubscription: boolean
 }
 
-export function PricingClient({ currentPlan, isSignedIn }: Props) {
+export function PricingClient({ currentPlan, isSignedIn, hasStripeSubscription }: Props) {
   const [loading, setLoading] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
 
@@ -186,7 +187,7 @@ export function PricingClient({ currentPlan, isSignedIn }: Props) {
                   >
                     {isSignedIn ? 'Open editor' : 'Get started free'}
                   </a>
-                ) : isCurrent ? (
+                ) : isCurrent && hasStripeSubscription ? (
                   <button
                     type="button"
                     disabled={loading === 'portal'}
@@ -198,6 +199,19 @@ export function PricingClient({ currentPlan, isSignedIn }: Props) {
                     }`}
                   >
                     {loading === 'portal' ? 'Loading…' : 'Manage subscription'}
+                  </button>
+                ) : isCurrent && !hasStripeSubscription ? (
+                  <button
+                    type="button"
+                    disabled={!!loading || !plan.monthlyKey}
+                    onClick={() => plan.monthlyKey && void handleUpgrade(plan.monthlyKey)}
+                    className={`w-full rounded-lg py-2.5 text-sm font-semibold transition-colors disabled:opacity-60 ${
+                      plan.highlight
+                        ? 'bg-background text-foreground hover:bg-background/90'
+                        : 'border border-border hover:bg-accent'
+                    }`}
+                  >
+                    {loading === plan.monthlyKey ? 'Loading…' : 'Start subscription'}
                   </button>
                 ) : !isSignedIn ? (
                   <a
