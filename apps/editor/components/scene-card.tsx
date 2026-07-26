@@ -15,7 +15,11 @@ interface SceneCardProps {
 
 function formatDate(iso: string): string {
   try {
-    return new Date(iso).toLocaleString()
+    return new Date(iso).toLocaleDateString(undefined, {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    })
   } catch {
     return iso
   }
@@ -83,12 +87,12 @@ export function SceneCard({ id, name, nodeCount, updatedAt, thumbnailUrl }: Scen
   }
 
   return (
-    <li className="group relative rounded-xl border border-border/60 bg-background transition-colors hover:border-border hover:bg-accent/30">
+    <li className="group relative rounded-xl border border-border/60 bg-background transition-all duration-150 hover:border-border hover:shadow-md">
       <Link className="block p-4" href={`/scene/${id}`}>
-        <div className="flex aspect-video items-center justify-center overflow-hidden rounded-lg bg-accent/30">
+        <div className="flex aspect-video items-center justify-center overflow-hidden rounded-lg bg-muted">
           {thumbnailUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img alt={displayName} className="h-full w-full object-cover" src={thumbnailUrl} />
+            <img alt={displayName} className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-[1.02]" src={thumbnailUrl} />
           ) : (
             <span className="text-muted-foreground text-xs">No thumbnail</span>
           )}
@@ -105,7 +109,7 @@ export function SceneCard({ id, name, nodeCount, updatedAt, thumbnailUrl }: Scen
                 onKeyDown={handleKeyDown}
               />
               <button
-                className="rounded p-0.5 text-green-600 hover:bg-green-50"
+                className="rounded p-0.5 text-success hover:bg-success-muted"
                 onClick={(e) => void saveEdit(e)}
                 type="button"
               >
