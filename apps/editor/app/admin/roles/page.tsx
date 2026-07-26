@@ -1,45 +1,65 @@
 import { redirect } from 'next/navigation'
 import { getSession } from '@/lib/auth-server'
 import { db } from '@/lib/db/client'
-import { users, roles } from '@/lib/db/schema'
-import { eq, desc, asc } from 'drizzle-orm'
+import { users, roles, planConfig } from '@/lib/db/schema'
+import { eq, desc, asc, sql } from 'drizzle-orm'
 import { AppShell } from '@/components/app-shell'
-import { Shield, User } from 'lucide-react'
 import { AdminClient } from '../admin-client'
 import { RolesClient } from './roles-client'
+import { ALL_PERMISSIONS } from '@/lib/permissions'
 
-const ROLE_GATES = [
-  { label: 'View all users', roles: ['admin'] },
-  { label: 'Change user plan', roles: ['admin'] },
-  { label: 'Change user role', roles: ['admin'] },
-  { label: 'View audit log', roles: ['admin'] },
-  { label: 'Access admin dashboard', roles: ['admin'] },
-  { label: 'Create scenes', roles: ['user', 'admin'] },
-  { label: 'Export GLB (Pro+)', roles: ['user', 'admin'] },
-  { label: 'Export IFC (Team+)', roles: ['user', 'admin'] },
-  { label: 'Share scenes (Pro+)', roles: ['user', 'admin'] },
-  { label: 'MCP access (Pro+)', roles: ['user', 'admin'] },
-  { label: 'Real-time collab (Team+)', roles: ['user', 'admin'] },
-]
+export const dynamic = 'force-dynamic'
+
+const PERMISSION_LABELS: Record<string, string> = {
+  view_all_users: 'View all users',
+  change_user_plan: 'Change user plan',
+  change_user_role: 'Change user role',
+  view_audit_log: 'View audit log',
+  impersonate_user: 'Impersonate user',
+  manage_coupons: 'Manage coupons',
+  manage_plan_config: 'Manage plan config',
+  manage_roles: 'Manage roles',
+  access_admin: 'Access admin dashboard',
+}
 
 export default async function RolesPage() {
   const session = await getSession()
   if (!session) redirect('/login?next=/admin/roles')
   if (session.role !== 'admin') redirect('/')
 
-  const [admins, regularUsers, allRoles] = await Promise.all([
-    db.select({
-      id: users.id, email: users.email, name: users.name,
-      plan: users.plan, role: users.role,
-      subscriptionStatus: users.subscriptionStatus, createdAt: users.createdAt,
-    }).from(users).where(eq(users.role, 'admin')).orderBy(desc(users.createdAt)),
-    db.select({
-      id: users.id, email: users.email, name: users.name,
-      plan: users.plan, role: users.role,
-      subscriptionStatus: users.subscriptionStatus, createdAt: users.createdAt,
-    }).from(users).where(eq(users.role, 'user')).orderBy(desc(users.createdAt)),
+  const [allRoles, allPlans, roleCounts] = await Promise.all([
     db.select().from(roles).orderBy(desc(roles.isSystem), asc(roles.createdAt)),
+    db.select({ planKey: planConfig.planKey }).from(planConfig).where(eq(planConfig.active, true)),
+    db
+      .select({ role: users.role, count: sql<number>`count(*)::int` })
+      .from(users)
+      .groupBy(users.role),
   ])
+
+  const countByRole = Object.fromEntries(roleCounts.map((r) => [r.role, r.count]))
+
+  const parsedRoles = allRoles.map((r) => ({
+    ...r,
+    permissionsArr: JSON.parse(r.permissions) as string[],
+  }))
+
+  const availableRoles = allRoles.map((r) => r.name)
+  const availablePlans = allPlans.map((p) => p.planKey)
+  const roleList = availableRoles.length > 0 ? availableRoles : ['user', 'admin']
+  const planList = availablePlans.length > 0 ? availablePlans : ['free', 'pro', 'team']
+
+  // All user rows grouped by role for the per-role user tables
+  const allUserRows = await db.select({
+    id: users.id, email: users.email, name: users.name,
+    plan: users.plan, role: users.role,
+    subscriptionStatus: users.subscriptionStatus, createdAt: users.createdAt,
+  }).from(users).orderBy(desc(users.createdAt))
+
+  const usersByRole = allUserRows.reduce<Record<string, typeof allUserRows>>((acc, u) => {
+    if (!acc[u.role]) acc[u.role] = []
+    acc[u.role]!.push(u)
+    return acc
+  }, {})
 
   return (
     <AppShell>
@@ -49,27 +69,40 @@ export default async function RolesPage() {
           <p className="mt-1 text-muted-foreground text-sm">Role definitions, permissions, and user assignment</p>
         </div>
 
-        {/* Role summary cards */}
-        <div className="grid grid-cols-2 gap-4">
-          <div className="rounded-xl border border-orange-200 bg-orange-50 p-5">
-            <div className="flex items-center gap-2 mb-2">
-              <Shield className="h-4 w-4 text-orange-600" />
-              <span className="font-semibold text-orange-700">Admin</span>
-              <span className="ml-auto rounded-full bg-orange-100 px-2.5 py-0.5 text-xs font-bold text-orange-700">{admins.length}</span>
+        {/* Role summary cards — one per DB role */}
+        <div className={`grid gap-4 ${parsedRoles.length > 2 ? 'grid-cols-3' : 'grid-cols-2'}`}>
+          {parsedRoles.map((r) => (
+            <div
+              key={r.id}
+              className={`rounded-xl border p-5 ${
+                r.name === 'admin'
+                  ? 'border-orange-200 bg-orange-50'
+                  : 'border-border bg-background'
+              }`}
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <span className={`font-semibold ${r.name === 'admin' ? 'text-orange-700' : 'text-foreground'}`}>
+                  {r.name}
+                </span>
+                {r.isSystem && (
+                  <span className="rounded-full bg-muted px-1.5 py-0.5 text-[10px] font-bold text-muted-foreground">
+                    system
+                  </span>
+                )}
+                <span className={`ml-auto rounded-full px-2.5 py-0.5 text-xs font-bold ${
+                  r.name === 'admin' ? 'bg-orange-100 text-orange-700' : 'bg-muted text-muted-foreground'
+                }`}>
+                  {countByRole[r.name] ?? 0}
+                </span>
+              </div>
+              <p className={`text-xs ${r.name === 'admin' ? 'text-orange-600/80' : 'text-muted-foreground'}`}>
+                {r.description}
+              </p>
             </div>
-            <p className="text-xs text-orange-600/80">Full platform access. Can manage users, plans, and roles. Feature gates bypassed — all features unlocked regardless of plan.</p>
-          </div>
-          <div className="rounded-xl border border-border bg-background p-5">
-            <div className="flex items-center gap-2 mb-2">
-              <User className="h-4 w-4 text-muted-foreground" />
-              <span className="font-semibold text-foreground">User</span>
-              <span className="ml-auto rounded-full bg-muted px-2.5 py-0.5 text-xs font-bold text-muted-foreground">{regularUsers.length}</span>
-            </div>
-            <p className="text-xs text-muted-foreground">Standard access. Features gated by subscription plan (Free / Pro / Team).</p>
-          </div>
+          ))}
         </div>
 
-        {/* Permission matrix */}
+        {/* Permission matrix — driven from DB roles */}
         <div>
           <h2 className="font-semibold text-base mb-3">Permission Matrix</h2>
           <div className="rounded-xl border border-border overflow-hidden">
@@ -77,26 +110,31 @@ export default async function RolesPage() {
               <thead className="border-b border-border bg-muted/40">
                 <tr>
                   <th className="px-4 py-3 text-left font-medium text-muted-foreground">Permission</th>
-                  <th className="px-4 py-3 text-center font-medium text-muted-foreground">
-                    <span className="text-muted-foreground">user</span>
-                  </th>
-                  <th className="px-4 py-3 text-center font-medium text-muted-foreground">
-                    <span className="text-orange-600">admin</span>
-                  </th>
+                  {parsedRoles.map((r) => (
+                    <th key={r.id} className="px-4 py-3 text-center font-medium text-muted-foreground">
+                      <span className={r.name === 'admin' ? 'text-orange-600' : 'text-muted-foreground'}>
+                        {r.name}
+                      </span>
+                    </th>
+                  ))}
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
-                {ROLE_GATES.map((g) => (
-                  <tr key={g.label} className="hover:bg-muted/20">
-                    <td className="px-4 py-2.5 text-muted-foreground">{g.label}</td>
-                    <td className="px-4 py-2.5 text-center">
-                      {g.roles.includes('user')
-                        ? <span className="text-green-600 text-base">✓</span>
-                        : <span className="text-muted-foreground/30 text-base">–</span>}
+                {ALL_PERMISSIONS.map((perm) => (
+                  <tr key={perm} className="hover:bg-muted/20">
+                    <td className="px-4 py-2.5 text-muted-foreground">
+                      {PERMISSION_LABELS[perm] ?? perm}
                     </td>
-                    <td className="px-4 py-2.5 text-center">
-                      <span className="text-green-600 text-base">✓</span>
-                    </td>
+                    {parsedRoles.map((r) => {
+                      const has = r.permissionsArr.includes('all') || r.permissionsArr.includes(perm)
+                      return (
+                        <td key={r.id} className="px-4 py-2.5 text-center">
+                          {has
+                            ? <span className="text-green-600 text-base">✓</span>
+                            : <span className="text-muted-foreground/30 text-base">–</span>}
+                        </td>
+                      )
+                    })}
                   </tr>
                 ))}
               </tbody>
@@ -104,35 +142,29 @@ export default async function RolesPage() {
           </div>
         </div>
 
-        {/* Custom Roles */}
+        {/* Custom Roles management */}
         <div>
-          <h2 className="font-semibold text-base mb-3">Custom Roles</h2>
+          <h2 className="font-semibold text-base mb-3">Manage Roles</h2>
           <RolesClient allRoles={allRoles} />
         </div>
 
-        {/* Admins */}
-        <div>
-          <h2 className="font-semibold text-base mb-3 flex items-center gap-2">
-            <Shield className="h-4 w-4 text-orange-600" />
-            Admins
-            <span className="text-muted-foreground font-normal text-sm">({admins.length})</span>
-          </h2>
-          {admins.length > 0
-            ? <AdminClient users={admins} />
-            : <p className="text-muted-foreground text-sm">No admins found.</p>}
-        </div>
-
-        {/* Regular users */}
-        <div>
-          <h2 className="font-semibold text-base mb-3 flex items-center gap-2">
-            <User className="h-4 w-4 text-muted-foreground" />
-            Users
-            <span className="text-muted-foreground font-normal text-sm">({regularUsers.length})</span>
-          </h2>
-          {regularUsers.length > 0
-            ? <AdminClient users={regularUsers} />
-            : <p className="text-muted-foreground text-sm">No standard users.</p>}
-        </div>
+        {/* Users grouped by role */}
+        {parsedRoles.map((r) => {
+          const roleUsers = usersByRole[r.name] ?? []
+          return (
+            <div key={r.id}>
+              <h2 className="font-semibold text-base mb-3 flex items-center gap-2">
+                <span className={`font-semibold ${r.name === 'admin' ? 'text-orange-600' : 'text-foreground'}`}>
+                  {r.name.charAt(0).toUpperCase() + r.name.slice(1)}
+                </span>
+                <span className="text-muted-foreground font-normal text-sm">({roleUsers.length})</span>
+              </h2>
+              {roleUsers.length > 0
+                ? <AdminClient users={roleUsers} availableRoles={roleList} availablePlans={planList} />
+                : <p className="text-muted-foreground text-sm">No users with this role.</p>}
+            </div>
+          )
+        })}
       </div>
     </AppShell>
   )

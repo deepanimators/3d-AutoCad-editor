@@ -10,51 +10,17 @@ declare global {
   }
 }
 
-const HARDCODED_PLANS = [
-  {
-    key: 'free',
-    name: 'Free',
-    price: '$0',
-    period: 'forever',
-    icon: Zap,
-    features: ['Up to 5 scenes', 'JSON export', 'Community support', 'Basic 3D editor'],
-    monthlyKey: null as string | null,
-    highlight: false,
-  },
-  {
-    key: 'pro',
-    name: 'Pro',
-    price: '$29',
-    period: '/month',
-    icon: Crown,
-    features: [
-      'Unlimited scenes',
-      'GLB & JSON export',
-      'MCP server access',
-      'Priority support',
-      '14-day free trial',
-    ],
-    monthlyKey: 'pro-monthly' as string | null,
-    highlight: true,
-  },
-  {
-    key: 'team',
-    name: 'Team',
-    price: '$79',
-    period: '/seat/month',
-    icon: Building2,
-    features: [
-      'Everything in Pro',
-      'IFC export',
-      'Real-time collaboration',
-      'SSO / SAML',
-      'Audit log',
-      '14-day free trial',
-    ],
-    monthlyKey: 'team-monthly' as string | null,
-    highlight: false,
-  },
-] as const
+const PLAN_ICONS: Record<string, typeof Zap> = {
+  free: Zap,
+  pro: Crown,
+  team: Building2,
+}
+
+const PLAN_MONTHLY_KEYS: Record<string, string | null> = {
+  free: null,
+  pro: 'pro-monthly',
+  team: 'team-monthly',
+}
 
 type ActivePromo = {
   id: string
@@ -68,7 +34,7 @@ type ActivePromo = {
 }
 
 type Props = {
-  currentPlan: 'free' | 'pro' | 'team' | null
+  currentPlan: string | null
   isSignedIn: boolean
   hasStripeSubscription: boolean
   hasRazorpaySubscription: boolean
@@ -108,30 +74,19 @@ export function PricingClient({
   const [loading, setLoading] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
 
-  // Build plan display data: prefer DB config, fall back to hardcoded
-  const PLAN_ICONS: Record<string, typeof Zap> = { free: Zap, pro: Crown, team: Building2 }
-  const PLAN_MONTHLY_KEYS: Record<string, string | null> = {
-    free: null,
-    pro: 'pro-monthly',
-    team: 'team-monthly',
-  }
+  const plans = planConfigs
+    .filter((p) => p.active)
+    .map((p) => ({
+      key: p.planKey,
+      name: p.displayName,
+      price: p.displayPriceCents === 0 ? '$0' : formatCents(p.displayPriceCents),
+      period: p.priceSuffix,
+      icon: PLAN_ICONS[p.planKey] ?? Zap,
+      features: JSON.parse(p.features) as string[],
+      monthlyKey: PLAN_MONTHLY_KEYS[p.planKey] ?? null,
+      highlight: p.highlight,
+    }))
 
-  const plans = HARDCODED_PLANS.map((hp) => {
-    const dbPlan = planConfigs.find((p) => p.planKey === hp.key)
-    if (!dbPlan) return hp
-    return {
-      key: hp.key,
-      name: dbPlan.displayName,
-      price: dbPlan.displayPriceCents === 0 ? '$0' : formatCents(dbPlan.displayPriceCents),
-      period: dbPlan.priceSuffix,
-      icon: PLAN_ICONS[hp.key] ?? Zap,
-      features: JSON.parse(dbPlan.features) as string[],
-      monthlyKey: PLAN_MONTHLY_KEYS[hp.key] ?? null,
-      highlight: dbPlan.highlight,
-    }
-  })
-
-  // Find active promo for each plan key
   function getPromoForPlan(monthlyKey: string | null): ActivePromo | null {
     if (!monthlyKey) return null
     return activePromos.find((p) => p.appliesToPlans.includes(monthlyKey)) ?? null
@@ -286,161 +241,166 @@ export function PricingClient({
           </div>
         )}
 
-        <div className="grid gap-6 md:grid-cols-3">
-          {plans.map((plan) => {
-            const isCurrent = currentPlan === plan.key
-            const Icon = plan.icon
-            const promo = getPromoForPlan(plan.monthlyKey)
-            const hasPromo = !!promo && !!promo.promoPriceCents && !!promo.originalPriceCents
+        {plans.length === 0 ? (
+          <div className="text-center text-muted-foreground">
+            <p>No pricing plans configured. Check back soon.</p>
+          </div>
+        ) : (
+          <div className="grid gap-6 md:grid-cols-3">
+            {plans.map((plan) => {
+              const isCurrent = currentPlan === plan.key
+              const Icon = plan.icon
+              const promo = getPromoForPlan(plan.monthlyKey)
+              const hasPromo = !!promo && !!promo.promoPriceCents && !!promo.originalPriceCents
 
-            return (
-              <div
-                key={plan.key}
-                className={`relative flex flex-col rounded-2xl border p-6 ${
-                  plan.highlight
-                    ? 'border-foreground bg-foreground text-background shadow-2xl'
-                    : 'border-border bg-background'
-                }`}
-              >
-                {plan.highlight && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <span className="rounded-full bg-blue-600 px-3 py-1 text-white text-xs font-bold">
-                      Most popular
-                    </span>
-                  </div>
-                )}
-
-                <div className="mb-6">
-                  <div className="mb-3 flex items-center gap-2">
-                    <Icon className="h-5 w-5" />
-                    <h2 className="font-bold text-xl">{plan.name}</h2>
-                    {isCurrent && (
-                      <span
-                        className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
-                          plan.highlight
-                            ? 'bg-background/20 text-background'
-                            : 'bg-muted text-muted-foreground'
-                        }`}
-                      >
-                        Current
-                      </span>
-                    )}
-                    {hasPromo && (
-                      <span className="ml-auto flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-bold text-green-700">
-                        <Tag className="h-3 w-3" />
-                        Offer
-                      </span>
-                    )}
-                  </div>
-
-                  {hasPromo && promo ? (
-                    <div>
-                      <div className="flex items-baseline gap-2">
-                        <span className={`text-sm line-through ${plan.highlight ? 'text-background/50' : 'text-muted-foreground'}`}>
-                          {formatCents(promo.originalPriceCents!)}
-                        </span>
-                        <span className="font-bold text-3xl">{formatCents(promo.promoPriceCents!)}</span>
-                      </div>
-                      <p className={`text-xs mt-0.5 ${plan.highlight ? 'text-background/70' : 'text-green-600'}`}>
-                        first month, then {formatCents(promo.originalPriceCents!)}{plan.period}
-                      </p>
-                      {promo.expiresAt && (
-                        <p className={`text-[11px] mt-0.5 ${plan.highlight ? 'text-background/50' : 'text-muted-foreground'}`}>
-                          Offer ends in {daysUntil(promo.expiresAt)} days
-                        </p>
-                      )}
-                    </div>
-                  ) : (
-                    <div className="flex items-baseline gap-1">
-                      <span className="font-bold text-3xl">{plan.price}</span>
-                      <span
-                        className={`text-sm ${plan.highlight ? 'text-background/70' : 'text-muted-foreground'}`}
-                      >
-                        {plan.period}
+              return (
+                <div
+                  key={plan.key}
+                  className={`relative flex flex-col rounded-2xl border p-6 ${
+                    plan.highlight
+                      ? 'border-foreground bg-foreground text-background shadow-2xl'
+                      : 'border-border bg-background'
+                  }`}
+                >
+                  {plan.highlight && (
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                      <span className="rounded-full bg-blue-600 px-3 py-1 text-white text-xs font-bold">
+                        Most popular
                       </span>
                     </div>
                   )}
-                </div>
 
-                <ul className="mb-8 flex-1 space-y-2.5">
-                  {plan.features.map((f) => (
-                    <li key={f} className="flex items-center gap-2 text-sm">
-                      <Check
-                        className={`h-4 w-4 shrink-0 ${plan.highlight ? 'text-background/80' : 'text-green-600'}`}
-                      />
-                      {f}
-                    </li>
-                  ))}
-                </ul>
+                  <div className="mb-6">
+                    <div className="mb-3 flex items-center gap-2">
+                      <Icon className="h-5 w-5" />
+                      <h2 className="font-bold text-xl">{plan.name}</h2>
+                      {isCurrent && (
+                        <span
+                          className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
+                            plan.highlight
+                              ? 'bg-background/20 text-background'
+                              : 'bg-muted text-muted-foreground'
+                          }`}
+                        >
+                          Current
+                        </span>
+                      )}
+                      {hasPromo && (
+                        <span className="ml-auto flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-bold text-green-700">
+                          <Tag className="h-3 w-3" />
+                          Offer
+                        </span>
+                      )}
+                    </div>
 
-                {/* CTA */}
-                {plan.key === 'free' ? (
-                  <a
-                    href={isSignedIn ? '/' : '/signup'}
-                    className={btnClass(plan.highlight) + ' block text-center'}
-                  >
-                    {isSignedIn ? 'Open editor' : 'Get started free'}
-                  </a>
-                ) : isCurrent && hasStripeSubscription ? (
-                  <button
-                    type="button"
-                    disabled={loading === 'portal'}
-                    onClick={handleStripePortal}
-                    className={btnClass(plan.highlight)}
-                  >
-                    {loading === 'portal' ? 'Loading…' : 'Manage subscription'}
-                  </button>
-                ) : isCurrent && hasRazorpaySubscription ? (
-                  <button
-                    type="button"
-                    disabled={loading === 'rzp-cancel'}
-                    onClick={() => void handleRazorpayCancel()}
-                    className={btnClass(plan.highlight)}
-                  >
-                    {loading === 'rzp-cancel' ? 'Cancelling…' : 'Cancel subscription'}
-                  </button>
-                ) : !isSignedIn ? (
-                  <a
-                    href="/signup?next=/pricing"
-                    className={btnClass(plan.highlight) + ' block text-center'}
-                  >
-                    Start free trial
-                  </a>
-                ) : (
-                  <div className="flex flex-col gap-2">
+                    {hasPromo && promo ? (
+                      <div>
+                        <div className="flex items-baseline gap-2">
+                          <span className={`text-sm line-through ${plan.highlight ? 'text-background/50' : 'text-muted-foreground'}`}>
+                            {formatCents(promo.originalPriceCents!)}
+                          </span>
+                          <span className="font-bold text-3xl">{formatCents(promo.promoPriceCents!)}</span>
+                        </div>
+                        <p className={`text-xs mt-0.5 ${plan.highlight ? 'text-background/70' : 'text-green-600'}`}>
+                          first month, then {formatCents(promo.originalPriceCents!)}{plan.period}
+                        </p>
+                        {promo.expiresAt && (
+                          <p className={`text-[11px] mt-0.5 ${plan.highlight ? 'text-background/50' : 'text-muted-foreground'}`}>
+                            Offer ends in {daysUntil(promo.expiresAt)} days
+                          </p>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="flex items-baseline gap-1">
+                        <span className="font-bold text-3xl">{plan.price}</span>
+                        <span
+                          className={`text-sm ${plan.highlight ? 'text-background/70' : 'text-muted-foreground'}`}
+                        >
+                          {plan.period}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  <ul className="mb-8 flex-1 space-y-2.5">
+                    {plan.features.map((f) => (
+                      <li key={f} className="flex items-center gap-2 text-sm">
+                        <Check
+                          className={`h-4 w-4 shrink-0 ${plan.highlight ? 'text-background/80' : 'text-green-600'}`}
+                        />
+                        {f}
+                      </li>
+                    ))}
+                  </ul>
+
+                  {plan.key === 'free' ? (
+                    <a
+                      href={isSignedIn ? '/' : '/signup'}
+                      className={btnClass(plan.highlight) + ' block text-center'}
+                    >
+                      {isSignedIn ? 'Open editor' : 'Get started free'}
+                    </a>
+                  ) : isCurrent && hasStripeSubscription ? (
                     <button
                       type="button"
-                      disabled={!!loading}
-                      onClick={() => plan.monthlyKey && void handleStripeUpgrade(plan.monthlyKey, promo?.id)}
+                      disabled={loading === 'portal'}
+                      onClick={handleStripePortal}
                       className={btnClass(plan.highlight)}
                     >
-                      <span className="flex items-center justify-center gap-2">
-                        <CreditCard className="h-3.5 w-3.5" />
-                        {loading === `stripe-${plan.monthlyKey}`
-                          ? 'Loading…'
-                          : hasPromo && promo
-                            ? `Pay with Card — ${formatCents(promo.promoPriceCents!)}`
-                            : 'Pay with Card'}
-                      </span>
+                      {loading === 'portal' ? 'Loading…' : 'Manage subscription'}
                     </button>
+                  ) : isCurrent && hasRazorpaySubscription ? (
                     <button
                       type="button"
-                      disabled={!!loading}
-                      onClick={() => plan.monthlyKey && void handleRazorpayUpgrade(plan.monthlyKey)}
-                      className={secondaryBtnClass(plan.highlight)}
+                      disabled={loading === 'rzp-cancel'}
+                      onClick={() => void handleRazorpayCancel()}
+                      className={btnClass(plan.highlight)}
                     >
-                      {loading === `razorpay-${plan.monthlyKey}`
-                        ? 'Loading…'
-                        : hasPromo && promo
-                          ? `₹ Pay with Razorpay — ${formatCents(promo.promoPriceCents!)}`
-                          : '₹ Pay with Razorpay'}
+                      {loading === 'rzp-cancel' ? 'Cancelling…' : 'Cancel subscription'}
                     </button>
-                  </div>
-                )}
-              </div>
-            )
-          })}
-        </div>
+                  ) : !isSignedIn ? (
+                    <a
+                      href="/signup?next=/pricing"
+                      className={btnClass(plan.highlight) + ' block text-center'}
+                    >
+                      Start free trial
+                    </a>
+                  ) : (
+                    <div className="flex flex-col gap-2">
+                      <button
+                        type="button"
+                        disabled={!!loading}
+                        onClick={() => plan.monthlyKey && void handleStripeUpgrade(plan.monthlyKey, promo?.id)}
+                        className={btnClass(plan.highlight)}
+                      >
+                        <span className="flex items-center justify-center gap-2">
+                          <CreditCard className="h-3.5 w-3.5" />
+                          {loading === `stripe-${plan.monthlyKey}`
+                            ? 'Loading…'
+                            : hasPromo && promo
+                              ? `Pay with Card — ${formatCents(promo.promoPriceCents!)}`
+                              : 'Pay with Card'}
+                        </span>
+                      </button>
+                      <button
+                        type="button"
+                        disabled={!!loading}
+                        onClick={() => plan.monthlyKey && void handleRazorpayUpgrade(plan.monthlyKey)}
+                        className={secondaryBtnClass(plan.highlight)}
+                      >
+                        {loading === `razorpay-${plan.monthlyKey}`
+                          ? 'Loading…'
+                          : hasPromo && promo
+                            ? `₹ Pay with Razorpay — ${formatCents(promo.promoPriceCents!)}`
+                            : '₹ Pay with Razorpay'}
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+        )}
 
         <p className="mt-8 text-center text-muted-foreground text-sm">
           All plans include 14-day free trial. No credit card required to start.
