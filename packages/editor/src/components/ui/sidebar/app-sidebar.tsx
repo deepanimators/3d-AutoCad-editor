@@ -95,7 +95,7 @@ export function AppSidebar({
             </SidebarHeader>
           )}
 
-          <SidebarContent className={cn('no-scrollbar flex flex-1 flex-col overflow-hidden')}>
+          <SidebarContent className={cn('no-scrollbar flex min-h-0 flex-1 flex-col overflow-y-auto')}>
             {renderPanelContent()}
           </SidebarContent>
         </div>
