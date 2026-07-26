@@ -2,7 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server'
 import { eq } from 'drizzle-orm'
 import { db } from '@/lib/db/client'
 import { users } from '@/lib/db/schema'
-import { razorpay, verifyRazorpayWebhookSignature, resolvePlanFromRazorpayPlanId } from '@/lib/razorpay'
+import { verifyRazorpayWebhookSignature, resolvePlanFromRazorpayPlanId } from '@/lib/razorpay'
 
 export const dynamic = 'force-dynamic'
 

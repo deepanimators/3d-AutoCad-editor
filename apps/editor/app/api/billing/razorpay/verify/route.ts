@@ -4,7 +4,7 @@ import { eq } from 'drizzle-orm'
 import { getSession } from '@/lib/auth-server'
 import { db } from '@/lib/db/client'
 import { users } from '@/lib/db/schema'
-import { razorpay, verifyRazorpaySignature, resolvePlanFromRazorpayPlanId } from '@/lib/razorpay'
+import { getRazorpay, verifyRazorpaySignature, resolvePlanFromRazorpayPlanId } from '@/lib/razorpay'
 import { logAction } from '@/lib/audit'
 
 export const dynamic = 'force-dynamic'
@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
   })
   if (!valid) return NextResponse.json({ error: 'invalid_signature' }, { status: 400 })
 
-  const subscription = (await razorpay.subscriptions.fetch(razorpay_subscription_id)) as unknown as Record<string, unknown>
+  const subscription = (await getRazorpay().subscriptions.fetch(razorpay_subscription_id)) as unknown as Record<string, unknown>
   const planId = subscription.plan_id as string | undefined
   const plan = resolvePlanFromRazorpayPlanId(planId)
 

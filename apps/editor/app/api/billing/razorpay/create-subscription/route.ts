@@ -4,7 +4,7 @@ import { eq } from 'drizzle-orm'
 import { getSession } from '@/lib/auth-server'
 import { db } from '@/lib/db/client'
 import { users } from '@/lib/db/schema'
-import { razorpay, RAZORPAY_PLAN_MAP } from '@/lib/razorpay'
+import { getRazorpay, RAZORPAY_PLAN_MAP } from '@/lib/razorpay'
 
 export const dynamic = 'force-dynamic'
 
@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
 
   let customerId = user?.razorpayCustomerId ?? null
   if (!customerId) {
-    const customer = await razorpay.customers.create({
+    const customer = await getRazorpay().customers.create({
       name: session.name,
       email: session.email,
       fail_existing: 0,
@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
     await db.update(users).set({ razorpayCustomerId: customerId }).where(eq(users.id, session.id))
   }
 
-  const subscription = await razorpay.subscriptions.create({
+  const subscription = await getRazorpay().subscriptions.create({
     plan_id: planId,
     customer_notify: 1,
     total_count: 12,

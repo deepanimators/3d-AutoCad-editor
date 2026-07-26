@@ -36,12 +36,12 @@ function ShareDialog({ id, onClose }: { id: string; onClose: () => void }) {
   const [inviting, setInviting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  useState(() => {
+  useEffect(() => {
     void fetch(`/api/scenes/${id}/collaborators`)
       .then((r) => r.json())
       .then((data: Collaborator[]) => { setCollabs(data); setLoading(false) })
       .catch(() => setLoading(false))
-  })
+  }, [id])
 
   async function invite(e: React.FormEvent) {
     e.preventDefault()

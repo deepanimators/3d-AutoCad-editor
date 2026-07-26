@@ -3,7 +3,7 @@ import { eq } from 'drizzle-orm'
 import { getSession } from '@/lib/auth-server'
 import { db } from '@/lib/db/client'
 import { users } from '@/lib/db/schema'
-import { razorpay } from '@/lib/razorpay'
+import { getRazorpay } from '@/lib/razorpay'
 import { logAction } from '@/lib/audit'
 
 export const dynamic = 'force-dynamic'
@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'no_subscription' }, { status: 400 })
   }
 
-  await razorpay.subscriptions.cancel(user.razorpaySubscriptionId, false)
+  await getRazorpay().subscriptions.cancel(user.razorpaySubscriptionId, false)
 
   await db.update(users).set({
     subscriptionStatus: 'canceled',
