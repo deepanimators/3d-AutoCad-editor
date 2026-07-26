@@ -1,9 +1,9 @@
 'use client'
 
-import { Pencil, Trash2, Check, X } from 'lucide-react'
+import { Pencil, Trash2, Check, X, Share2, UserPlus, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 interface SceneCardProps {
   id: string
@@ -11,6 +11,7 @@ interface SceneCardProps {
   nodeCount: number
   updatedAt: string
   thumbnailUrl: string | null
+  canShare?: boolean
 }
 
 function formatDate(iso: string): string {
@@ -25,12 +26,127 @@ function formatDate(iso: string): string {
   }
 }
 
-export function SceneCard({ id, name, nodeCount, updatedAt, thumbnailUrl }: SceneCardProps) {
+type Collaborator = { id: string; email: string | null; role: string }
+
+function ShareDialog({ id, onClose }: { id: string; onClose: () => void }) {
+  const [email, setEmail] = useState('')
+  const [role, setRole] = useState<'viewer' | 'editor'>('viewer')
+  const [collabs, setCollabs] = useState<Collaborator[]>([])
+  const [loading, setLoading] = useState(true)
+  const [inviting, setInviting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  useState(() => {
+    void fetch(`/api/scenes/${id}/collaborators`)
+      .then((r) => r.json())
+      .then((data: Collaborator[]) => { setCollabs(data); setLoading(false) })
+      .catch(() => setLoading(false))
+  })
+
+  async function invite(e: React.FormEvent) {
+    e.preventDefault()
+    if (!email.trim()) return
+    setInviting(true)
+    setError(null)
+    const res = await fetch(`/api/scenes/${id}/collaborators`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email.trim(), role }),
+    })
+    const data = await res.json()
+    if (!res.ok) {
+      setError(data.error === 'already_invited' ? 'Already invited.' : data.error === 'pro_required' ? 'Pro plan required.' : 'Failed to invite.')
+    } else {
+      setCollabs((prev) => [...prev, data as Collaborator])
+      setEmail('')
+    }
+    setInviting(false)
+  }
+
+  async function removeCollab(collabId: string) {
+    await fetch(`/api/scenes/${id}/collaborators?collaboratorId=${collabId}`, { method: 'DELETE' })
+    setCollabs((prev) => prev.filter((c) => c.id !== collabId))
+  }
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+      onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
+    >
+      <div className="w-full max-w-md rounded-xl border border-border bg-background shadow-xl" onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-center justify-between border-b border-border px-5 py-4">
+          <div className="flex items-center gap-2">
+            <Share2 className="h-4 w-4 text-brand" />
+            <h3 className="font-semibold text-sm">Share scene</h3>
+          </div>
+          <button type="button" onClick={onClose} className="rounded p-1 text-muted-foreground hover:bg-accent">
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+        <div className="p-5 space-y-4">
+          <form onSubmit={(e) => void invite(e)} className="flex gap-2">
+            <input
+              autoFocus
+              className="flex-1 rounded-lg border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+              placeholder="Email address"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <select
+              className="rounded-lg border border-border bg-background px-2 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+              value={role}
+              onChange={(e) => setRole(e.target.value as 'viewer' | 'editor')}
+            >
+              <option value="viewer">Viewer</option>
+              <option value="editor">Editor</option>
+            </select>
+            <button
+              type="submit"
+              disabled={inviting || !email.trim()}
+              className="flex items-center gap-1.5 rounded-lg bg-brand px-3 py-2 text-brand-foreground text-sm font-medium hover:opacity-90 disabled:opacity-50"
+            >
+              {inviting ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <UserPlus className="h-3.5 w-3.5" />}
+              Invite
+            </button>
+          </form>
+          {error && <p className="text-destructive text-xs">{error}</p>}
+          {loading ? (
+            <p className="text-muted-foreground text-xs">Loading…</p>
+          ) : collabs.length === 0 ? (
+            <p className="text-muted-foreground text-xs">No collaborators yet.</p>
+          ) : (
+            <ul className="space-y-1.5">
+              {collabs.map((c) => (
+                <li key={c.id} className="flex items-center justify-between rounded-lg bg-muted/40 px-3 py-2 text-sm">
+                  <span className="truncate text-foreground">{c.email ?? 'Unknown'}</span>
+                  <div className="flex items-center gap-2 shrink-0 ml-2">
+                    <span className="text-muted-foreground text-xs capitalize">{c.role}</span>
+                    <button
+                      type="button"
+                      onClick={() => void removeCollab(c.id)}
+                      className="rounded p-0.5 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                    >
+                      <X className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export function SceneCard({ id, name, nodeCount, updatedAt, thumbnailUrl, canShare }: SceneCardProps) {
   const router = useRouter()
   const [editing, setEditing] = useState(false)
   const [editName, setEditName] = useState(name)
   const [displayName, setDisplayName] = useState(name)
   const [deleting, setDeleting] = useState(false)
+  const [sharing, setSharing] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
   const startEdit = (e: React.MouseEvent) => {
@@ -88,6 +204,7 @@ export function SceneCard({ id, name, nodeCount, updatedAt, thumbnailUrl }: Scen
 
   return (
     <li className="group relative rounded-xl border border-border/60 bg-background transition-all duration-150 hover:border-border hover:shadow-md">
+      {sharing && <ShareDialog id={id} onClose={() => setSharing(false)} />}
       <Link className="block p-4" href={`/scene/${id}`}>
         <div className="flex aspect-video items-center justify-center overflow-hidden rounded-lg bg-muted">
           {thumbnailUrl ? (
@@ -134,6 +251,16 @@ export function SceneCard({ id, name, nodeCount, updatedAt, thumbnailUrl }: Scen
               >
                 <Pencil className="h-3.5 w-3.5" />
               </button>
+              {canShare && (
+                <button
+                  className="shrink-0 rounded p-0.5 text-muted-foreground opacity-0 transition-opacity hover:bg-brand-muted hover:text-brand group-hover:opacity-100"
+                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); setSharing(true) }}
+                  title="Share"
+                  type="button"
+                >
+                  <Share2 className="h-3.5 w-3.5" />
+                </button>
+              )}
               <button
                 className="shrink-0 rounded p-0.5 text-muted-foreground opacity-0 transition-opacity hover:bg-destructive/10 hover:text-destructive group-hover:opacity-100 disabled:opacity-50"
                 disabled={deleting}
@@ -154,3 +281,4 @@ export function SceneCard({ id, name, nodeCount, updatedAt, thumbnailUrl }: Scen
     </li>
   )
 }
+
