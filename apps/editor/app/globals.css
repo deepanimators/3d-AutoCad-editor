@@ -79,41 +79,45 @@
 
 :root {
   --radius: 0.5rem;
-  --background: oklch(0.995 0.002 100);
-  --foreground: oklch(0.14 0 0);
-  --card: oklch(1.0 0 0);
-  --card-foreground: oklch(0.14 0 0);
-  --popover: oklch(0.99 0 0);
-  --popover-foreground: oklch(0.14 0 0);
+  /* Warm off-white base with blueprint paper feel */
+  --background: oklch(0.985 0.003 80);
+  --foreground: oklch(0.12 0.010 264);
+  /* Card sits above background — near-white with hint of brand */
+  --card: oklch(0.995 0.002 264);
+  --card-foreground: oklch(0.12 0.010 264);
+  --popover: oklch(0.998 0.001 264);
+  --popover-foreground: oklch(0.12 0.010 264);
   --primary: oklch(0.55 0.22 264);
   --primary-foreground: oklch(1.0 0 0);
-  --secondary: oklch(0.96 0 0);
-  --secondary-foreground: oklch(0.14 0 0);
-  --muted: oklch(0.96 0 0);
-  --muted-foreground: oklch(0.60 0 0);
-  --accent: oklch(0.96 0 0);
-  --accent-foreground: oklch(0.14 0 0);
+  --secondary: oklch(0.96 0.003 264);
+  --secondary-foreground: oklch(0.12 0.010 264);
+  --muted: oklch(0.96 0.003 264);
+  --muted-foreground: oklch(0.52 0.008 264);
+  --accent: oklch(0.94 0.005 264);
+  --accent-foreground: oklch(0.12 0.010 264);
   --destructive: oklch(0.58 0.24 27);
-  --border: oklch(0.90 0 0);
-  --input: oklch(0.93 0 0);
+  /* Subtle indigo-tinted border */
+  --border: oklch(0.87 0.006 264);
+  --input: oklch(0.93 0.004 264);
   --ring: oklch(0.55 0.22 264);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.98 0 0);
-  --sidebar-foreground: oklch(0.14 0 0);
+  /* Sidebar slightly cooler than background — panel layer */
+  --sidebar: oklch(0.975 0.004 264);
+  --sidebar-foreground: oklch(0.12 0.010 264);
   --sidebar-primary: oklch(0.55 0.22 264);
   --sidebar-primary-foreground: oklch(1.0 0 0);
-  --sidebar-accent: oklch(0.93 0.04 264);
+  --sidebar-accent: oklch(0.90 0.07 264);
   --sidebar-accent-foreground: oklch(0.40 0.18 264);
-  --sidebar-border: oklch(0.91 0 0);
+  --sidebar-border: oklch(0.87 0.006 264);
   --sidebar-ring: oklch(0.55 0.22 264);
   /* Brand */
   --brand: oklch(0.55 0.22 264);
   --brand-hover: oklch(0.48 0.22 264);
-  --brand-muted: oklch(0.93 0.06 264);
+  --brand-muted: oklch(0.92 0.07 264);
   --brand-foreground: oklch(1.0 0 0);
   /* Semantic */
   --success: oklch(0.52 0.17 145);
@@ -125,23 +129,34 @@
   --purple: oklch(0.52 0.22 300);
   --purple-muted: oklch(0.94 0.05 300);
   --purple-foreground: oklch(1.0 0 0);
+  /* Canvas background (read by Three.js scene) */
+  --canvas-bg: oklch(0.92 0.004 80);
+  /* Elevation tokens */
+  --el-1: 0 0 0 1px var(--border), 0 1px 3px oklch(0 0 0 / 0.06);
+  --el-2: 0 0 0 1px var(--border), 0 4px 16px oklch(0 0 0 / 0.10), 0 1px 4px oklch(0 0 0 / 0.06);
+  --el-3: 0 0 0 1px var(--border), 0 12px 40px oklch(0 0 0 / 0.16), 0 4px 12px oklch(0 0 0 / 0.08);
+  /* Motion tokens */
+  --duration-fast: 100ms;
+  --duration-base: 150ms;
+  --duration-slow: 250ms;
 }
 
 .dark {
-  --background: oklch(0.10 0 0);
-  --foreground: oklch(0.97 0 0);
-  --card: oklch(0.14 0 0);
-  --card-foreground: oklch(0.97 0 0);
-  --popover: oklch(0.17 0 0);
-  --popover-foreground: oklch(0.97 0 0);
+  /* Deep dark with blueprint-night indigo tint */
+  --background: oklch(0.09 0.012 264);
+  --foreground: oklch(0.96 0.005 80);
+  --card: oklch(0.15 0.008 264);
+  --card-foreground: oklch(0.96 0.005 80);
+  --popover: oklch(0.17 0.007 264);
+  --popover-foreground: oklch(0.96 0.005 80);
   --primary: oklch(0.72 0.18 264);
-  --primary-foreground: oklch(0.10 0 0);
-  --secondary: oklch(0.18 0 0);
-  --secondary-foreground: oklch(0.97 0 0);
-  --muted: oklch(0.18 0 0);
-  --muted-foreground: oklch(0.62 0 0);
-  --accent: oklch(0.18 0 0);
-  --accent-foreground: oklch(0.97 0 0);
+  --primary-foreground: oklch(0.09 0.012 264);
+  --secondary: oklch(0.17 0.007 264);
+  --secondary-foreground: oklch(0.96 0.005 80);
+  --muted: oklch(0.17 0.007 264);
+  --muted-foreground: oklch(0.58 0.006 264);
+  --accent: oklch(0.20 0.008 264);
+  --accent-foreground: oklch(0.96 0.005 80);
   --destructive: oklch(0.70 0.19 22);
   --border: oklch(1.0 0 0 / 0.09);
   --input: oklch(1.0 0 0 / 0.12);
@@ -151,19 +166,20 @@
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.12 0 0);
-  --sidebar-foreground: oklch(0.97 0 0);
+  /* Sidebar panel layer — slightly lighter than background */
+  --sidebar: oklch(0.11 0.011 264);
+  --sidebar-foreground: oklch(0.96 0.005 80);
   --sidebar-primary: oklch(0.72 0.18 264);
-  --sidebar-primary-foreground: oklch(0.10 0 0);
-  --sidebar-accent: oklch(0.20 0.06 264);
+  --sidebar-primary-foreground: oklch(0.09 0.012 264);
+  --sidebar-accent: oklch(0.20 0.07 264);
   --sidebar-accent-foreground: oklch(0.72 0.18 264);
   --sidebar-border: oklch(1.0 0 0 / 0.08);
   --sidebar-ring: oklch(0.72 0.18 264);
   /* Brand */
   --brand: oklch(0.72 0.18 264);
   --brand-hover: oklch(0.78 0.16 264);
-  --brand-muted: oklch(0.20 0.06 264);
-  --brand-foreground: oklch(0.10 0 0);
+  --brand-muted: oklch(0.20 0.08 264);
+  --brand-foreground: oklch(0.09 0.012 264);
   /* Semantic */
   --success: oklch(0.72 0.17 145);
   --success-muted: oklch(0.18 0.06 145);
@@ -174,6 +190,12 @@
   --purple: oklch(0.70 0.20 300);
   --purple-muted: oklch(0.18 0.06 300);
   --purple-foreground: oklch(0.10 0 0);
+  /* Canvas background */
+  --canvas-bg: oklch(0.11 0.010 264);
+  /* Elevation — dark mode: inset highlight + drop shadow */
+  --el-1: 0 0 0 1px var(--border), inset 0 1px 0 oklch(1 0 0 / 0.04), 0 1px 3px oklch(0 0 0 / 0.20);
+  --el-2: 0 0 0 1px var(--border), inset 0 1px 0 oklch(1 0 0 / 0.05), 0 8px 24px oklch(0 0 0 / 0.30);
+  --el-3: 0 0 0 1px var(--border), inset 0 1px 0 oklch(1 0 0 / 0.06), 0 20px 60px oklch(0 0 0 / 0.40);
 }
 
 @layer base {
@@ -190,12 +212,10 @@
   }
 }
 
-/* Elevation utilities */
-.el-1 { box-shadow: var(--shadow-1, 0 1px 2px oklch(0 0 0 / 0.05)); }
-.el-2 { box-shadow: var(--shadow-2, 0 1px 3px oklch(0 0 0 / 0.1), 0 1px 2px oklch(0 0 0 / 0.06)); }
-.el-3 { box-shadow: var(--shadow-3, 0 4px 6px oklch(0 0 0 / 0.07), 0 2px 4px oklch(0 0 0 / 0.06)); }
-.el-4 { box-shadow: var(--shadow-4, 0 10px 15px oklch(0 0 0 / 0.1), 0 4px 6px oklch(0 0 0 / 0.05)); }
-.el-5 { box-shadow: var(--shadow-5, 0 20px 25px oklch(0 0 0 / 0.15), 0 10px 10px oklch(0 0 0 / 0.04)); }
+/* Elevation utilities — 3 levels, dark/light via CSS variables */
+.el-1 { box-shadow: var(--el-1); }
+.el-2 { box-shadow: var(--el-2); }
+.el-3 { box-shadow: var(--el-3); }
 
 /* Apple-style smooth corners (squircle) — progressive enhancement */
 .rounded-smooth {

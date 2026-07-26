@@ -1241,12 +1241,6 @@ export default function Editor({
     return releaseReadOnly
   }, [isVersionPreviewMode])
 
-  useEffect(() => {
-    document.body.classList.add('dark')
-    return () => {
-      document.body.classList.remove('dark')
-    }
-  }, [])
 
   const handleSceneReadyChange = useCallback((ready: boolean) => {
     setIsViewerSceneReady(ready)
@@ -1398,7 +1392,7 @@ export default function Editor({
         )}
 
         {!isLoading && isPreviewMode ? (
-          <div className="dark flex h-full w-full flex-col bg-neutral-100 text-foreground">
+          <div className="flex h-full w-full flex-col bg-background text-foreground">
             {isFirstPersonMode ? (
               <FirstPersonOverlay onExit={() => useEditor.getState().setFirstPersonMode(false)} />
             ) : (

@@ -46,17 +46,16 @@ import {
   SwatchBook,
   Tag,
 } from 'lucide-react'
-import Image from 'next/image'
 import React, { type ReactNode, useCallback } from 'react'
 import { flushSync } from 'react-dom'
 import { cn } from '@/lib/utils'
 import { Tooltip, TooltipContent, TooltipTrigger } from './toolbar-tooltip'
 
 const TOOLBAR_CONTAINER =
-  'inline-flex h-8 items-stretch overflow-hidden rounded-xl border border-border bg-background/90 shadow-2xl backdrop-blur-md'
+  'inline-flex h-8 items-stretch overflow-hidden rounded-xl border border-border bg-background/90 shadow-[var(--el-2)] backdrop-blur-md'
 
 const TOOLBAR_BTN =
-  'flex w-8 items-center justify-center text-muted-foreground/80 transition-colors hover:bg-white/8 hover:text-foreground/90'
+  'flex w-8 items-center justify-center text-muted-foreground transition-colors hover:bg-accent/50 hover:text-foreground'
 
 function requestWalkthroughPointerLock() {
   const canvas = document.querySelector<HTMLCanvasElement>('[data-aruct-viewer-3d] canvas')
@@ -89,28 +88,12 @@ const VIEW_MODES: { id: ViewMode; label: string; icon: React.ReactNode }[] = [
   {
     id: '3d',
     label: '3D',
-    icon: (
-      <Image
-        alt=""
-        className="h-3.5 w-3.5 object-contain"
-        height={14}
-        src="/icons/building.webp"
-        width={14}
-      />
-    ),
+    icon: <Box className="h-3.5 w-3.5" />,
   },
   {
     id: '2d',
     label: '2D',
-    icon: (
-      <Image
-        alt=""
-        className="h-3.5 w-3.5 object-contain"
-        height={14}
-        src="/icons/blueprint.webp"
-        width={14}
-      />
-    ),
+    icon: <PenLine className="h-3.5 w-3.5" />,
   },
   {
     id: 'split',
@@ -128,11 +111,11 @@ const levelModeLabels: Record<string, string> = {
 }
 
 const wallModeOrder = ['cutaway', 'up', 'down', 'translucent'] as const
-const wallModeConfig: Record<string, { icon: string; label: string }> = {
-  up: { icon: '/icons/room.webp', label: 'Full height' },
-  cutaway: { icon: '/icons/wallcut.webp', label: 'Cutaway' },
-  down: { icon: '/icons/walllow.webp', label: 'Low' },
-  translucent: { icon: '/icons/wall.webp', label: 'Translucent' },
+const wallModeConfig: Record<string, { icon: React.ReactNode; label: string }> = {
+  up: { icon: <Layers3 className="h-4 w-4" />, label: 'Full height' },
+  cutaway: { icon: <Contrast className="h-4 w-4" />, label: 'Cutaway' },
+  down: { icon: <SlidersHorizontal className="h-4 w-4" />, label: 'Low' },
+  translucent: { icon: <Eye className="h-4 w-4" />, label: 'Translucent' },
 }
 
 const SHADING_OPTIONS = [
@@ -172,8 +155,8 @@ function ViewModeControl() {
               className={cn(
                 'flex items-center justify-center gap-1.5 px-2.5 font-medium text-xs transition-colors',
                 isActive
-                  ? 'bg-white/10 text-foreground'
-                  : 'text-muted-foreground/70 hover:bg-white/8 hover:text-muted-foreground',
+                  ? 'bg-accent text-foreground'
+                  : 'text-muted-foreground hover:bg-accent/50 hover:text-foreground',
               )}
               onClick={() => setViewMode(mode.id)}
               type="button"
@@ -319,13 +302,13 @@ function WallModeToggle() {
           TOOLBAR_BTN,
           'w-auto gap-1.5 px-2.5',
           wallMode !== 'cutaway'
-            ? 'bg-white/10'
+            ? 'bg-accent text-foreground'
             : 'opacity-60 grayscale hover:opacity-100 hover:grayscale-0',
         )}
         onClick={cycle}
         type="button"
       >
-        <Image alt="" className="h-4 w-4 object-contain" height={16} src={config.icon} width={16} />
+        {config.icon}
         <span className="font-medium text-xs">{config.label}</span>
       </button>
     </ToolbarTooltip>

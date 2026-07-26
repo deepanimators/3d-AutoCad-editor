@@ -3,11 +3,11 @@
 import { useScene } from '@aruct/core'
 import { Editor, ItemsPanel } from '@aruct/editor'
 import { Hammer, Layers, Package, Settings } from 'lucide-react'
-import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useCallback } from 'react'
 import { BuildTab } from '@/components/build-tab'
+import { EditorTopBar } from '@/components/editor-top-bar'
 import { FloorplanConstructionPreflight } from '@/components/floorplan-construction-preflight'
 import { RailAccountNav } from '@/components/rail-account-nav'
 import {
@@ -29,15 +29,7 @@ const SIDEBAR_TABS = [
     component: () => null,
     mobileDefaultSnap: 0.5,
     mobileIcon: <Layers className="h-5 w-5" />,
-    icon: (
-      <Image
-        alt=""
-        className="h-8 w-8 object-contain"
-        height={32}
-        src="/icons/scene.webp"
-        width={32}
-      />
-    ),
+    icon: <Layers className="h-5 w-5" />,
   },
   {
     id: 'build',
@@ -45,15 +37,7 @@ const SIDEBAR_TABS = [
     component: BuildTab,
     mobileDefaultSnap: 0.5,
     mobileIcon: <Hammer className="h-5 w-5" />,
-    icon: (
-      <Image
-        alt=""
-        className="h-8 w-8 object-contain"
-        height={32}
-        src="/icons/build.webp"
-        width={32}
-      />
-    ),
+    icon: <Hammer className="h-5 w-5" />,
   },
   {
     id: 'items',
@@ -61,15 +45,7 @@ const SIDEBAR_TABS = [
     component: EditorItemsPanel,
     mobileDefaultSnap: 0.5,
     mobileIcon: <Package className="h-5 w-5" />,
-    icon: (
-      <Image
-        alt=""
-        className="h-8 w-8 object-contain"
-        height={32}
-        src="/icons/couch.webp"
-        width={32}
-      />
-    ),
+    icon: <Package className="h-5 w-5" />,
   },
   {
     id: 'settings',
@@ -77,15 +53,7 @@ const SIDEBAR_TABS = [
     component: () => null,
     mobileDefaultSnap: 0.5,
     mobileIcon: <Settings className="h-5 w-5" />,
-    icon: (
-      <Image
-        alt=""
-        className="h-8 w-8 object-contain"
-        height={32}
-        src="/icons/settings.webp"
-        width={32}
-      />
-    ),
+    icon: <Settings className="h-5 w-5" />,
   },
 ]
 
@@ -148,6 +116,7 @@ export default function Home() {
       )}
       <Editor
         layoutVersion="v2"
+        navbarSlot={<EditorTopBar />}
         projectId={PROJECT_ID}
         railBottomSlot={<RailAccountNav />}
         settingsPanelProps={{

@@ -1,6 +1,5 @@
 import { getSession } from '@/lib/auth-server'
-import { AppSidebar } from './app-sidebar'
-import { MobileShellClient } from './mobile-shell-client'
+import { TopBar } from './top-bar'
 
 export async function AppShell({ children }: { children: React.ReactNode }) {
   const session = await getSession()
@@ -14,16 +13,13 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
     : null
 
   return (
-    <div className="flex min-h-screen bg-background">
-      <AppSidebar user={user} />
-      <div className="flex flex-1 flex-col min-w-0">
-        <MobileShellClient user={user} />
-        <main className="flex-1 overflow-auto">
-          <div className="mx-auto max-w-[1280px] w-full">
-            {children}
-          </div>
-        </main>
-      </div>
+    <div className="flex min-h-screen flex-col bg-background">
+      <TopBar user={user} />
+      <main className="flex-1 overflow-auto">
+        <div className="mx-auto max-w-[1280px] w-full px-6 py-8">
+          {children}
+        </div>
+      </main>
     </div>
   )
 }

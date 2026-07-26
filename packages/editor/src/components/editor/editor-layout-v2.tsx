@@ -172,12 +172,7 @@ function RightColumn({
 }) {
   return (
     <div
-      className="relative flex min-w-0 flex-1 flex-col overflow-hidden"
-      style={{
-        borderTopLeftRadius: 16,
-        clipPath: 'inset(0 0 0 0 round 16px 0 0 0)',
-        boxShadow: '-4px -2px 16px rgba(0, 0, 0, 0.08), -1px 0 4px rgba(0, 0, 0, 0.04)',
-      }}
+      className="relative flex min-w-0 flex-1 flex-col overflow-hidden border-l border-border"
     >
       {/* Viewer toolbar */}
       {(toolbarLeft || toolbarRight) && (
@@ -253,7 +248,7 @@ export function EditorLayoutV2({
   }
 
   return (
-    <div className="dark flex h-full w-full flex-col bg-sidebar text-foreground">
+    <div className="flex h-full w-full flex-col bg-sidebar text-foreground">
       {/* Top navbar */}
       {navbarSlot}
 
