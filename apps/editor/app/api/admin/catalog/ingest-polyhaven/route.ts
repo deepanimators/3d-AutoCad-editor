@@ -66,8 +66,8 @@ export async function POST(request: NextRequest) {
           sourceUrl: glbUrl,
           license: 'CC0',
           s3Key: glbUrl,
-          tags: JSON.stringify(asset.tags ?? []),
-          category: asset.categories?.[0] ?? null,
+          tags: JSON.stringify(asset?.tags ?? []),
+          category: asset?.categories?.[0] ?? null,
           addedBy: 'system',
         })
         inserted++

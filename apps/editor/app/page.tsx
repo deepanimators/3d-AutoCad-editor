@@ -1,11 +1,11 @@
 'use client'
 
 import { useScene } from '@aruct/core'
-import { Editor, ItemsPanel } from '@aruct/editor'
+import { Editor, type ExternalResult, ItemsPanel } from '@aruct/editor'
 import { Hammer, Layers, Package, Settings } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useCallback } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { BuildTab } from '@/components/build-tab'
 import { EditorTopBar } from '@/components/editor-top-bar'
 import { FloorplanConstructionPreflight } from '@/components/floorplan-construction-preflight'
@@ -16,10 +16,41 @@ import {
 } from '@/components/viewer-toolbar'
 
 // The open-source editor only ships the built-in catalog (no uploaded items),
-// so the Library/Community/Mine source chips and tag filters add nothing —
-// drop them and keep the panel to plain categories.
+// so the Library/Community/Mine source chips and tag filters add nothing.
+// External search (Poly Haven + Poly Pizza) is wired up via onSearchChange.
 function EditorItemsPanel() {
-  return <ItemsPanel showSourceFilter={false} showTagFilters={false} />
+  const [externalResults, setExternalResults] = useState<ExternalResult[] | null | undefined>(
+    undefined,
+  )
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const handleSearchChange = (q: string) => {
+    if (debounceRef.current) clearTimeout(debounceRef.current)
+    if (!q.trim()) {
+      setExternalResults(undefined)
+      return
+    }
+    setExternalResults(null) // loading
+    debounceRef.current = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/catalog/external?q=${encodeURIComponent(q)}&limit=12`)
+        if (!res.ok) throw new Error('fetch failed')
+        const data = (await res.json()) as { results: ExternalResult[] }
+        setExternalResults(data.results ?? [])
+      } catch {
+        setExternalResults([])
+      }
+    }, 400)
+  }
+
+  return (
+    <ItemsPanel
+      externalResults={externalResults}
+      onSearchChange={handleSearchChange}
+      showSourceFilter={false}
+      showTagFilters={false}
+    />
+  )
 }
 
 const SIDEBAR_TABS = [

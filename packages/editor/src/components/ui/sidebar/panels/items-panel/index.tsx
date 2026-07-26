@@ -1,16 +1,28 @@
 'use client'
 
 import type { AssetInput } from '@aruct/core'
+import { useViewer } from '@aruct/viewer'
 import NextImage from 'next/image'
 import { useEffect, useState } from 'react'
 import { triggerSFX } from '../../../../../lib/sfx-bus'
 import { cn } from '../../../../../lib/utils'
-import type { CatalogCategory } from '../../../../../store/use-editor'
+import type { CatalogCategory, Mode } from '../../../../../store/use-editor'
 import useEditor from '../../../../../store/use-editor'
 import { furnishTools } from '../../../action-menu/furnish-tools'
 import { CATALOG_ITEMS } from '../../../item-catalog/catalog-items'
 import { ItemCatalog } from '../../../item-catalog/item-catalog'
 import { type FunctionTreeNode, FunctionTreePanel } from './function-tree-panel'
+
+export type ExternalResult = {
+  sourceId: string
+  source: string
+  name: string
+  thumbnailUrl?: string | null
+  glbUrl: string
+  license: string
+  attribution?: string | null
+  tags?: string[]
+}
 
 const PLACEMENT_TAGS = new Set(['floor', 'wall', 'ceiling', 'countertop'])
 
@@ -23,6 +35,7 @@ export function ItemsPanel({
   functionTree,
   showSourceFilter = true,
   showTagFilters = true,
+  externalResults,
 }: {
   items?: AssetInput[]
   /** Called when the search query changes (community edition uses this for server-side search) */
@@ -54,6 +67,11 @@ export function ItemsPanel({
    * open-source editor hides these to keep the panel to plain categories.
    */
   showTagFilters?: boolean
+  /**
+   * External (Poly Haven / Poly Pizza) search results. undefined = no search
+   * active, null = loading, array = results ready.
+   */
+  externalResults?: ExternalResult[] | null
 }) {
   // When the embedder supplies a function taxonomy, the hierarchical browse
   // replaces the legacy `furnishTools` category tabs entirely.
@@ -72,6 +90,7 @@ export function ItemsPanel({
 
   return <LegacyItemsPanel
     emptyState={emptyState}
+    externalResults={externalResults}
     items={items}
     leadingTile={leadingTile}
     onSearchChange={onSearchChange}
@@ -89,6 +108,7 @@ function LegacyItemsPanel({
   emptyState,
   showSourceFilter = true,
   showTagFilters = true,
+  externalResults,
 }: {
   items?: AssetInput[]
   onSearchChange?: (query: string) => void
@@ -97,12 +117,14 @@ function LegacyItemsPanel({
   emptyState?: React.ReactNode
   showSourceFilter?: boolean
   showTagFilters?: boolean
+  externalResults?: ExternalResult[] | null
 }) {
   const mode = useEditor((s) => s.mode)
   const catalogCategory = useEditor((s) => s.catalogCategory)
   const setMode = useEditor((s) => s.setMode)
   const setTool = useEditor((s) => s.setTool)
   const setCatalogCategory = useEditor((s) => s.setCatalogCategory)
+  const setSelectedItem = useEditor((s) => s.setSelectedItem)
 
   const [activePlacementTag, setActivePlacementTag] = useState<string | null>(null)
   const [activeFunctionalTag, setActiveFunctionalTag] = useState<string | null>(null)
@@ -114,7 +136,10 @@ function LegacyItemsPanel({
     showSourceFilter ? 'library' : null,
   )
   const [search, setSearch] = useState('')
-  const isServerSearch = onSearchChange !== undefined
+  // Server search mode only activates when the caller explicitly passes searchResults
+  // (even if null/empty). When only onSearchChange is provided (e.g. external search
+  // side-effect), local filtering continues to work normally.
+  const isServerSearch = onSearchChange !== undefined && searchResults !== undefined
   // True when server search is active but results haven't come back yet
   const isSearchPending = isServerSearch && search.length > 0 && searchResults === null
 
@@ -380,25 +405,122 @@ function LegacyItemsPanel({
             </div>
           ))
         ) : (
-          <ItemCatalog
-            activeFunctionalTag={isServerSearch ? null : activeFunctionalTag}
-            activePlacementTag={isServerSearch ? null : activePlacementTag}
-            category={activeCategory.catalogCategory}
-            emptyState={emptyState}
-            items={activeSource && items ? items.filter(matchesSource) : items}
-            key={activeCategory.catalogCategory}
-            leadingTile={leadingTile}
-            overrideItems={
-              isServerSearch && search
-                ? activeSource && searchResults
-                  ? searchResults.filter(matchesSource)
-                  : (searchResults ?? undefined)
-                : undefined
-            }
-            search={isServerSearch ? '' : search}
-          />
+          <>
+            <ItemCatalog
+              activeFunctionalTag={isServerSearch ? null : activeFunctionalTag}
+              activePlacementTag={isServerSearch ? null : activePlacementTag}
+              category={activeCategory.catalogCategory}
+              emptyState={emptyState}
+              items={activeSource && items ? items.filter(matchesSource) : items}
+              key={activeCategory.catalogCategory}
+              leadingTile={leadingTile}
+              overrideItems={
+                isServerSearch && search
+                  ? activeSource && searchResults
+                    ? searchResults.filter(matchesSource)
+                    : (searchResults ?? undefined)
+                  : undefined
+              }
+              search={isServerSearch ? '' : search}
+            />
+            {search && externalResults !== undefined && (
+              <ExternalResultsSection
+                activeCategory={activeCategory.catalogCategory}
+                results={externalResults}
+                setMode={setMode}
+                setSelectedItem={setSelectedItem}
+                setTool={setTool}
+              />
+            )}
+          </>
         )}
       </div>
+    </div>
+  )
+}
+
+function ExternalResultsSection({
+  results,
+  activeCategory,
+  setSelectedItem,
+  setTool,
+  setMode,
+}: {
+  results: ExternalResult[] | null
+  activeCategory: string
+  setSelectedItem: (item: AssetInput) => void
+  setTool: (tool: string) => void
+  setMode: (mode: Mode) => void
+}) {
+  const handleSelect = (result: ExternalResult) => {
+    triggerSFX('sfx:menu-click')
+    const asset: AssetInput = {
+      id: `ext-${result.source}-${result.sourceId}`,
+      name: result.name,
+      category: activeCategory,
+      thumbnail: result.thumbnailUrl ?? '',
+      src: result.glbUrl as AssetInput['src'],
+      dimensions: [1, 1, 1],
+      offset: [0, 0, 0],
+      rotation: [0, 0, 0],
+      scale: [1, 1, 1],
+      tags: result.tags,
+    }
+    useViewer.getState().setSelection({ selectedIds: [], zoneId: null })
+    setSelectedItem(asset)
+    setTool('item')
+    setMode('build' as Mode)
+  }
+
+  return (
+    <div className="mt-4 space-y-2">
+      <div className="flex items-center gap-2">
+        <div className="h-px flex-1 bg-border/50" />
+        <span className="font-medium text-[10px] text-muted-foreground uppercase tracking-wide">
+          {results === null ? 'Searching the web…' : 'From the Web'}
+        </span>
+        <div className="h-px flex-1 bg-border/50" />
+      </div>
+      {results === null ? (
+        <div className="flex justify-center py-3">
+          <div className="size-4 animate-spin rounded-full border-2 border-muted-foreground/20 border-t-muted-foreground" />
+        </div>
+      ) : results.length === 0 ? (
+        <div className="py-3 text-center text-muted-foreground text-xs">No external results</div>
+      ) : (
+        <div className="grid gap-2" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(90px, 1fr))' }}>
+          {results.map((result) => (
+            <button
+              className="group relative flex flex-col gap-1.5 rounded-xl p-1.5 transition-colors hover:cursor-pointer hover:bg-sidebar-accent"
+              key={`${result.source}-${result.sourceId}`}
+              onClick={() => handleSelect(result)}
+              onMouseEnter={() => triggerSFX('sfx:menu-hover')}
+              type="button"
+            >
+              <div className="relative aspect-square w-full overflow-hidden rounded-lg bg-muted">
+                {result.thumbnailUrl ? (
+                  <img
+                    alt={result.name}
+                    className="h-full w-full object-cover"
+                    loading="lazy"
+                    src={result.thumbnailUrl}
+                  />
+                ) : (
+                  <div className="flex h-full items-center justify-center text-muted-foreground text-[10px]">
+                    3D
+                  </div>
+                )}
+                <span className="absolute bottom-1 right-1 rounded-sm bg-black/60 px-1 py-0.5 text-[8px] text-white capitalize">
+                  {result.source === 'polyhaven' ? 'Haven' : result.source === 'polypizza' ? 'Pizza' : result.source}
+                </span>
+              </div>
+              <span className="truncate px-0.5 text-left font-medium text-[11px] text-muted-foreground group-hover:text-foreground">
+                {result.name}
+              </span>
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   )
 }

@@ -32,7 +32,8 @@ export async function POST(request: NextRequest) {
 
   const task = await waitForTripoTask(taskId)
 
-  if (!task.output?.model) {
+  const modelUrl = task.output?.model
+  if (!modelUrl) {
     return NextResponse.json({ error: 'No model output' }, { status: 500 })
   }
 
@@ -45,10 +46,10 @@ export async function POST(request: NextRequest) {
         description: `AI-generated from prompt: "${prompt}"`,
         source: 'tripo3d',
         sourceId: task.task_id,
-        sourceUrl: task.output.model,
+        sourceUrl: modelUrl,
         license: 'CC0',
         attribution: null,
-        s3Key: task.output.model,
+        s3Key: modelUrl,
         s3Thumbnail: null,
         tags: JSON.stringify(['ai-generated', 'tripo3d']),
         category: null,
@@ -59,7 +60,7 @@ export async function POST(request: NextRequest) {
 
   return NextResponse.json({
     taskId: task.task_id,
-    glbUrl: task.output.model,
-    pbrGlbUrl: task.output.pbr_model,
+    glbUrl: modelUrl,
+    pbrGlbUrl: task.output?.pbr_model,
   })
 }
