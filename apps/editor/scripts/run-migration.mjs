@@ -24,12 +24,18 @@ try {
       "role" text DEFAULT 'user' NOT NULL CHECK (role IN ('user','admin')),
       "stripe_customer_id" text UNIQUE,
       "stripe_subscription_id" text,
+      "razorpay_customer_id" text,
+      "razorpay_subscription_id" text,
+      "payment_gateway" text CHECK (payment_gateway IN ('stripe','razorpay')),
       "subscription_status" text,
       "plan_expires_at" timestamptz,
       "created_at" timestamptz DEFAULT now() NOT NULL,
       "updated_at" timestamptz DEFAULT now() NOT NULL
     )
   `
+  await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "razorpay_customer_id" text`
+  await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "razorpay_subscription_id" text`
+  await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "payment_gateway" text CHECK (payment_gateway IN ('stripe','razorpay'))`
   console.log('✓ users table ready')
 
   await sql`
