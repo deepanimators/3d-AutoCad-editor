@@ -166,7 +166,15 @@ export function buildItemFloorplan(node: ItemNode, ctx: GeometryContext): Floorp
   // `transform.rotation`, +depth/2 always points off the wall for either side;
   // a negative offset would lay the footprint across the wall onto the far side.
   const centerLocalZ = node.asset.attachTo === 'wall-side' ? depth / 2 : 0
-  const [centerOffsetX, centerOffsetY] = rotateVec(0, centerLocalZ, transform.rotation)
+  // asset.offset shifts the GLB in local space (same as 3D: position={node.asset.offset}).
+  // Apply offset[0] (local X) and offset[2] (local Z) rotated into world space so
+  // the 2D footprint matches where the model actually appears in 3D.
+  const assetOffset = node.asset.offset ?? [0, 0, 0]
+  const [centerOffsetX, centerOffsetY] = rotateVec(
+    assetOffset[0],
+    centerLocalZ + assetOffset[2],
+    transform.rotation,
+  )
   const cx = transform.x + centerOffsetX
   const cy = transform.y + centerOffsetY
 

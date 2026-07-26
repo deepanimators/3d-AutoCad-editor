@@ -155,7 +155,9 @@ function LegacyItemsPanel({
 
   function selectCategory(categoryId: CatalogCategory) {
     setCatalogCategory(categoryId)
-    setTool('item')
+    if (categoryId === 'window') setTool('window')
+    else if (categoryId === 'door') setTool('door')
+    else setTool('item')
     setActivePlacementTag(null)
     setActiveFunctionalTag(null)
     setSearch('')
@@ -184,8 +186,11 @@ function LegacyItemsPanel({
     return true
   }
   const sourceItems = baseItems.filter(matchesSource)
+  // "Mine" items with no category (e.g. AI-generated) appear in any active tab
   const categoryItems = sourceItems.filter(
-    (item) => item.category === activeCategory.catalogCategory,
+    (item) =>
+      item.category === activeCategory.catalogCategory ||
+      (activeSource === 'mine' && !item.category),
   )
 
   // The three source chips are always shown so users can discover the
@@ -394,7 +399,25 @@ function LegacyItemsPanel({
 
       {/* Item grid */}
       <div className="min-h-0 flex-1 overflow-y-auto p-3">
-        {isSearchPending ? (
+        {activeCategory.catalogCategory === 'window' ? (
+          <StructuralTypePicker
+            onSelect={() => {
+              triggerSFX('sfx:menu-click')
+              setTool('window')
+              if (mode !== 'build') setMode('build')
+            }}
+            structuralType="window"
+          />
+        ) : activeCategory.catalogCategory === 'door' ? (
+          <StructuralTypePicker
+            onSelect={() => {
+              triggerSFX('sfx:menu-click')
+              setTool('door')
+              if (mode !== 'build') setMode('build')
+            }}
+            structuralType="door"
+          />
+        ) : isSearchPending ? (
           <div className="flex h-full items-center justify-center">
             <div className="size-5 animate-spin rounded-full border-2 border-muted-foreground/20 border-t-muted-foreground" />
           </div>
@@ -434,6 +457,209 @@ function LegacyItemsPanel({
             )}
           </>
         )}
+      </div>
+    </div>
+  )
+}
+
+const WINDOW_TYPES: Array<{ type: string; label: string; hint: string }> = [
+  { type: 'fixed', label: 'Fixed', hint: 'Non-opening picture window' },
+  { type: 'sliding', label: 'Sliding', hint: 'Slides horizontally' },
+  { type: 'casement', label: 'Casement', hint: 'Side-hinged, opens outward' },
+  { type: 'awning', label: 'Awning', hint: 'Top-hinged, opens outward' },
+  { type: 'hopper', label: 'Hopper', hint: 'Bottom-hinged, opens inward' },
+  { type: 'single-hung', label: 'Single Hung', hint: 'Lower sash moves vertically' },
+  { type: 'double-hung', label: 'Double Hung', hint: 'Both sashes move vertically' },
+  { type: 'bay', label: 'Bay', hint: 'Three panels projecting outward' },
+  { type: 'bow', label: 'Bow', hint: 'Curved multi-panel projection' },
+  { type: 'louvered', label: 'Louvered', hint: 'Angled glass slats' },
+]
+
+const DOOR_TYPES: Array<{ type: string; label: string; hint: string }> = [
+  { type: 'hinged', label: 'Hinged', hint: 'Standard swing door' },
+  { type: 'double', label: 'Double', hint: 'Two swing panels' },
+  { type: 'french', label: 'French', hint: 'Glass double door' },
+  { type: 'folding', label: 'Folding', hint: 'Accordion bi-fold panels' },
+  { type: 'pocket', label: 'Pocket', hint: 'Slides into wall cavity' },
+  { type: 'barn', label: 'Barn', hint: 'Slides on surface rail' },
+  { type: 'sliding', label: 'Sliding', hint: 'Parallel sliding panel' },
+  { type: 'garage-sectional', label: 'Sectional', hint: 'Overhead garage door' },
+  { type: 'garage-rollup', label: 'Roll-up', hint: 'Coiling garage door' },
+  { type: 'garage-tiltup', label: 'Tilt-up', hint: 'Single panel tilt garage' },
+]
+
+function WindowSVG({ type }: { type: string }) {
+  const s = 44
+  const hw = s / 2
+
+  if (type === 'sliding') return (
+    <svg fill="none" height={s} stroke="currentColor" strokeWidth={1.5} viewBox={`0 0 ${s} ${s}`} width={s}>
+      <rect height={30} rx={1} width={14} x={7} y={7} />
+      <rect height={30} rx={1} width={14} x={16} y={7} />
+    </svg>
+  )
+  if (type === 'casement') return (
+    <svg fill="none" height={s} stroke="currentColor" strokeWidth={1.5} viewBox={`0 0 ${s} ${s}`} width={s}>
+      <rect height={30} rx={1} width={22} x={hw - 11} y={7} />
+      <line x1={hw - 11} x2={hw + 11} y1={hw + 3} y2={7} />
+    </svg>
+  )
+  if (type === 'awning') return (
+    <svg fill="none" height={s} stroke="currentColor" strokeWidth={1.5} viewBox={`0 0 ${s} ${s}`} width={s}>
+      <rect height={30} rx={1} width={22} x={hw - 11} y={7} />
+      <line x1={hw - 11} x2={hw + 11} y1={7} y2={22} />
+    </svg>
+  )
+  if (type === 'hopper') return (
+    <svg fill="none" height={s} stroke="currentColor" strokeWidth={1.5} viewBox={`0 0 ${s} ${s}`} width={s}>
+      <rect height={30} rx={1} width={22} x={hw - 11} y={7} />
+      <line x1={hw - 11} x2={hw + 11} y1={37} y2={22} />
+    </svg>
+  )
+  if (type === 'single-hung') return (
+    <svg fill="none" height={s} stroke="currentColor" strokeWidth={1.5} viewBox={`0 0 ${s} ${s}`} width={s}>
+      <rect height={30} rx={1} width={22} x={hw - 11} y={7} />
+      <line x1={hw - 11} x2={hw + 11} y1={22} y2={22} />
+      <polyline points={`${hw - 4},17 ${hw},13 ${hw + 4},17`} />
+    </svg>
+  )
+  if (type === 'double-hung') return (
+    <svg fill="none" height={s} stroke="currentColor" strokeWidth={1.5} viewBox={`0 0 ${s} ${s}`} width={s}>
+      <rect height={30} rx={1} width={22} x={hw - 11} y={7} />
+      <line x1={hw - 11} x2={hw + 11} y1={22} y2={22} />
+      <polyline points={`${hw - 4},17 ${hw},13 ${hw + 4},17`} />
+      <polyline points={`${hw - 4},27 ${hw},31 ${hw + 4},27`} />
+    </svg>
+  )
+  if (type === 'bay') return (
+    <svg fill="none" height={s} stroke="currentColor" strokeWidth={1.5} viewBox={`0 0 ${s} ${s}`} width={s}>
+      <rect height={26} rx={1} width={14} x={hw - 7} y={9} />
+      <rect height={22} rx={1} transform="rotate(-25,14,24)" width={9} x={5} y={12} />
+      <rect height={22} rx={1} transform="rotate(25,30,24)" width={9} x={30} y={12} />
+    </svg>
+  )
+  if (type === 'bow') return (
+    <svg fill="none" height={s} stroke="currentColor" strokeWidth={1.5} viewBox={`0 0 ${s} ${s}`} width={s}>
+      <path d={`M 7 37 Q ${hw} 7 37 37 Z`} />
+      <line x1={7} x2={37} y1={37} y2={37} />
+    </svg>
+  )
+  if (type === 'louvered') return (
+    <svg fill="none" height={s} stroke="currentColor" strokeWidth={1.5} viewBox={`0 0 ${s} ${s}`} width={s}>
+      <rect height={30} rx={1} width={22} x={hw - 11} y={7} />
+      {[13, 19, 25, 31].map((y) => (
+        <line key={y} x1={hw - 9} x2={hw + 9} y1={y + 2} y2={y - 2} />
+      ))}
+    </svg>
+  )
+  // fixed (default)
+  return (
+    <svg fill="none" height={s} stroke="currentColor" strokeWidth={1.5} viewBox={`0 0 ${s} ${s}`} width={s}>
+      <rect height={30} rx={1} width={22} x={hw - 11} y={7} />
+      <line x1={hw} x2={hw} y1={7} y2={37} />
+      <line x1={hw - 11} x2={hw + 11} y1={22} y2={22} />
+    </svg>
+  )
+}
+
+function DoorSVG({ type }: { type: string }) {
+  const s = 44
+  const hw = s / 2
+
+  if (type === 'double' || type === 'french') return (
+    <svg fill="none" height={s} stroke="currentColor" strokeWidth={1.5} viewBox={`0 0 ${s} ${s}`} width={s}>
+      <rect height={28} rx={1} width={10} x={hw - 11} y={9} />
+      <rect height={28} rx={1} width={10} x={hw + 1} y={9} />
+      <path d={`M ${hw - 1} 9 A 10 10 0 0 0 ${hw - 11} 19`} />
+      <path d={`M ${hw + 1} 9 A 10 10 0 0 1 ${hw + 11} 19`} />
+    </svg>
+  )
+  if (type === 'folding') return (
+    <svg fill="none" height={s} stroke="currentColor" strokeWidth={1.5} viewBox={`0 0 ${s} ${s}`} width={s}>
+      <rect height={28} rx={0} width={26} x={hw - 13} y={9} />
+      <line x1={hw - 7} x2={hw - 7} y1={9} y2={37} />
+      <line x1={hw} x2={hw} y1={9} y2={37} />
+      <line x1={hw + 7} x2={hw + 7} y1={9} y2={37} />
+    </svg>
+  )
+  if (type === 'pocket') return (
+    <svg fill="none" height={s} stroke="currentColor" strokeWidth={1.5} viewBox={`0 0 ${s} ${s}`} width={s}>
+      <rect height={28} rx={1} width={14} x={hw - 13} y={9} />
+      <line x1={hw - 13} x2={hw + 13} y1={9} y2={9} strokeDasharray="2 2" />
+      <line x1={hw - 13} x2={hw + 13} y1={37} y2={37} strokeDasharray="2 2" />
+      <polyline points={`${hw + 8},20 ${hw + 13},23 ${hw + 8},26`} />
+    </svg>
+  )
+  if (type === 'barn' || type === 'sliding') return (
+    <svg fill="none" height={s} stroke="currentColor" strokeWidth={1.5} viewBox={`0 0 ${s} ${s}`} width={s}>
+      <line x1={6} x2={38} y1={9} y2={9} />
+      <rect height={26} rx={1} width={14} x={hw - 3} y={9} />
+      <polyline points="14,14 9,9 14,4" />
+    </svg>
+  )
+  if (type === 'garage-sectional') return (
+    <svg fill="none" height={s} stroke="currentColor" strokeWidth={1.5} viewBox={`0 0 ${s} ${s}`} width={s}>
+      <rect height={28} rx={1} width={26} x={hw - 13} y={9} />
+      {[16, 22, 28].map((y) => (
+        <line key={y} x1={hw - 13} x2={hw + 13} y1={y} y2={y} />
+      ))}
+    </svg>
+  )
+  if (type === 'garage-rollup') return (
+    <svg fill="none" height={s} stroke="currentColor" strokeWidth={1.5} viewBox={`0 0 ${s} ${s}`} width={s}>
+      <rect height={28} rx={1} width={26} x={hw - 13} y={9} />
+      {[14, 18, 22, 26, 30].map((y) => (
+        <line key={y} x1={hw - 13} x2={hw + 13} y1={y} y2={y} />
+      ))}
+    </svg>
+  )
+  if (type === 'garage-tiltup') return (
+    <svg fill="none" height={s} stroke="currentColor" strokeWidth={1.5} viewBox={`0 0 ${s} ${s}`} width={s}>
+      <rect height={28} rx={1} width={26} x={hw - 13} y={9} />
+      <polyline points={`${hw - 13},9 ${hw},4 ${hw + 13},9`} />
+    </svg>
+  )
+  // hinged (default)
+  return (
+    <svg fill="none" height={s} stroke="currentColor" strokeWidth={1.5} viewBox={`0 0 ${s} ${s}`} width={s}>
+      <rect height={28} rx={1} width={14} x={hw - 7} y={9} />
+      <path d={`M ${hw - 7} 9 A 14 14 0 0 0 ${hw + 7} 23`} />
+    </svg>
+  )
+}
+
+function StructuralTypePicker({
+  structuralType,
+  onSelect,
+}: {
+  structuralType: 'window' | 'door'
+  onSelect: (type: string) => void
+}) {
+  const types = structuralType === 'window' ? WINDOW_TYPES : DOOR_TYPES
+
+  return (
+    <div className="space-y-3">
+      <p className="text-[10px] text-muted-foreground leading-relaxed">
+        {structuralType === 'window'
+          ? 'Click a type to arm the window tool, then click a wall to place.'
+          : 'Click a type to arm the door tool, then click a wall to place.'}
+      </p>
+      <div className="grid gap-2" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(90px, 1fr))' }}>
+        {types.map(({ type, label, hint }) => (
+          <button
+            className="group flex flex-col items-center gap-1.5 rounded-xl p-2 text-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-foreground"
+            key={type}
+            onClick={() => onSelect(type)}
+            onMouseEnter={() => triggerSFX('sfx:menu-hover')}
+            title={hint}
+            type="button"
+          >
+            <div className="opacity-70 group-hover:opacity-100 transition-opacity">
+              {structuralType === 'window' ? <WindowSVG type={type} /> : <DoorSVG type={type} />}
+            </div>
+            <span className="font-medium text-[10px] leading-none text-center">{label}</span>
+          </button>
+        ))}
       </div>
     </div>
   )

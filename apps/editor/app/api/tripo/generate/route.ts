@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
         slug: prompt.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 40) + '-' + task.task_id.slice(-6),
         name: prompt.slice(0, 100),
         description: `AI-generated from prompt: "${prompt}"`,
-        source: 'tripo3d',
+        source: 'mine',
         sourceId: task.task_id,
         sourceUrl: modelUrl,
         license: 'CC0',

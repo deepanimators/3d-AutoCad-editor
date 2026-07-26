@@ -1,11 +1,11 @@
 'use client'
 
-import { useScene } from '@aruct/core'
-import { Editor, type ExternalResult, ItemsPanel } from '@aruct/editor'
+import { type AssetInput, useScene } from '@aruct/core'
+import { CATALOG_ITEMS, Editor, type ExternalResult, ItemsPanel } from '@aruct/editor'
 import { Hammer, Layers, Package, Settings } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { BuildTab } from '@/components/build-tab'
 import { EditorTopBar } from '@/components/editor-top-bar'
 import { FloorplanConstructionPreflight } from '@/components/floorplan-construction-preflight'
@@ -15,14 +15,53 @@ import {
   CommunityViewerToolbarRight,
 } from '@/components/viewer-toolbar'
 
-// The open-source editor only ships the built-in catalog (no uploaded items),
-// so the Library/Community/Mine source chips and tag filters add nothing.
-// External search (Poly Haven + Poly Pizza) is wired up via onSearchChange.
+type CatalogApiModel = {
+  id: string
+  name: string
+  category: string | null
+  glbUrl: string
+  thumbnailUrl: string | null
+  source: string | null
+  tags: string[]
+}
+
+function mapDbModelToAsset(m: CatalogApiModel): AssetInput {
+  const source =
+    m.source === 'mine' || m.source === 'tripo3d'
+      ? ('mine' as const)
+      : m.source === 'polyhaven' || m.source === 'polypizza' || m.source === 'community'
+        ? ('community' as const)
+        : ('library' as const)
+  return {
+    id: m.id,
+    name: m.name,
+    category: m.category ?? 'furniture',
+    thumbnail: m.thumbnailUrl ?? '',
+    src: m.glbUrl as AssetInput['src'],
+    dimensions: [1, 1, 1],
+    offset: [0, 0, 0],
+    rotation: [0, 0, 0],
+    scale: [1, 1, 1],
+    tags: m.tags,
+    source,
+  }
+}
+
 function EditorItemsPanel() {
   const [externalResults, setExternalResults] = useState<ExternalResult[] | null | undefined>(
     undefined,
   )
+  const [dbItems, setDbItems] = useState<AssetInput[]>([])
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  useEffect(() => {
+    fetch('/api/catalog?limit=48')
+      .then((r) => r.ok ? r.json() : Promise.reject(r.status))
+      .then((data: { models: CatalogApiModel[] }) => {
+        setDbItems(data.models.map(mapDbModelToAsset))
+      })
+      .catch(() => {})
+  }, [])
 
   const handleSearchChange = (q: string) => {
     if (debounceRef.current) clearTimeout(debounceRef.current)
@@ -43,11 +82,14 @@ function EditorItemsPanel() {
     }, 400)
   }
 
+  const allItems = dbItems.length > 0 ? [...CATALOG_ITEMS, ...dbItems] : undefined
+
   return (
     <ItemsPanel
       externalResults={externalResults}
+      items={allItems}
       onSearchChange={handleSearchChange}
-      showSourceFilter={false}
+      showSourceFilter={dbItems.length > 0}
       showTagFilters={false}
     />
   )
