@@ -1,6 +1,7 @@
 'use client'
 
 import { Crown, Zap, Building2, Check } from 'lucide-react'
+import { useState } from 'react'
 
 const PLANS = [
   {
@@ -59,20 +60,51 @@ type Props = {
 }
 
 export function PricingClient({ currentPlan, isSignedIn }: Props) {
+  const [loading, setLoading] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
+
   async function handleUpgrade(priceKey: string) {
-    const res = await fetch('/api/billing/checkout', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ priceKey }),
-    })
-    const { url } = await res.json()
-    if (url) window.location.href = url
+    setLoading(priceKey)
+    setError(null)
+    try {
+      const res = await fetch('/api/billing/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ priceKey }),
+      })
+      const data = (await res.json()) as { url?: string; error?: string }
+      if (data.url) {
+        window.location.href = data.url
+      } else {
+        setError(data.error ?? 'Failed to start checkout. Please try again.')
+      }
+    } catch {
+      setError('Network error. Please try again.')
+    } finally {
+      setLoading(null)
+    }
   }
 
   async function handlePortal() {
-    const res = await fetch('/api/billing/portal', { method: 'POST' })
-    const { url } = await res.json()
-    if (url) window.location.href = url
+    setLoading('portal')
+    setError(null)
+    try {
+      const res = await fetch('/api/billing/portal', { method: 'POST' })
+      const data = (await res.json()) as { url?: string; error?: string }
+      if (data.url) {
+        window.location.href = data.url
+      } else {
+        setError(
+          data.error === 'no_subscription'
+            ? 'No active subscription found. Contact support if this is unexpected.'
+            : (data.error ?? 'Failed to open billing portal.'),
+        )
+      }
+    } catch {
+      setError('Network error. Please try again.')
+    } finally {
+      setLoading(null)
+    }
   }
 
   return (
@@ -84,6 +116,12 @@ export function PricingClient({ currentPlan, isSignedIn }: Props) {
             Start free. Upgrade when you're ready to scale.
           </p>
         </div>
+
+        {error && (
+          <div className="mb-6 rounded-lg border border-destructive/50 bg-destructive/10 px-4 py-3 text-center text-destructive text-sm">
+            {error}
+          </div>
+        )}
 
         <div className="grid gap-6 md:grid-cols-3">
           {PLANS.map((plan) => {
@@ -151,14 +189,15 @@ export function PricingClient({ currentPlan, isSignedIn }: Props) {
                 ) : isCurrent ? (
                   <button
                     type="button"
+                    disabled={loading === 'portal'}
                     onClick={handlePortal}
-                    className={`rounded-lg py-2.5 text-sm font-semibold transition-colors ${
+                    className={`w-full rounded-lg py-2.5 text-sm font-semibold transition-colors disabled:opacity-60 ${
                       plan.highlight
                         ? 'bg-background text-foreground hover:bg-background/90'
                         : 'border border-border hover:bg-accent'
                     }`}
                   >
-                    Manage subscription
+                    {loading === 'portal' ? 'Loading…' : 'Manage subscription'}
                   </button>
                 ) : !isSignedIn ? (
                   <a
@@ -174,14 +213,15 @@ export function PricingClient({ currentPlan, isSignedIn }: Props) {
                 ) : (
                   <button
                     type="button"
-                    onClick={() => plan.monthlyKey && handleUpgrade(plan.monthlyKey)}
-                    className={`rounded-lg py-2.5 text-sm font-semibold transition-colors ${
+                    disabled={loading === plan.monthlyKey}
+                    onClick={() => plan.monthlyKey && void handleUpgrade(plan.monthlyKey)}
+                    className={`w-full rounded-lg py-2.5 text-sm font-semibold transition-colors disabled:opacity-60 ${
                       plan.highlight
                         ? 'bg-background text-foreground hover:bg-background/90'
                         : 'border border-border hover:bg-accent'
                     }`}
                   >
-                    Start 14-day free trial
+                    {loading === plan.monthlyKey ? 'Loading…' : 'Start 14-day free trial'}
                   </button>
                 )}
               </div>
