@@ -9,7 +9,7 @@ VERCEL_DIR="$SCRIPT_DIR/apps/editor"
 push_var() {
   local KEY=$1
   local VALUE
-  VALUE=$(grep "^${KEY}=" "$ENV_FILE" | head -1 | cut -d= -f2-)
+  VALUE=$(grep "^${KEY}=" "$ENV_FILE" | head -1 | cut -d= -f2- | sed 's/^"\(.*\)"$/\1/')
   if [ -z "$VALUE" ]; then
     echo "SKIP (empty): $KEY"
     return
