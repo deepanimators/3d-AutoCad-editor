@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Crown, CreditCard, Settings, Shield, Pencil, Check, X } from 'lucide-react'
+import { Crown, CreditCard, Settings, Shield, Pencil, Check, X, Users, ChevronRight } from 'lucide-react'
 import { signOut } from '@/lib/auth-client'
 
 type AiUsage = {
@@ -238,6 +238,27 @@ export function AccountClient({ user, sceneLimit, aiUsage }: Props) {
             )}
           </div>
         </div>
+
+        {/* Team workspace — only for team plan */}
+        {user.plan === 'team' && (
+          <div className="rounded-xl border border-border bg-background p-6">
+            <h2 className="mb-4 flex items-center gap-2 font-semibold text-base">
+              <Users className="h-4 w-4" />
+              Team Workspace
+            </h2>
+            <p className="mb-4 text-muted-foreground text-sm">
+              Invite team members, manage roles, and collaborate in shared workspaces.
+            </p>
+            <a
+              href="/org"
+              className="inline-flex items-center gap-2 rounded-lg bg-purple-muted border border-purple/20 px-4 py-2 text-purple text-sm font-medium hover:opacity-90 transition-opacity"
+            >
+              <Users className="h-4 w-4" />
+              Manage team workspaces
+              <ChevronRight className="h-3.5 w-3.5" />
+            </a>
+          </div>
+        )}
 
         {/* Danger zone */}
         <div className="rounded-xl border border-destructive/30 bg-background p-6">

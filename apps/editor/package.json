@@ -20,6 +20,7 @@
     "@aruct/nodes": "*",
     "@aruct/plugin-trees": "github:pascalorg/plugin-trees#56d978cd9b409b716207b3f3d269455d3cd6f067",
     "@aruct/viewer": "*",
+    "@aws-sdk/client-s3": "^3.1095.0",
     "@iconify/react": "^6.0.2",
     "@neondatabase/serverless": "^1.1.0",
     "@number-flow/react": "^0.6.0",

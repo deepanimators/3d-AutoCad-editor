@@ -43,11 +43,13 @@ type NavItem = {
   label: string
   icon: React.ComponentType<{ className?: string }>
   adminOnly?: boolean
+  teamOnly?: boolean
   drawerOnly?: boolean
 }
 
 const TOP_NAV: NavItem[] = [
   { href: '/scenes', label: 'Scenes', icon: LayoutGrid },
+  { href: '/org', label: 'Team', icon: Users, teamOnly: true },
   { href: '/pricing', label: 'Pricing', icon: Tag },
   { href: '/account', label: 'Account', icon: Settings },
   { href: '/admin', label: 'Admin', icon: Shield, adminOnly: true },
@@ -55,6 +57,7 @@ const TOP_NAV: NavItem[] = [
 
 const DRAWER_NAV: NavItem[] = [
   { href: '/scenes', label: 'My Scenes', icon: LayoutGrid },
+  { href: '/org', label: 'Team Workspaces', icon: Users, teamOnly: true },
   { href: '/items', label: 'My Items', icon: Package },
   { href: '/catalog', label: 'Model Catalog', icon: Globe },
   { href: '/dcc-bridge', label: 'DCC Bridge', icon: Plug },
@@ -123,7 +126,12 @@ function DrawerContent({ user, onClose }: { user: User; onClose: () => void }) {
   const isActive = (href: string) =>
     href === '/scenes' ? pathname === '/scenes' : pathname.startsWith(href.split('#')[0] ?? href)
 
-  const visibleItems = DRAWER_NAV.filter((item) => !item.adminOnly || user?.role === 'admin')
+  const isTeamUser = user?.plan === 'team' || user?.role === 'admin'
+  const visibleItems = DRAWER_NAV.filter(
+    (item) =>
+      (!item.adminOnly || user?.role === 'admin') &&
+      (!item.teamOnly || isTeamUser),
+  )
   const regularItems = visibleItems.filter((i) => !i.adminOnly)
   const adminItems = visibleItems.filter((i) => i.adminOnly)
 
@@ -297,7 +305,12 @@ export function TopBar({ user }: { user: User }) {
   const isActive = (href: string) =>
     href === '/scenes' ? pathname === '/scenes' : pathname.startsWith(href.split('#')[0] ?? href)
 
-  const visibleTopNav = TOP_NAV.filter((item) => !item.adminOnly || user?.role === 'admin')
+  const isTeamUser = user?.plan === 'team' || user?.role === 'admin'
+  const visibleTopNav = TOP_NAV.filter(
+    (item) =>
+      (!item.adminOnly || user?.role === 'admin') &&
+      (!item.teamOnly || isTeamUser),
+  )
 
   return (
     <>

@@ -20,3 +20,5 @@ function getAdminApp() {
 export function getAdminAuth() {
   return getAuth(getAdminApp())
 }
+
+export { getAdminApp }
