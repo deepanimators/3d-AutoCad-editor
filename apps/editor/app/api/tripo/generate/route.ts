@@ -2,6 +2,8 @@ import { type NextRequest, NextResponse } from 'next/server'
 import { getSession } from '@/lib/auth-server'
 import { z } from 'zod'
 import { createTripoTask, waitForTripoTask } from '@/lib/tripo-client'
+import { db } from '@/lib/db/client'
+import { globalModels } from '@/lib/db/schema'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 120
@@ -33,6 +35,27 @@ export async function POST(request: NextRequest) {
   if (!task.output?.model) {
     return NextResponse.json({ error: 'No model output' }, { status: 500 })
   }
+
+  void (async () => {
+    try {
+      await db.insert(globalModels).values({
+        id: crypto.randomUUID(),
+        slug: prompt.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 40) + '-' + task.task_id.slice(-6),
+        name: prompt.slice(0, 100),
+        description: `AI-generated from prompt: "${prompt}"`,
+        source: 'tripo3d',
+        sourceId: task.task_id,
+        sourceUrl: task.output.model,
+        license: 'CC0',
+        attribution: null,
+        s3Key: task.output.model,
+        s3Thumbnail: null,
+        tags: JSON.stringify(['ai-generated', 'tripo3d']),
+        category: null,
+        addedBy: session.id,
+      })
+    } catch {}
+  })()
 
   return NextResponse.json({
     taskId: task.task_id,

@@ -21,6 +21,20 @@ type CatalogModel = {
   polyCount: number | null
 }
 
+type ExternalModel = {
+  sourceId: string
+  source: 'polyhaven' | 'polypizza'
+  name: string
+  description: string | null
+  glbUrl: string
+  thumbnailUrl: string | null
+  license: string
+  attribution: string | null
+  tags: string[]
+  category: string | null
+  polyCount: number | null
+}
+
 const CATEGORIES = ['All', 'Furniture', 'Architecture', 'Nature', 'Characters', 'Vehicles', 'Other']
 
 const SOURCES = [
@@ -141,6 +155,86 @@ function ModelCard({ model, isLoggedIn }: { model: CatalogModel; isLoggedIn: boo
   )
 }
 
+function ExternalModelCard({
+  model,
+  isImporting,
+  onImport,
+}: {
+  model: ExternalModel
+  isImporting: boolean
+  onImport: (model: ExternalModel) => void
+}) {
+  return (
+    <div className="group relative rounded-xl border border-border/60 bg-background overflow-hidden transition-all duration-150 hover:border-border hover:shadow-md">
+      {/* Thumbnail */}
+      <div className="relative aspect-square overflow-hidden bg-muted">
+        {model.thumbnailUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={model.thumbnailUrl}
+            alt={model.name}
+            className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-[1.03]"
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center text-muted-foreground/40 text-lg font-semibold">
+            {getInitials(model.name)}
+          </div>
+        )}
+
+        {/* Import overlay on hover */}
+        <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity duration-150 group-hover:opacity-100">
+          <button
+            type="button"
+            onClick={() => onImport(model)}
+            disabled={isImporting}
+            className="flex items-center gap-1.5 rounded-lg bg-background px-3 py-2 text-xs font-medium text-foreground shadow-md hover:bg-muted transition-colors disabled:opacity-70"
+          >
+            {isImporting ? (
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            ) : (
+              <Download className="h-3.5 w-3.5" />
+            )}
+            {isImporting ? 'Importing…' : 'Import'}
+          </button>
+        </div>
+      </div>
+
+      {/* Card info */}
+      <div className="px-3 py-2.5 space-y-1.5">
+        <p className="truncate text-sm font-medium text-foreground leading-tight" title={model.name}>
+          {model.name}
+        </p>
+        <div className="flex items-center gap-1.5 flex-wrap">
+          {/* Source badge */}
+          <span
+            className={cn(
+              'rounded-full px-1.5 py-0.5 text-[10px] font-medium',
+              SOURCE_COLORS[model.source] ?? 'bg-muted text-muted-foreground'
+            )}
+          >
+            {SOURCE_NAMES[model.source] ?? model.source}
+          </span>
+
+          {/* License badge */}
+          <span
+            className={cn(
+              'rounded-full px-1.5 py-0.5 text-[10px] font-medium',
+              LICENSE_COLORS[model.license] ?? 'bg-muted text-muted-foreground'
+            )}
+          >
+            {model.license}
+          </span>
+        </div>
+        {model.polyCount != null && (
+          <p className="text-[10px] text-muted-foreground/60">
+            {model.polyCount.toLocaleString()} triangles
+          </p>
+        )}
+      </div>
+    </div>
+  )
+}
+
 export function CatalogClient({
   initialModels,
   totalModels,
@@ -150,6 +244,10 @@ export function CatalogClient({
   totalModels: number
   isLoggedIn: boolean
 }) {
+  // Tab state
+  const [tab, setTab] = useState<'catalog' | 'discover'>('catalog')
+
+  // Catalog tab state
   const [models, setModels] = useState<CatalogModel[]>(initialModels)
   const [total, setTotal] = useState(totalModels)
   const [loading, setLoading] = useState(false)
@@ -160,6 +258,16 @@ export function CatalogClient({
   const [isNewOnly, setIsNewOnly] = useState(false)
 
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  // Discover tab state
+  const [discoverQ, setDiscoverQ] = useState('')
+  const [discoverSource, setDiscoverSource] = useState<'all' | 'polyhaven' | 'polypizza'>('all')
+  const [discoverResults, setDiscoverResults] = useState<ExternalModel[]>([])
+  const [discoverLoading, setDiscoverLoading] = useState(false)
+  const [discoverError, setDiscoverError] = useState<string | null>(null)
+  const [importing, setImporting] = useState<Set<string>>(new Set())
+
+  const discoverDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const fetchModels = useCallback(
     async (params: {
@@ -194,6 +302,51 @@ export function CatalogClient({
     []
   )
 
+  async function fetchExternal(q: string, src: string) {
+    if (!q.trim()) { setDiscoverResults([]); return }
+    setDiscoverLoading(true)
+    setDiscoverError(null)
+    try {
+      const sp = new URLSearchParams({ q, source: src, limit: '24' })
+      const res = await fetch(`/api/catalog/external?${sp}`)
+      if (!res.ok) throw new Error('Search failed')
+      const data = await res.json() as { results: ExternalModel[] }
+      setDiscoverResults(data.results)
+    } catch {
+      setDiscoverError('Search failed. Please try again.')
+    } finally {
+      setDiscoverLoading(false)
+    }
+  }
+
+  async function importModel(model: ExternalModel) {
+    if (!isLoggedIn) { window.location.href = '/login?next=/catalog'; return }
+    setImporting(prev => new Set(prev).add(model.sourceId))
+    try {
+      const res = await fetch('/api/catalog/import', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          source: model.source,
+          sourceId: model.sourceId,
+          name: model.name,
+          description: model.description,
+          glbUrl: model.glbUrl,
+          thumbnailUrl: model.thumbnailUrl ?? undefined,
+          license: model.license,
+          attribution: model.attribution ?? undefined,
+          tags: model.tags,
+          category: model.category ?? undefined,
+        }),
+      })
+      if (res.ok) {
+        setTab('catalog')
+      }
+    } finally {
+      setImporting(prev => { const s = new Set(prev); s.delete(model.sourceId); return s })
+    }
+  }
+
   function handleSearchChange(value: string) {
     setQ(value)
     if (debounceRef.current) clearTimeout(debounceRef.current)
@@ -222,6 +375,19 @@ export function CatalogClient({
     void fetchModels({ q, category, source, isNew: isNewOnly, page: page + 1, append: true })
   }
 
+  function handleDiscoverSearchChange(value: string) {
+    setDiscoverQ(value)
+    if (discoverDebounceRef.current) clearTimeout(discoverDebounceRef.current)
+    discoverDebounceRef.current = setTimeout(() => {
+      void fetchExternal(value, discoverSource)
+    }, 400)
+  }
+
+  function handleDiscoverSourceChange(src: 'all' | 'polyhaven' | 'polypizza') {
+    setDiscoverSource(src)
+    void fetchExternal(discoverQ, src)
+  }
+
   const hasMore = models.length < total
 
   return (
@@ -234,9 +400,39 @@ export function CatalogClient({
             Browse and import free 3D models from multiple sources
           </p>
         </div>
-        <span className="rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">
-          {total.toLocaleString()} models
-        </span>
+        {tab === 'catalog' && (
+          <span className="rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">
+            {total.toLocaleString()} models
+          </span>
+        )}
+      </div>
+
+      {/* Tab switcher */}
+      <div className="flex items-center gap-1 rounded-lg bg-muted p-1 w-fit">
+        <button
+          type="button"
+          onClick={() => setTab('catalog')}
+          className={cn(
+            'rounded-md px-3 py-1.5 text-sm font-medium transition-colors',
+            tab === 'catalog'
+              ? 'bg-background text-foreground shadow-sm'
+              : 'text-muted-foreground hover:text-foreground'
+          )}
+        >
+          Catalog
+        </button>
+        <button
+          type="button"
+          onClick={() => setTab('discover')}
+          className={cn(
+            'rounded-md px-3 py-1.5 text-sm font-medium transition-colors',
+            tab === 'discover'
+              ? 'bg-background text-foreground shadow-sm'
+              : 'text-muted-foreground hover:text-foreground'
+          )}
+        >
+          Discover
+        </button>
       </div>
 
       {/* Login prompt for non-authenticated users */}
@@ -251,118 +447,210 @@ export function CatalogClient({
         </div>
       )}
 
-      {/* Search + Filters */}
-      <div className="space-y-3">
-        {/* Search input */}
-        <div className="relative max-w-sm">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground pointer-events-none" />
-          <input
-            type="text"
-            value={q}
-            onChange={(e) => handleSearchChange(e.target.value)}
-            placeholder="Search models…"
-            className="w-full rounded-lg border border-border bg-background pl-9 pr-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-ring"
-          />
-        </div>
+      {/* Catalog tab */}
+      {tab === 'catalog' && (
+        <>
+          {/* Search + Filters */}
+          <div className="space-y-3">
+            {/* Search input */}
+            <div className="relative max-w-sm">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+              <input
+                type="text"
+                value={q}
+                onChange={(e) => handleSearchChange(e.target.value)}
+                placeholder="Search models…"
+                className="w-full rounded-lg border border-border bg-background pl-9 pr-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-ring"
+              />
+            </div>
 
-        {/* Filter row */}
-        <div className="flex flex-wrap items-center gap-2">
-          {/* Category buttons */}
-          <div className="flex flex-wrap gap-1">
-            {CATEGORIES.map((cat) => (
+            {/* Filter row */}
+            <div className="flex flex-wrap items-center gap-2">
+              {/* Category buttons */}
+              <div className="flex flex-wrap gap-1">
+                {CATEGORIES.map((cat) => (
+                  <button
+                    key={cat}
+                    type="button"
+                    onClick={() => handleCategoryChange(cat)}
+                    className={cn(
+                      'rounded-full px-3 py-1 text-xs font-medium transition-colors',
+                      category === cat
+                        ? 'bg-foreground text-background'
+                        : 'bg-muted text-muted-foreground hover:bg-muted/70 hover:text-foreground'
+                    )}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+
+              <div className="h-4 w-px bg-border" />
+
+              {/* Source select */}
+              <select
+                value={source}
+                onChange={(e) => handleSourceChange(e.target.value)}
+                className="rounded-lg border border-border bg-background px-2.5 py-1 text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+              >
+                {SOURCES.map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {s.label}
+                  </option>
+                ))}
+              </select>
+
+              {/* New only toggle */}
               <button
-                key={cat}
                 type="button"
-                onClick={() => handleCategoryChange(cat)}
+                onClick={handleIsNewToggle}
                 className={cn(
                   'rounded-full px-3 py-1 text-xs font-medium transition-colors',
-                  category === cat
-                    ? 'bg-foreground text-background'
+                  isNewOnly
+                    ? 'bg-brand text-brand-foreground'
                     : 'bg-muted text-muted-foreground hover:bg-muted/70 hover:text-foreground'
                 )}
               >
-                {cat}
+                New only
               </button>
-            ))}
+            </div>
           </div>
 
-          <div className="h-4 w-px bg-border" />
+          {/* Loading indicator (initial/filter change) */}
+          {loading && models.length === 0 && (
+            <div className="flex items-center justify-center py-24">
+              <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+            </div>
+          )}
 
-          {/* Source select */}
-          <select
-            value={source}
-            onChange={(e) => handleSourceChange(e.target.value)}
-            className="rounded-lg border border-border bg-background px-2.5 py-1 text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-          >
-            {SOURCES.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.label}
-              </option>
-            ))}
-          </select>
+          {/* Empty state */}
+          {!loading && models.length === 0 && (
+            <div className="rounded-xl border border-dashed border-border/60 bg-background p-16 text-center">
+              <Search className="mx-auto h-8 w-8 text-muted-foreground/30 mb-3" />
+              <p className="text-muted-foreground text-sm">No models found.</p>
+              <p className="text-muted-foreground/60 text-xs mt-1">
+                Try adjusting your search or filters.
+              </p>
+            </div>
+          )}
 
-          {/* New only toggle */}
-          <button
-            type="button"
-            onClick={handleIsNewToggle}
-            className={cn(
-              'rounded-full px-3 py-1 text-xs font-medium transition-colors',
-              isNewOnly
-                ? 'bg-brand text-brand-foreground'
-                : 'bg-muted text-muted-foreground hover:bg-muted/70 hover:text-foreground'
-            )}
-          >
-            New only
-          </button>
-        </div>
-      </div>
+          {/* Model grid */}
+          {models.length > 0 && (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+              {models.map((model) => (
+                <ModelCard key={model.id} model={model} isLoggedIn={isLoggedIn} />
+              ))}
+            </div>
+          )}
 
-      {/* Loading indicator (initial/filter change) */}
-      {loading && models.length === 0 && (
-        <div className="flex items-center justify-center py-24">
-          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-        </div>
+          {/* Load more */}
+          {hasMore && (
+            <div className="flex justify-center pt-2">
+              <button
+                type="button"
+                onClick={handleLoadMore}
+                disabled={loading}
+                className="flex items-center gap-2 rounded-lg border border-border bg-background px-5 py-2.5 text-sm font-medium text-foreground hover:bg-muted transition-colors disabled:opacity-50"
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Loading…
+                  </>
+                ) : (
+                  `Load more (${total - models.length} remaining)`
+                )}
+              </button>
+            </div>
+          )}
+        </>
       )}
 
-      {/* Empty state */}
-      {!loading && models.length === 0 && (
-        <div className="rounded-xl border border-dashed border-border/60 bg-background p-16 text-center">
-          <Search className="mx-auto h-8 w-8 text-muted-foreground/30 mb-3" />
-          <p className="text-muted-foreground text-sm">No models found.</p>
-          <p className="text-muted-foreground/60 text-xs mt-1">
-            Try adjusting your search or filters.
-          </p>
-        </div>
-      )}
+      {/* Discover tab */}
+      {tab === 'discover' && (
+        <>
+          <div className="space-y-3">
+            {/* Source filter */}
+            <div className="flex gap-1">
+              {(['all', 'polyhaven', 'polypizza'] as const).map((src) => (
+                <button
+                  key={src}
+                  type="button"
+                  onClick={() => handleDiscoverSourceChange(src)}
+                  className={cn(
+                    'rounded-full px-3 py-1 text-xs font-medium transition-colors',
+                    discoverSource === src
+                      ? 'bg-foreground text-background'
+                      : 'bg-muted text-muted-foreground hover:bg-muted/70 hover:text-foreground'
+                  )}
+                >
+                  {src === 'all' ? 'All' : src === 'polyhaven' ? 'Poly Haven' : 'Poly Pizza'}
+                </button>
+              ))}
+            </div>
 
-      {/* Model grid */}
-      {models.length > 0 && (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-          {models.map((model) => (
-            <ModelCard key={model.id} model={model} isLoggedIn={isLoggedIn} />
-          ))}
-        </div>
-      )}
+            {/* Search input */}
+            <div className="relative max-w-sm">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+              <input
+                type="text"
+                value={discoverQ}
+                onChange={(e) => handleDiscoverSearchChange(e.target.value)}
+                placeholder="Search external models…"
+                className="w-full rounded-lg border border-border bg-background pl-9 pr-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-ring"
+              />
+            </div>
+          </div>
 
-      {/* Load more */}
-      {hasMore && (
-        <div className="flex justify-center pt-2">
-          <button
-            type="button"
-            onClick={handleLoadMore}
-            disabled={loading}
-            className="flex items-center gap-2 rounded-lg border border-border bg-background px-5 py-2.5 text-sm font-medium text-foreground hover:bg-muted transition-colors disabled:opacity-50"
-          >
-            {loading ? (
-              <>
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Loading…
-              </>
-            ) : (
-              `Load more (${total - models.length} remaining)`
-            )}
-          </button>
-        </div>
+          {/* Empty state — no query */}
+          {!discoverQ.trim() && (
+            <div className="rounded-xl border border-dashed border-border/60 bg-background p-16 text-center">
+              <Search className="mx-auto h-8 w-8 text-muted-foreground/30 mb-3" />
+              <p className="text-muted-foreground text-sm">
+                Search Poly Haven and Poly Pizza for free 3D models.
+              </p>
+            </div>
+          )}
+
+          {/* Loading */}
+          {discoverLoading && (
+            <div className="flex items-center justify-center py-24">
+              <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+            </div>
+          )}
+
+          {/* Error */}
+          {discoverError && !discoverLoading && (
+            <div className="rounded-xl border border-dashed border-border/60 bg-background p-16 text-center">
+              <p className="text-muted-foreground text-sm">{discoverError}</p>
+            </div>
+          )}
+
+          {/* Empty results */}
+          {!discoverLoading && !discoverError && discoverQ.trim() && discoverResults.length === 0 && (
+            <div className="rounded-xl border border-dashed border-border/60 bg-background p-16 text-center">
+              <Search className="mx-auto h-8 w-8 text-muted-foreground/30 mb-3" />
+              <p className="text-muted-foreground text-sm">No results found.</p>
+              <p className="text-muted-foreground/60 text-xs mt-1">
+                Try a different search term or source.
+              </p>
+            </div>
+          )}
+
+          {/* Results grid */}
+          {!discoverLoading && discoverResults.length > 0 && (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+              {discoverResults.map((model) => (
+                <ExternalModelCard
+                  key={`${model.source}:${model.sourceId}`}
+                  model={model}
+                  isImporting={importing.has(model.sourceId)}
+                  onImport={importModel}
+                />
+              ))}
+            </div>
+          )}
+        </>
       )}
     </div>
   )
