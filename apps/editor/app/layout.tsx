@@ -1,10 +1,20 @@
 import { Agentation } from 'agentation'
 import { GeistPixelSquare } from 'geist/font/pixel'
 import { Barlow } from 'next/font/google'
+import type { Metadata } from 'next'
 import localFont from 'next/font/local'
 import { ThemeProvider } from 'next-themes'
 import { ClientBootstrap } from './client-bootstrap'
 import './globals.css'
+
+export const metadata: Metadata = {
+  title: 'Aruct Editor',
+  description: 'Build in three dimensions.',
+  icons: {
+    icon: '/favicon.svg',
+    shortcut: '/favicon.svg',
+  },
+}
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
