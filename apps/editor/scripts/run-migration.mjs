@@ -131,6 +131,13 @@ try {
   `
   console.log('✓ org_invitations table ready')
 
+  // AI usage tracking columns
+  await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "ai_generations_this_month" integer DEFAULT 0 NOT NULL`
+  await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "ai_generations_reset_at" timestamptz`
+  await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "vision_calls_this_month" integer DEFAULT 0 NOT NULL`
+  await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "vision_calls_reset_at" timestamptz`
+  console.log('✓ users AI usage columns ready')
+
   // Sprint 3: Drop users.role enum constraint → allow custom roles
   await sql`ALTER TABLE users ALTER COLUMN role TYPE text USING role::text`
   // Remove old CHECK constraint if exists (idempotent via try/catch)
