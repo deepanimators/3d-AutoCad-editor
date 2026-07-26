@@ -195,6 +195,8 @@ export type CatalogCategory =
   | 'bathroom'
   | 'kitchen'
   | 'outdoor'
+  | 'lighting'
+  | 'decor'
   | 'window'
   | 'door'
 

@@ -11,7 +11,7 @@ export type CatalogItem = AssetInput & { tool?: string }
 export const CATALOG_ITEMS: CatalogItem[] = [
   {
     id: 'cactus',
-    category: 'furniture',
+    category: 'decor',
     name: 'Cactus',
     tags: [
       'cactus',
@@ -128,7 +128,7 @@ export const CATALOG_ITEMS: CatalogItem[] = [
   },
   {
     id: 'small-indoor-plant',
-    category: 'furniture',
+    category: 'decor',
     name: 'Small Plant',
     tags: ['countertop', 'decor', 'vegetation'],
     thumbnail:
@@ -249,7 +249,7 @@ export const CATALOG_ITEMS: CatalogItem[] = [
   },
   {
     id: 'books',
-    category: 'furniture',
+    category: 'decor',
     name: 'Books',
     tags: [
       'books',
@@ -638,7 +638,7 @@ export const CATALOG_ITEMS: CatalogItem[] = [
   },
   {
     id: 'recessed-light',
-    category: 'furniture',
+    category: 'lighting',
     name: 'Recessed Light',
     tags: [
       'recessed',
@@ -716,7 +716,7 @@ export const CATALOG_ITEMS: CatalogItem[] = [
   },
   {
     id: 'table-lamp',
-    category: 'furniture',
+    category: 'lighting',
     name: 'Table Lamp',
     tags: ['countertop', 'lighting'],
     thumbnail:
@@ -731,7 +731,7 @@ export const CATALOG_ITEMS: CatalogItem[] = [
   },
   {
     id: 'ceiling-lamp',
-    category: 'furniture',
+    category: 'lighting',
     name: 'Ceiling Lamp',
     tags: [
       'lamp',
@@ -924,7 +924,7 @@ export const CATALOG_ITEMS: CatalogItem[] = [
   },
   {
     id: 'indoor-plant',
-    category: 'furniture',
+    category: 'decor',
     name: 'Indoor Plant',
     tags: [
       'plant',
@@ -1011,7 +1011,7 @@ export const CATALOG_ITEMS: CatalogItem[] = [
   },
   {
     id: 'floor-lamp',
-    category: 'furniture',
+    category: 'lighting',
     name: 'Floor Lamp',
     tags: [
       'lamp',
@@ -1191,7 +1191,7 @@ export const CATALOG_ITEMS: CatalogItem[] = [
   },
   {
     id: 'picture',
-    category: 'furniture',
+    category: 'decor',
     name: 'Picture',
     tags: [
       'picture',
@@ -1223,7 +1223,7 @@ export const CATALOG_ITEMS: CatalogItem[] = [
   },
   {
     id: 'rectangular-carpet',
-    category: 'furniture',
+    category: 'decor',
     name: 'Rectangular Carpet',
     tags: [
       'carpet',
@@ -1252,7 +1252,7 @@ export const CATALOG_ITEMS: CatalogItem[] = [
   },
   {
     id: 'round-mirror',
-    category: 'furniture',
+    category: 'decor',
     name: 'Rounded Mirror',
     tags: [
       'mirror',
@@ -1283,7 +1283,7 @@ export const CATALOG_ITEMS: CatalogItem[] = [
   },
   {
     id: 'round-carpet',
-    category: 'furniture',
+    category: 'decor',
     name: 'Round Carpet',
     tags: [
       'carpet',
@@ -1668,7 +1668,7 @@ export const CATALOG_ITEMS: CatalogItem[] = [
   },
   {
     id: 'ceiling-fan',
-    category: 'appliance',
+    category: 'lighting',
     name: 'Ceiling fan',
     tags: [
       'fan',
