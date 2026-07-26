@@ -1,7 +1,8 @@
 'use client'
 
-import { Crown, Zap, Building2, Check, CreditCard, X } from 'lucide-react'
+import { Crown, Zap, Building2, Check, CreditCard, X, Tag } from 'lucide-react'
 import { useState } from 'react'
+import type { PlanConfigRow } from '@/lib/db/schema'
 
 declare global {
   interface Window {
@@ -9,7 +10,7 @@ declare global {
   }
 }
 
-const PLANS = [
+const HARDCODED_PLANS = [
   {
     key: 'free',
     name: 'Free',
@@ -17,7 +18,7 @@ const PLANS = [
     period: 'forever',
     icon: Zap,
     features: ['Up to 5 scenes', 'JSON export', 'Community support', 'Basic 3D editor'],
-    monthlyKey: null,
+    monthlyKey: null as string | null,
     highlight: false,
   },
   {
@@ -33,7 +34,7 @@ const PLANS = [
       'Priority support',
       '14-day free trial',
     ],
-    monthlyKey: 'pro-monthly',
+    monthlyKey: 'pro-monthly' as string | null,
     highlight: true,
   },
   {
@@ -50,10 +51,21 @@ const PLANS = [
       'Audit log',
       '14-day free trial',
     ],
-    monthlyKey: 'team-monthly',
+    monthlyKey: 'team-monthly' as string | null,
     highlight: false,
   },
 ] as const
+
+type ActivePromo = {
+  id: string
+  appliesToPlans: string[]
+  originalPriceCents: number | null
+  promoPriceCents: number | null
+  expiresAt: string | null
+  duration: string
+  discountType: string
+  discountValue: number
+}
 
 type Props = {
   currentPlan: 'free' | 'pro' | 'team' | null
@@ -61,6 +73,16 @@ type Props = {
   hasStripeSubscription: boolean
   hasRazorpaySubscription: boolean
   paymentGateway: 'stripe' | 'razorpay' | null
+  activePromos: ActivePromo[]
+  planConfigs: PlanConfigRow[]
+}
+
+function formatCents(cents: number): string {
+  return `$${(cents / 100).toFixed(cents % 100 === 0 ? 0 : 2)}`
+}
+
+function daysUntil(iso: string): number {
+  return Math.ceil((new Date(iso).getTime() - Date.now()) / 86_400_000)
 }
 
 function loadRazorpayScript(): Promise<void> {
@@ -80,21 +102,49 @@ export function PricingClient({
   hasStripeSubscription,
   hasRazorpaySubscription,
   paymentGateway,
+  activePromos,
+  planConfigs,
 }: Props) {
   const [loading, setLoading] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
-  const [gatewayModal, setGatewayModal] = useState<string | null>(null) // priceKey when modal open
 
-  const hasActiveSubscription = hasStripeSubscription || hasRazorpaySubscription
+  // Build plan display data: prefer DB config, fall back to hardcoded
+  const PLAN_ICONS: Record<string, typeof Zap> = { free: Zap, pro: Crown, team: Building2 }
+  const PLAN_MONTHLY_KEYS: Record<string, string | null> = {
+    free: null,
+    pro: 'pro-monthly',
+    team: 'team-monthly',
+  }
 
-  async function handleStripeUpgrade(priceKey: string) {
+  const plans = HARDCODED_PLANS.map((hp) => {
+    const dbPlan = planConfigs.find((p) => p.planKey === hp.key)
+    if (!dbPlan) return hp
+    return {
+      key: hp.key,
+      name: dbPlan.displayName,
+      price: dbPlan.displayPriceCents === 0 ? '$0' : formatCents(dbPlan.displayPriceCents),
+      period: dbPlan.priceSuffix,
+      icon: PLAN_ICONS[hp.key] ?? Zap,
+      features: JSON.parse(dbPlan.features) as string[],
+      monthlyKey: PLAN_MONTHLY_KEYS[hp.key] ?? null,
+      highlight: dbPlan.highlight,
+    }
+  })
+
+  // Find active promo for each plan key
+  function getPromoForPlan(monthlyKey: string | null): ActivePromo | null {
+    if (!monthlyKey) return null
+    return activePromos.find((p) => p.appliesToPlans.includes(monthlyKey)) ?? null
+  }
+
+  async function handleStripeUpgrade(priceKey: string, promoId?: string) {
     setLoading(`stripe-${priceKey}`)
     setError(null)
     try {
       const res = await fetch('/api/billing/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ priceKey }),
+        body: JSON.stringify({ priceKey, ...(promoId ? { promoCodeId: promoId } : {}) }),
       })
       const data = (await res.json()) as { url?: string; error?: string }
       if (data.url) {
@@ -225,7 +275,7 @@ export function PricingClient({
         <div className="mb-12 text-center">
           <h1 className="font-bold text-4xl text-foreground">Simple, transparent pricing</h1>
           <p className="mt-3 text-muted-foreground text-lg">
-            Start free. Upgrade when you're ready to scale.
+            Start free. Upgrade when you&apos;re ready to scale.
           </p>
         </div>
 
@@ -237,9 +287,11 @@ export function PricingClient({
         )}
 
         <div className="grid gap-6 md:grid-cols-3">
-          {PLANS.map((plan) => {
+          {plans.map((plan) => {
             const isCurrent = currentPlan === plan.key
             const Icon = plan.icon
+            const promo = getPromoForPlan(plan.monthlyKey)
+            const hasPromo = !!promo && !!promo.promoPriceCents && !!promo.originalPriceCents
 
             return (
               <div
@@ -273,15 +325,41 @@ export function PricingClient({
                         Current
                       </span>
                     )}
+                    {hasPromo && (
+                      <span className="ml-auto flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-bold text-green-700">
+                        <Tag className="h-3 w-3" />
+                        Offer
+                      </span>
+                    )}
                   </div>
-                  <div className="flex items-baseline gap-1">
-                    <span className="font-bold text-3xl">{plan.price}</span>
-                    <span
-                      className={`text-sm ${plan.highlight ? 'text-background/70' : 'text-muted-foreground'}`}
-                    >
-                      {plan.period}
-                    </span>
-                  </div>
+
+                  {hasPromo && promo ? (
+                    <div>
+                      <div className="flex items-baseline gap-2">
+                        <span className={`text-sm line-through ${plan.highlight ? 'text-background/50' : 'text-muted-foreground'}`}>
+                          {formatCents(promo.originalPriceCents!)}
+                        </span>
+                        <span className="font-bold text-3xl">{formatCents(promo.promoPriceCents!)}</span>
+                      </div>
+                      <p className={`text-xs mt-0.5 ${plan.highlight ? 'text-background/70' : 'text-green-600'}`}>
+                        first month, then {formatCents(promo.originalPriceCents!)}{plan.period}
+                      </p>
+                      {promo.expiresAt && (
+                        <p className={`text-[11px] mt-0.5 ${plan.highlight ? 'text-background/50' : 'text-muted-foreground'}`}>
+                          Offer ends in {daysUntil(promo.expiresAt)} days
+                        </p>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="flex items-baseline gap-1">
+                      <span className="font-bold text-3xl">{plan.price}</span>
+                      <span
+                        className={`text-sm ${plan.highlight ? 'text-background/70' : 'text-muted-foreground'}`}
+                      >
+                        {plan.period}
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 <ul className="mb-8 flex-1 space-y-2.5">
@@ -333,12 +411,16 @@ export function PricingClient({
                     <button
                       type="button"
                       disabled={!!loading}
-                      onClick={() => plan.monthlyKey && void handleStripeUpgrade(plan.monthlyKey)}
+                      onClick={() => plan.monthlyKey && void handleStripeUpgrade(plan.monthlyKey, promo?.id)}
                       className={btnClass(plan.highlight)}
                     >
                       <span className="flex items-center justify-center gap-2">
                         <CreditCard className="h-3.5 w-3.5" />
-                        {loading === `stripe-${plan.monthlyKey}` ? 'Loading…' : 'Pay with Card'}
+                        {loading === `stripe-${plan.monthlyKey}`
+                          ? 'Loading…'
+                          : hasPromo && promo
+                            ? `Pay with Card — ${formatCents(promo.promoPriceCents!)}`
+                            : 'Pay with Card'}
                       </span>
                     </button>
                     <button
@@ -347,7 +429,11 @@ export function PricingClient({
                       onClick={() => plan.monthlyKey && void handleRazorpayUpgrade(plan.monthlyKey)}
                       className={secondaryBtnClass(plan.highlight)}
                     >
-                      {loading === `razorpay-${plan.monthlyKey}` ? 'Loading…' : '₹ Pay with Razorpay'}
+                      {loading === `razorpay-${plan.monthlyKey}`
+                        ? 'Loading…'
+                        : hasPromo && promo
+                          ? `₹ Pay with Razorpay — ${formatCents(promo.promoPriceCents!)}`
+                          : '₹ Pay with Razorpay'}
                     </button>
                   </div>
                 )}

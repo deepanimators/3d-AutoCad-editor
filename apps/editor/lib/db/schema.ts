@@ -6,7 +6,7 @@ export const users = pgTable('users', {
   name: text('name').notNull(),
   image: text('image'),
   plan: text('plan', { enum: ['free', 'pro', 'team'] }).notNull().default('free'),
-  role: text('role', { enum: ['user', 'admin'] }).notNull().default('user'),
+  role: text('role').notNull().default('user'),        // 'user' | 'admin' | custom roles
   stripeCustomerId: text('stripe_customer_id').unique(),
   stripeSubscriptionId: text('stripe_subscription_id'),
   razorpayCustomerId: text('razorpay_customer_id'),
@@ -110,3 +110,63 @@ export const orgInvitations = pgTable('org_invitations', {
 
 export type OrgInvitationRow = typeof orgInvitations.$inferSelect
 export type NewOrgInvitationRow = typeof orgInvitations.$inferInsert
+
+// Sprint 1: Coupons & promo codes
+export const coupons = pgTable('coupons', {
+  id: text('id').primaryKey(),
+  name: text('name').notNull(),
+  code: text('code').notNull().unique(),
+  gateway: text('gateway', { enum: ['stripe', 'razorpay', 'both'] }).notNull(),
+  stripePromoCodeId: text('stripe_promo_code_id'),
+  stripeCouponId: text('stripe_coupon_id'),
+  razorpayOfferId: text('razorpay_offer_id'),
+  discountType: text('discount_type', { enum: ['percent', 'fixed'] }).notNull(),
+  discountValue: integer('discount_value').notNull(),
+  duration: text('duration', { enum: ['once', 'repeating', 'forever'] }).notNull(),
+  durationInMonths: integer('duration_in_months'),
+  appliesToPlans: text('applies_to_plans').notNull(),   // JSON: ['pro-monthly','team-monthly']
+  originalPriceCents: integer('original_price_cents'),
+  promoPriceCents: integer('promo_price_cents'),
+  maxRedemptions: integer('max_redemptions'),
+  redemptionCount: integer('redemption_count').notNull().default(0),
+  active: boolean('active').notNull().default(true),
+  expiresAt: timestamp('expires_at', { mode: 'string' }),
+  createdAt: timestamp('created_at', { mode: 'string' }).notNull().defaultNow(),
+})
+
+export type CouponRow = typeof coupons.$inferSelect
+export type NewCouponRow = typeof coupons.$inferInsert
+
+// Sprint 2: Plan display config (editable by admin without changing Stripe prices)
+export const planConfig = pgTable('plan_config', {
+  id: text('id').primaryKey(),
+  planKey: text('plan_key', { enum: ['free', 'pro', 'team'] }).notNull().unique(),
+  displayName: text('display_name').notNull(),
+  displayPriceCents: integer('display_price_cents').notNull(),
+  currency: text('currency').notNull().default('usd'),
+  priceSuffix: text('price_suffix').notNull().default('/month'),
+  stripePriceId: text('stripe_price_id'),
+  stripeYearlyPriceId: text('stripe_yearly_price_id'),
+  razorpayPlanId: text('razorpay_plan_id'),
+  razorpayYearlyPlanId: text('razorpay_yearly_plan_id'),
+  features: text('features').notNull(),                 // JSON array of feature strings
+  highlight: boolean('highlight').notNull().default(false),
+  active: boolean('active').notNull().default(true),
+  updatedAt: timestamp('updated_at', { mode: 'string' }).notNull().defaultNow(),
+})
+
+export type PlanConfigRow = typeof planConfig.$inferSelect
+export type NewPlanConfigRow = typeof planConfig.$inferInsert
+
+// Sprint 3: Custom roles with granular permissions
+export const roles = pgTable('roles', {
+  id: text('id').primaryKey(),
+  name: text('name').notNull().unique(),
+  description: text('description').notNull(),
+  permissions: text('permissions').notNull(),           // JSON: ['view_all_users','manage_coupons']
+  isSystem: boolean('is_system').notNull().default(false),
+  createdAt: timestamp('created_at', { mode: 'string' }).notNull().defaultNow(),
+})
+
+export type RoleRow = typeof roles.$inferSelect
+export type NewRoleRow = typeof roles.$inferInsert

@@ -1,11 +1,12 @@
 import { redirect } from 'next/navigation'
 import { getSession } from '@/lib/auth-server'
 import { db } from '@/lib/db/client'
-import { users } from '@/lib/db/schema'
-import { eq, desc } from 'drizzle-orm'
+import { users, roles } from '@/lib/db/schema'
+import { eq, desc, asc } from 'drizzle-orm'
 import { AppShell } from '@/components/app-shell'
 import { Shield, User } from 'lucide-react'
 import { AdminClient } from '../admin-client'
+import { RolesClient } from './roles-client'
 
 const ROLE_GATES = [
   { label: 'View all users', roles: ['admin'] },
@@ -26,7 +27,7 @@ export default async function RolesPage() {
   if (!session) redirect('/login?next=/admin/roles')
   if (session.role !== 'admin') redirect('/')
 
-  const [admins, regularUsers] = await Promise.all([
+  const [admins, regularUsers, allRoles] = await Promise.all([
     db.select({
       id: users.id, email: users.email, name: users.name,
       plan: users.plan, role: users.role,
@@ -37,6 +38,7 @@ export default async function RolesPage() {
       plan: users.plan, role: users.role,
       subscriptionStatus: users.subscriptionStatus, createdAt: users.createdAt,
     }).from(users).where(eq(users.role, 'user')).orderBy(desc(users.createdAt)),
+    db.select().from(roles).orderBy(desc(roles.isSystem), asc(roles.createdAt)),
   ])
 
   return (
@@ -100,6 +102,12 @@ export default async function RolesPage() {
               </tbody>
             </table>
           </div>
+        </div>
+
+        {/* Custom Roles */}
+        <div>
+          <h2 className="font-semibold text-base mb-3">Custom Roles</h2>
+          <RolesClient allRoles={allRoles} />
         </div>
 
         {/* Admins */}

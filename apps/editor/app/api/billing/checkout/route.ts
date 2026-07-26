@@ -1,7 +1,7 @@
 import { stripe, PRICE_MAP } from '@/lib/stripe'
 import { getSession } from '@/lib/auth-server'
 import { db } from '@/lib/db/client'
-import { users } from '@/lib/db/schema'
+import { users, coupons } from '@/lib/db/schema'
 import { eq } from 'drizzle-orm'
 
 export const dynamic = 'force-dynamic'
@@ -10,7 +10,7 @@ export async function POST(request: Request) {
   const session = await getSession()
   if (!session) return Response.json({ error: 'unauthorized' }, { status: 401 })
 
-  const { priceKey, seats = 1 } = await request.json()
+  const { priceKey, seats = 1, promoCodeId } = await request.json() as { priceKey: string; seats?: number; promoCodeId?: string }
   const priceId = PRICE_MAP[priceKey]
   if (!priceId) return Response.json({ error: 'invalid_price' }, { status: 400 })
 
@@ -27,6 +27,14 @@ export async function POST(request: Request) {
     await db.update(users).set({ stripeCustomerId: customerId }).where(eq(users.id, session.id))
   }
 
+  let stripePromoCodeId: string | undefined
+  if (promoCodeId) {
+    const [coupon] = await db.select().from(coupons).where(eq(coupons.id, promoCodeId))
+    if (coupon?.active && coupon.stripePromoCodeId) {
+      stripePromoCodeId = coupon.stripePromoCodeId
+    }
+  }
+
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3002'
   const checkout = await stripe.checkout.sessions.create({
     customer: customerId,
@@ -39,7 +47,9 @@ export async function POST(request: Request) {
     },
     success_url: `${appUrl}/billing/success?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${appUrl}/pricing`,
-    allow_promotion_codes: true,
+    ...(stripePromoCodeId
+      ? { discounts: [{ promotion_code: stripePromoCodeId }] }
+      : { allow_promotion_codes: true }),
   })
 
   return Response.json({ url: checkout.url })

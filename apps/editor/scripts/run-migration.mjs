@@ -131,6 +131,91 @@ try {
   `
   console.log('✓ org_invitations table ready')
 
+  // Sprint 3: Drop users.role enum constraint → allow custom roles
+  await sql`ALTER TABLE users ALTER COLUMN role TYPE text USING role::text`
+  // Remove old CHECK constraint if exists (idempotent via try/catch)
+  try {
+    await sql`ALTER TABLE users DROP CONSTRAINT IF EXISTS users_role_check`
+  } catch {}
+  await sql`ALTER TABLE users ADD CONSTRAINT users_role_nonempty CHECK (length(role) > 0)`
+  console.log('✓ users.role enum constraint dropped, allows custom roles')
+
+  // Sprint 1: Coupons table
+  await sql`
+    CREATE TABLE IF NOT EXISTS "coupons" (
+      "id" text PRIMARY KEY NOT NULL,
+      "name" text NOT NULL,
+      "code" text NOT NULL UNIQUE,
+      "gateway" text NOT NULL CHECK (gateway IN ('stripe','razorpay','both')),
+      "stripe_promo_code_id" text,
+      "stripe_coupon_id" text,
+      "razorpay_offer_id" text,
+      "discount_type" text NOT NULL CHECK (discount_type IN ('percent','fixed')),
+      "discount_value" integer NOT NULL,
+      "duration" text NOT NULL CHECK (duration IN ('once','repeating','forever')),
+      "duration_in_months" integer,
+      "applies_to_plans" text NOT NULL,
+      "original_price_cents" integer,
+      "promo_price_cents" integer,
+      "max_redemptions" integer,
+      "redemption_count" integer DEFAULT 0 NOT NULL,
+      "active" boolean DEFAULT true NOT NULL,
+      "expires_at" timestamptz,
+      "created_at" timestamptz DEFAULT now() NOT NULL
+    )
+  `
+  console.log('✓ coupons table ready')
+
+  // Sprint 2: Plan config table + seed
+  await sql`
+    CREATE TABLE IF NOT EXISTS "plan_config" (
+      "id" text PRIMARY KEY NOT NULL,
+      "plan_key" text NOT NULL UNIQUE CHECK (plan_key IN ('free','pro','team')),
+      "display_name" text NOT NULL,
+      "display_price_cents" integer NOT NULL,
+      "currency" text DEFAULT 'usd' NOT NULL,
+      "price_suffix" text DEFAULT '/month' NOT NULL,
+      "stripe_price_id" text,
+      "stripe_yearly_price_id" text,
+      "razorpay_plan_id" text,
+      "razorpay_yearly_plan_id" text,
+      "features" text NOT NULL,
+      "highlight" boolean DEFAULT false NOT NULL,
+      "active" boolean DEFAULT true NOT NULL,
+      "updated_at" timestamptz DEFAULT now() NOT NULL
+    )
+  `
+  // Seed default plan config (idempotent)
+  await sql`
+    INSERT INTO plan_config (id, plan_key, display_name, display_price_cents, currency, price_suffix, features, highlight, active, updated_at)
+    VALUES
+      ('plan_free', 'free', 'Free', 0, 'usd', 'forever', '["Up to 5 scenes","JSON export","Community support","Basic 3D editor"]', false, true, now()),
+      ('plan_pro', 'pro', 'Pro', 2900, 'usd', '/month', '["Unlimited scenes","GLB & JSON export","MCP server access","Priority support","14-day free trial"]', true, true, now()),
+      ('plan_team', 'team', 'Team', 7900, 'usd', '/seat/month', '["Everything in Pro","IFC export","Real-time collaboration","SSO / SAML","Audit log","14-day free trial"]', false, true, now())
+    ON CONFLICT (plan_key) DO NOTHING
+  `
+  console.log('✓ plan_config table ready + seeded')
+
+  // Sprint 3: Roles table + seed system roles
+  await sql`
+    CREATE TABLE IF NOT EXISTS "roles" (
+      "id" text PRIMARY KEY NOT NULL,
+      "name" text NOT NULL UNIQUE,
+      "description" text NOT NULL,
+      "permissions" text NOT NULL,
+      "is_system" boolean DEFAULT false NOT NULL,
+      "created_at" timestamptz DEFAULT now() NOT NULL
+    )
+  `
+  await sql`
+    INSERT INTO roles (id, name, description, permissions, is_system, created_at)
+    VALUES
+      ('role_user', 'user', 'Standard access. Features gated by subscription plan.', '[]', true, now()),
+      ('role_admin', 'admin', 'Full platform access. All features unlocked.', '["all"]', true, now())
+    ON CONFLICT (name) DO NOTHING
+  `
+  console.log('✓ roles table ready + seeded')
+
   const u = await sql`SELECT COUNT(*) as count FROM users`
   const s = await sql`SELECT COUNT(*) as count FROM scenes`
   console.log(`✓ done — ${u[0].count} users, ${s[0].count} scenes`)
