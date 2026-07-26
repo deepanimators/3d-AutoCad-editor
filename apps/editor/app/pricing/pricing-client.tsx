@@ -85,6 +85,8 @@ export function PricingClient({
       features: JSON.parse(p.features) as string[],
       monthlyKey: PLAN_MONTHLY_KEYS[p.planKey] ?? null,
       highlight: p.highlight,
+      hasStripe: !!p.stripePriceId,
+      hasRazorpay: !!p.razorpayPlanId,
     }))
 
   function getPromoForPlan(monthlyKey: string | null): ActivePromo | null {
@@ -359,33 +361,42 @@ export function PricingClient({
                     </a>
                   ) : (
                     <div className="flex flex-col gap-2">
-                      <button
-                        type="button"
-                        disabled={!!loading}
-                        onClick={() => plan.monthlyKey && void handleStripeUpgrade(plan.monthlyKey, promo?.id)}
-                        className={btnClass(plan.highlight)}
-                      >
-                        <span className="flex items-center justify-center gap-2">
-                          <CreditCard className="h-3.5 w-3.5" />
-                          {loading === `stripe-${plan.monthlyKey}`
+                      {plan.hasStripe && (
+                        <button
+                          type="button"
+                          disabled={!!loading}
+                          onClick={() => plan.monthlyKey && void handleStripeUpgrade(plan.monthlyKey, promo?.id)}
+                          className={btnClass(plan.highlight)}
+                        >
+                          <span className="flex items-center justify-center gap-2">
+                            <CreditCard className="h-3.5 w-3.5" />
+                            {loading === `stripe-${plan.monthlyKey}`
+                              ? 'Loading…'
+                              : hasPromo && promo
+                                ? `Pay with Card — ${formatCents(promo.promoPriceCents!)}`
+                                : 'Pay with Card'}
+                          </span>
+                        </button>
+                      )}
+                      {plan.hasRazorpay && (
+                        <button
+                          type="button"
+                          disabled={!!loading}
+                          onClick={() => plan.monthlyKey && void handleRazorpayUpgrade(plan.monthlyKey)}
+                          className={plan.hasStripe ? secondaryBtnClass(plan.highlight) : btnClass(plan.highlight)}
+                        >
+                          {loading === `razorpay-${plan.monthlyKey}`
                             ? 'Loading…'
                             : hasPromo && promo
-                              ? `Pay with Card — ${formatCents(promo.promoPriceCents!)}`
-                              : 'Pay with Card'}
-                        </span>
-                      </button>
-                      <button
-                        type="button"
-                        disabled={!!loading}
-                        onClick={() => plan.monthlyKey && void handleRazorpayUpgrade(plan.monthlyKey)}
-                        className={secondaryBtnClass(plan.highlight)}
-                      >
-                        {loading === `razorpay-${plan.monthlyKey}`
-                          ? 'Loading…'
-                          : hasPromo && promo
-                            ? `₹ Pay with Razorpay — ${formatCents(promo.promoPriceCents!)}`
-                            : '₹ Pay with Razorpay'}
-                      </button>
+                              ? `₹ Pay with Razorpay — ${formatCents(promo.promoPriceCents!)}`
+                              : '₹ Pay with Razorpay'}
+                        </button>
+                      )}
+                      {!plan.hasStripe && !plan.hasRazorpay && (
+                        <p className="text-center text-muted-foreground text-xs py-2">
+                          Payment not yet configured. Contact us to upgrade.
+                        </p>
+                      )}
                     </div>
                   )}
                 </div>
