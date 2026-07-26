@@ -76,12 +76,12 @@ export default async function RolesPage() {
               key={r.id}
               className={`rounded-xl border p-5 ${
                 r.name === 'admin'
-                  ? 'border-orange-200 bg-orange-50'
+                  ? 'border-warning/30 bg-warning-muted'
                   : 'border-border bg-background'
               }`}
             >
               <div className="flex items-center gap-2 mb-2">
-                <span className={`font-semibold ${r.name === 'admin' ? 'text-orange-700' : 'text-foreground'}`}>
+                <span className={`font-semibold ${r.name === 'admin' ? 'text-warning' : 'text-foreground'}`}>
                   {r.name}
                 </span>
                 {r.isSystem && (
@@ -90,12 +90,12 @@ export default async function RolesPage() {
                   </span>
                 )}
                 <span className={`ml-auto rounded-full px-2.5 py-0.5 text-xs font-bold ${
-                  r.name === 'admin' ? 'bg-orange-100 text-orange-700' : 'bg-muted text-muted-foreground'
+                  r.name === 'admin' ? 'bg-warning-muted text-warning' : 'bg-muted text-muted-foreground'
                 }`}>
                   {countByRole[r.name] ?? 0}
                 </span>
               </div>
-              <p className={`text-xs ${r.name === 'admin' ? 'text-orange-600/80' : 'text-muted-foreground'}`}>
+              <p className={`text-xs ${r.name === 'admin' ? 'text-warning/80' : 'text-muted-foreground'}`}>
                 {r.description}
               </p>
             </div>
@@ -112,7 +112,7 @@ export default async function RolesPage() {
                   <th className="px-4 py-3 text-left font-medium text-muted-foreground">Permission</th>
                   {parsedRoles.map((r) => (
                     <th key={r.id} className="px-4 py-3 text-center font-medium text-muted-foreground">
-                      <span className={r.name === 'admin' ? 'text-orange-600' : 'text-muted-foreground'}>
+                      <span className={r.name === 'admin' ? 'text-warning' : 'text-muted-foreground'}>
                         {r.name}
                       </span>
                     </th>
@@ -130,7 +130,7 @@ export default async function RolesPage() {
                       return (
                         <td key={r.id} className="px-4 py-2.5 text-center">
                           {has
-                            ? <span className="text-green-600 text-base">✓</span>
+                            ? <span className="text-success text-base">✓</span>
                             : <span className="text-muted-foreground/30 text-base">–</span>}
                         </td>
                       )
@@ -154,7 +154,7 @@ export default async function RolesPage() {
           return (
             <div key={r.id}>
               <h2 className="font-semibold text-base mb-3 flex items-center gap-2">
-                <span className={`font-semibold ${r.name === 'admin' ? 'text-orange-600' : 'text-foreground'}`}>
+                <span className={`font-semibold ${r.name === 'admin' ? 'text-warning' : 'text-foreground'}`}>
                   {r.name.charAt(0).toUpperCase() + r.name.slice(1)}
                 </span>
                 <span className="text-muted-foreground font-normal text-sm">({roleUsers.length})</span>

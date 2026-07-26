@@ -210,7 +210,7 @@ export function RolesClient({ allRoles }: { allRoles: RoleRow[] }) {
                   </div>
                 </td>
                 <td className="px-4 py-3">
-                  <span className="rounded-full bg-orange-100 px-2.5 py-0.5 text-xs font-semibold text-orange-700">System</span>
+                  <span className="rounded-full bg-warning-muted px-2.5 py-0.5 text-xs font-semibold text-warning">System</span>
                 </td>
               </tr>
             ))}

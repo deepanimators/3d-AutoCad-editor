@@ -29,8 +29,8 @@ type Props = {
 const PLAN_LABELS = { free: 'Free', pro: 'Pro', team: 'Team' }
 const PLAN_COLORS = {
   free: 'bg-muted text-muted-foreground',
-  pro: 'bg-blue-100 text-blue-700',
-  team: 'bg-violet-100 text-violet-700',
+  pro: 'bg-brand-muted text-brand',
+  team: 'bg-purple-muted text-purple',
 }
 const STATUS_LABELS: Record<string, string> = {
   active: 'Active',
@@ -75,7 +75,7 @@ export function AccountClient({ user, sceneLimit, aiUsage }: Props) {
           {user.role === 'admin' && (
             <a
               href="/admin"
-              className="flex items-center gap-1.5 rounded-lg bg-orange-50 border border-orange-200 px-3 py-1.5 text-orange-700 text-sm font-medium hover:bg-orange-100"
+              className="flex items-center gap-1.5 rounded-lg bg-warning-muted border border-warning/30 px-3 py-1.5 text-warning text-sm font-medium hover:bg-warning-muted"
             >
               <Shield className="h-4 w-4" />
               Admin dashboard
@@ -107,7 +107,7 @@ export function AccountClient({ user, sceneLimit, aiUsage }: Props) {
                     type="button"
                     onClick={saveName}
                     disabled={saving}
-                    className="rounded p-1 text-green-600 hover:bg-green-50 disabled:opacity-50"
+                    className="rounded p-1 text-success hover:bg-success-muted disabled:opacity-50"
                   >
                     <Check className="h-4 w-4" />
                   </button>
@@ -176,7 +176,7 @@ export function AccountClient({ user, sceneLimit, aiUsage }: Props) {
                   {aiUsage.generationsLimit !== null && (
                     <div className="h-1.5 rounded-full bg-muted overflow-hidden">
                       <div
-                        className="h-full rounded-full bg-blue-500 transition-all"
+                        className="h-full rounded-full bg-brand transition-all"
                         style={{ width: `${Math.min(100, (aiUsage.generationsUsed / aiUsage.generationsLimit) * 100)}%` }}
                       />
                     </div>

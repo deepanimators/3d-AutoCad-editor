@@ -8,11 +8,25 @@ import { ClientBootstrap } from './client-bootstrap'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Aruct Editor',
-  description: 'Build in three dimensions.',
+  title: { default: 'Aruct Editor', template: '%s — Aruct Editor' },
+  description: 'Build in three dimensions. Professional 3D architectural editor for architects, designers, and space planners.',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? 'https://aruct.app'),
   icons: {
     icon: '/favicon.svg',
     shortcut: '/favicon.svg',
+  },
+  openGraph: {
+    type: 'website',
+    siteName: 'Aruct Editor',
+    title: 'Aruct Editor — Build in three dimensions.',
+    description: 'Professional 3D architectural editor for architects, designers, and space planners.',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Aruct Editor' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Aruct Editor',
+    description: 'Professional 3D architectural editor.',
+    images: ['/og-image.png'],
   },
 }
 

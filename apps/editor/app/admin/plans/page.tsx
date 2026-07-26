@@ -10,8 +10,8 @@ export const dynamic = 'force-dynamic'
 
 const PLAN_COLORS: Record<string, string> = {
   free: 'bg-muted text-muted-foreground',
-  pro: 'bg-blue-100 text-blue-700',
-  team: 'bg-violet-100 text-violet-700',
+  pro: 'bg-brand-muted text-brand',
+  team: 'bg-purple-muted text-purple',
 }
 
 export default async function PlansPage() {

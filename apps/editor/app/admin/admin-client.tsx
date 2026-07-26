@@ -15,14 +15,14 @@ type UserRow = {
 }
 
 const PLAN_COLORS: Record<string, string> = {
-  pro: 'bg-blue-100 text-blue-700',
-  team: 'bg-violet-100 text-violet-700',
+  pro: 'bg-brand-muted text-brand',
+  team: 'bg-purple-muted text-purple',
   free: 'bg-muted text-muted-foreground',
 }
 
 const STATUS_COLORS: Record<string, string> = {
-  active: 'bg-green-100 text-green-700',
-  trialing: 'bg-blue-100 text-blue-700',
+  active: 'bg-success-muted text-success',
+  trialing: 'bg-brand-muted text-brand',
   past_due: 'bg-yellow-100 text-yellow-800',
   canceled: 'bg-red-100 text-red-700',
 }
@@ -56,7 +56,7 @@ function RoleSelect({ userId, value, availableRoles }: { userId: string; value: 
       onChange={(e) => onChange(e.target.value)}
       disabled={saving}
       className={`rounded px-2 py-0.5 text-xs font-medium border border-transparent cursor-pointer hover:border-border focus:outline-none focus:ring-1 focus:ring-ring disabled:opacity-50 ${
-        role === 'admin' ? 'text-orange-600 bg-orange-50' : 'text-muted-foreground bg-transparent'
+        role === 'admin' ? 'text-warning bg-warning-muted' : 'text-muted-foreground bg-transparent'
       }`}
     >
       {availableRoles.map((r) => (

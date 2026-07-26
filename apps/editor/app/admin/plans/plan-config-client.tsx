@@ -84,7 +84,7 @@ function PlanCard({ plan, onSaved }: { plan: ParsedPlanConfig; onSaved: (updated
           <span className="ml-2 text-muted-foreground text-sm">{displayPrice}</span>
           <span className="ml-2 rounded-full bg-muted px-2 py-0.5 text-[11px] font-medium text-muted-foreground capitalize">{plan.planKey}</span>
           {plan.highlight && (
-            <span className="ml-2 rounded-full bg-blue-100 px-2 py-0.5 text-[11px] font-medium text-blue-700">Highlighted</span>
+            <span className="ml-2 rounded-full bg-brand-muted px-2 py-0.5 text-[11px] font-medium text-brand">Highlighted</span>
           )}
         </div>
         {!editing && (

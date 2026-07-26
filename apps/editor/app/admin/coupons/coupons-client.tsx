@@ -200,7 +200,7 @@ function CreateForm({ onClose }: { onClose: () => void }) {
 
 function ActiveBadge({ active }: { active: boolean }) {
   return (
-    <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${active ? 'bg-green-100 text-green-700' : 'bg-muted text-muted-foreground'}`}>
+    <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${active ? 'bg-success-muted text-success' : 'bg-muted text-muted-foreground'}`}>
       {active ? 'Active' : 'Inactive'}
     </span>
   )
