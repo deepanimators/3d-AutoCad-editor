@@ -18,8 +18,8 @@ type AppUser = {
 const PLAN_LABELS: Record<string, string> = { free: 'Free', pro: 'Pro', team: 'Team' }
 const PLAN_COLORS: Record<string, string> = {
   free: 'bg-muted text-muted-foreground',
-  pro: 'bg-blue-100 text-blue-700',
-  team: 'bg-violet-100 text-violet-700',
+  pro: 'bg-brand-muted text-brand',
+  team: 'bg-purple-muted text-purple',
 }
 
 export function UserMenu() {
@@ -127,7 +127,7 @@ export function UserMenu() {
             </a>
             {plan === 'free' && (
               <a
-                className="flex items-center gap-2.5 px-4 py-2 text-sm text-blue-600 hover:bg-accent"
+                className="flex items-center gap-2.5 px-4 py-2 text-sm text-brand hover:bg-accent"
                 href="/pricing"
                 onClick={() => setOpen(false)}
               >
@@ -137,7 +137,7 @@ export function UserMenu() {
             )}
             {plan === 'pro' && (
               <a
-                className="flex items-center gap-2.5 px-4 py-2 text-sm text-violet-600 hover:bg-accent"
+                className="flex items-center gap-2.5 px-4 py-2 text-sm text-purple hover:bg-accent"
                 href="/pricing"
                 onClick={() => setOpen(false)}
               >
@@ -151,7 +151,7 @@ export function UserMenu() {
           {isAdmin && (
             <div className="border-t border-border py-1">
               <a
-                className="flex items-center gap-2.5 px-4 py-2 text-sm text-orange-600 hover:bg-accent"
+                className="flex items-center gap-2.5 px-4 py-2 text-sm text-warning hover:bg-accent"
                 href="/admin"
                 onClick={() => setOpen(false)}
               >
@@ -159,7 +159,7 @@ export function UserMenu() {
                 Admin dashboard
               </a>
               <a
-                className="flex items-center gap-2.5 px-4 py-2 text-sm text-orange-600 hover:bg-accent"
+                className="flex items-center gap-2.5 px-4 py-2 text-sm text-warning hover:bg-accent"
                 href="/admin/audit"
                 onClick={() => setOpen(false)}
               >
