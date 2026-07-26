@@ -3,7 +3,6 @@ import { getSession } from '@/lib/auth-server'
 import { db } from '@/lib/db/client'
 import { users, planConfig } from '@/lib/db/schema'
 import { sql } from 'drizzle-orm'
-import { AppShell } from '@/components/app-shell'
 import { PlanConfigClient } from './plan-config-client'
 
 export const dynamic = 'force-dynamic'
@@ -35,8 +34,7 @@ export default async function PlansPage() {
   }))
 
   return (
-    <AppShell>
-      <div className="px-8 py-8 space-y-8">
+    <div className="px-8 py-8 space-y-8">
         <div>
           <h1 className="font-bold text-2xl text-foreground">Plans</h1>
           <p className="mt-1 text-muted-foreground text-sm">Plan configuration and user distribution</p>
@@ -115,7 +113,6 @@ export default async function PlansPage() {
             </div>
           </>
         )}
-      </div>
-    </AppShell>
+    </div>
   )
 }

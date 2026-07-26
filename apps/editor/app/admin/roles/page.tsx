@@ -3,7 +3,6 @@ import { getSession } from '@/lib/auth-server'
 import { db } from '@/lib/db/client'
 import { users, roles, planConfig } from '@/lib/db/schema'
 import { eq, desc, asc, sql } from 'drizzle-orm'
-import { AppShell } from '@/components/app-shell'
 import { AdminClient } from '../admin-client'
 import { RolesClient } from './roles-client'
 import { ALL_PERMISSIONS } from '@/lib/permissions'
@@ -62,8 +61,7 @@ export default async function RolesPage() {
   }, {})
 
   return (
-    <AppShell>
-      <div className="px-8 py-8 space-y-8">
+    <div className="px-8 py-8 space-y-8">
         <div>
           <h1 className="font-bold text-2xl text-foreground">Roles & RBAC</h1>
           <p className="mt-1 text-muted-foreground text-sm">Role definitions, permissions, and user assignment</p>
@@ -165,7 +163,6 @@ export default async function RolesPage() {
             </div>
           )
         })}
-      </div>
-    </AppShell>
+    </div>
   )
 }

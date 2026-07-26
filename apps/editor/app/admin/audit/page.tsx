@@ -3,7 +3,7 @@ import { getSession } from '@/lib/auth-server'
 import { db } from '@/lib/db/client'
 import { auditLog } from '@/lib/db/schema'
 import { desc } from 'drizzle-orm'
-import { AppShell } from '@/components/app-shell'
+export const dynamic = 'force-dynamic'
 
 export default async function AuditPage() {
   const session = await getSession()
@@ -13,8 +13,7 @@ export default async function AuditPage() {
   const events = await db.select().from(auditLog).orderBy(desc(auditLog.createdAt)).limit(200)
 
   return (
-    <AppShell>
-      <div className="px-8 py-8">
+    <div className="px-8 py-8">
         <div className="mb-6">
           <h1 className="font-bold text-2xl text-foreground">Audit Log</h1>
           <p className="mt-1 text-muted-foreground text-sm">Last {events.length} platform events</p>
@@ -55,7 +54,6 @@ export default async function AuditPage() {
             </tbody>
           </table>
         </div>
-      </div>
-    </AppShell>
+    </div>
   )
 }

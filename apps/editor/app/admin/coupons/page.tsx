@@ -3,7 +3,6 @@ import { getSession } from '@/lib/auth-server'
 import { db } from '@/lib/db/client'
 import { coupons } from '@/lib/db/schema'
 import { desc } from 'drizzle-orm'
-import { AppShell } from '@/components/app-shell'
 import { CouponsClient } from './coupons-client'
 
 export default async function CouponsPage() {
@@ -14,14 +13,12 @@ export default async function CouponsPage() {
   const allCoupons = await db.select().from(coupons).orderBy(desc(coupons.createdAt))
 
   return (
-    <AppShell>
-      <div className="px-8 py-8 space-y-6">
-        <div>
-          <h1 className="font-bold text-2xl text-foreground">Coupons</h1>
-          <p className="mt-1 text-muted-foreground text-sm">{allCoupons.length} total coupons</p>
-        </div>
-        <CouponsClient initialCoupons={allCoupons} />
+    <div className="px-8 py-8 space-y-6">
+      <div>
+        <h1 className="font-bold text-2xl text-foreground">Coupons</h1>
+        <p className="mt-1 text-muted-foreground text-sm">{allCoupons.length} total coupons</p>
       </div>
-    </AppShell>
+      <CouponsClient initialCoupons={allCoupons} />
+    </div>
   )
 }
