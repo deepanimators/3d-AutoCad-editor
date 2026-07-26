@@ -4,6 +4,14 @@ import { useState } from 'react'
 import { Crown, CreditCard, Settings, Shield, Pencil, Check, X } from 'lucide-react'
 import { signOut } from '@/lib/auth-client'
 
+type AiUsage = {
+  generationsUsed: number
+  generationsLimit: number | null
+  visionUsed: number
+  visionLimit: number | null
+  resetAt: string | null
+}
+
 type Props = {
   user: {
     name: string
@@ -15,6 +23,7 @@ type Props = {
     stripeCustomerId: string | null
   }
   sceneLimit: number | null
+  aiUsage?: AiUsage
 }
 
 const PLAN_LABELS = { free: 'Free', pro: 'Pro', team: 'Team' }
@@ -36,7 +45,7 @@ async function openBillingPortal() {
   if (url) window.location.href = url
 }
 
-export function AccountClient({ user, sceneLimit }: Props) {
+export function AccountClient({ user, sceneLimit, aiUsage }: Props) {
   const [name, setName] = useState(user.name)
   const [editingName, setEditingName] = useState(false)
   const [nameInput, setNameInput] = useState(user.name)
@@ -151,6 +160,62 @@ export function AccountClient({ user, sceneLimit }: Props) {
               <Row label="Next billing" value={new Date(user.planExpiresAt).toLocaleDateString()} />
             )}
           </div>
+
+          {aiUsage && (aiUsage.generationsLimit !== 0 || aiUsage.visionLimit !== 0) && (
+            <div className="mt-4 space-y-3 border-t border-border/50 pt-4 text-sm">
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">AI Usage this month</p>
+              {aiUsage.generationsLimit !== 0 && (
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">AI generations</span>
+                    <span className="font-medium tabular-nums">
+                      {aiUsage.generationsUsed}
+                      {aiUsage.generationsLimit !== null ? ` / ${aiUsage.generationsLimit}` : ' / ∞'}
+                    </span>
+                  </div>
+                  {aiUsage.generationsLimit !== null && (
+                    <div className="h-1.5 rounded-full bg-muted overflow-hidden">
+                      <div
+                        className="h-full rounded-full bg-blue-500 transition-all"
+                        style={{ width: `${Math.min(100, (aiUsage.generationsUsed / aiUsage.generationsLimit) * 100)}%` }}
+                      />
+                    </div>
+                  )}
+                </div>
+              )}
+              {aiUsage.visionLimit !== 0 && (
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">Vision calls</span>
+                    <span className="font-medium tabular-nums">
+                      {aiUsage.visionUsed}
+                      {aiUsage.visionLimit !== null ? ` / ${aiUsage.visionLimit}` : ' / ∞'}
+                    </span>
+                  </div>
+                  {aiUsage.visionLimit !== null && (
+                    <div className="h-1.5 rounded-full bg-muted overflow-hidden">
+                      <div
+                        className="h-full rounded-full bg-violet-500 transition-all"
+                        style={{ width: `${Math.min(100, (aiUsage.visionUsed / aiUsage.visionLimit) * 100)}%` }}
+                      />
+                    </div>
+                  )}
+                </div>
+              )}
+              {aiUsage.resetAt && (
+                <p className="text-[11px] text-muted-foreground">
+                  Resets on {new Date(new Date(aiUsage.resetAt).getFullYear(), new Date(aiUsage.resetAt).getMonth() + 1, 1).toLocaleDateString()}
+                </p>
+              )}
+            </div>
+          )}
+
+          {user.plan === 'free' && (
+            <p className="mt-3 text-[11px] text-muted-foreground">
+              AI generation requires Pro plan.{' '}
+              <a href="/pricing" className="text-foreground underline">Upgrade →</a>
+            </p>
+          )}
 
           <div className="mt-6 flex flex-wrap gap-3">
             {user.plan !== 'free' && user.stripeCustomerId ? (
