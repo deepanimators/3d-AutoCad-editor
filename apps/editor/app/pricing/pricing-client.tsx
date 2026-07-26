@@ -213,16 +213,12 @@ export function PricingClient({
   const btnClass = (highlight: boolean) =>
     `w-full rounded-lg py-2.5 text-sm font-semibold transition-colors disabled:opacity-60 ${
       highlight
-        ? 'bg-background text-foreground hover:bg-background/90'
+        ? 'bg-brand text-brand-foreground hover:opacity-90'
         : 'border border-border hover:bg-accent'
     }`
 
-  const secondaryBtnClass = (highlight: boolean) =>
-    `w-full rounded-lg py-2 text-xs font-medium transition-colors disabled:opacity-60 ${
-      highlight
-        ? 'border border-background/30 text-background/80 hover:border-background/60'
-        : 'border border-border text-muted-foreground hover:bg-accent'
-    }`
+  const secondaryBtnClass = (_highlight: boolean) =>
+    `w-full rounded-lg py-2 text-xs font-medium transition-colors disabled:opacity-60 border border-border text-muted-foreground hover:bg-accent`
 
   return (
     <div className="min-h-screen bg-background px-4 py-16">
@@ -246,7 +242,7 @@ export function PricingClient({
             <p>No pricing plans configured. Check back soon.</p>
           </div>
         ) : (
-          <div className="grid gap-6 md:grid-cols-3">
+          <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {plans.map((plan) => {
               const isCurrent = currentPlan === plan.key
               const Icon = plan.icon
@@ -256,15 +252,15 @@ export function PricingClient({
               return (
                 <div
                   key={plan.key}
-                  className={`relative flex flex-col rounded-2xl border p-6 ${
+                  className={`relative flex flex-col rounded-2xl border p-6 transition-shadow ${
                     plan.highlight
-                      ? 'border-foreground bg-foreground text-background shadow-2xl'
-                      : 'border-border bg-background'
+                      ? 'border-brand bg-background ring-2 ring-brand/20 shadow-xl'
+                      : 'border-border bg-background hover:shadow-md'
                   }`}
                 >
                   {plan.highlight && (
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                      <span className="rounded-full bg-blue-600 px-3 py-1 text-white text-xs font-bold">
+                      <span className="rounded-full bg-brand px-3 py-1 text-brand-foreground text-xs font-bold">
                         Most popular
                       </span>
                     </div>
@@ -278,7 +274,7 @@ export function PricingClient({
                         <span
                           className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
                             plan.highlight
-                              ? 'bg-background/20 text-background'
+                              ? 'bg-brand/20 text-brand'
                               : 'bg-muted text-muted-foreground'
                           }`}
                         >
@@ -286,7 +282,7 @@ export function PricingClient({
                         </span>
                       )}
                       {hasPromo && (
-                        <span className="ml-auto flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-bold text-green-700">
+                        <span className="ml-auto flex items-center gap-1 rounded-full bg-success-muted px-2 py-0.5 text-[10px] font-bold text-success">
                           <Tag className="h-3 w-3" />
                           Offer
                         </span>
@@ -296,7 +292,7 @@ export function PricingClient({
                     {hasPromo && promo ? (
                       <div>
                         <div className="flex items-baseline gap-2">
-                          <span className={`text-sm line-through ${plan.highlight ? 'text-background/50' : 'text-muted-foreground'}`}>
+                          <span className="text-sm line-through text-muted-foreground">
                             {formatCents(promo.originalPriceCents!)}
                           </span>
                           <span className="font-bold text-3xl">{formatCents(promo.promoPriceCents!)}</span>

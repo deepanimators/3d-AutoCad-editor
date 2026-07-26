@@ -9,12 +9,15 @@ import {
   BarChart3,
   LogOut,
   ChevronRight,
-  Box,
   Users,
   Layers,
+  Sun,
+  Moon,
+  X,
   Package,
 } from 'lucide-react'
 import { usePathname } from 'next/navigation'
+import { useTheme } from 'next-themes'
 import { signOut } from '@/lib/auth-client'
 
 type User = {
@@ -26,8 +29,8 @@ type User = {
 
 const PLAN_COLORS = {
   free: 'bg-muted text-muted-foreground',
-  pro: 'bg-blue-100 text-blue-700',
-  team: 'bg-violet-100 text-violet-700',
+  pro: 'bg-brand-muted text-brand',
+  team: 'bg-purple-muted text-purple',
 }
 const PLAN_LABELS = { free: 'Free', pro: 'Pro', team: 'Team' }
 
@@ -47,11 +50,55 @@ const NAV: NavItem[] = [
   { href: '/admin', label: 'Admin Dashboard', icon: Shield, adminOnly: true },
   { href: '/admin/roles', label: 'Roles & RBAC', icon: Users, adminOnly: true },
   { href: '/admin/plans', label: 'Plans', icon: Layers, adminOnly: true },
-  { href: '/admin/coupons', label: 'Coupons', icon: Tag, adminOnly: true },
   { href: '/admin/audit', label: 'Audit Log', icon: BarChart3, adminOnly: true },
 ]
 
-export function AppSidebar({ user }: { user: User | null }) {
+function AructMark({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M12 2 L22 7.5 L12 13 L2 7.5 Z" />
+      <line x1="2" y1="13" x2="22" y2="13" />
+      <path d="M2 7.5 L2 16.5 L12 22 L12 13" />
+      <path d="M22 7.5 L22 16.5 L12 22" />
+    </svg>
+  )
+}
+
+function ThemeToggle() {
+  const { setTheme, resolvedTheme } = useTheme()
+  const isDark = resolvedTheme === 'dark'
+
+  return (
+    <button
+      type="button"
+      onClick={() => setTheme(isDark ? 'light' : 'dark')}
+      className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+    >
+      {isDark ? (
+        <Sun className="h-4 w-4 shrink-0" />
+      ) : (
+        <Moon className="h-4 w-4 shrink-0" />
+      )}
+      {isDark ? 'Light mode' : 'Dark mode'}
+    </button>
+  )
+}
+
+type SidebarContentProps = {
+  user: User | null
+  onClose?: () => void
+}
+
+function SidebarContent({ user, onClose }: SidebarContentProps) {
   const pathname = usePathname()
 
   const isActive = (href: string) =>
@@ -59,21 +106,35 @@ export function AppSidebar({ user }: { user: User | null }) {
 
   const visibleNav = NAV.filter((item) => !item.adminOnly || user?.role === 'admin')
 
+  const adminItems = visibleNav.filter((i) => i.adminOnly)
+  const regularItems = visibleNav.filter((i) => !i.adminOnly)
+
   return (
-    <aside className="flex w-60 flex-col border-r border-border bg-background/95">
+    <>
       {/* Logo */}
-      <div className="flex h-14 items-center gap-2.5 border-b border-border px-4">
-        <a href="/" className="flex items-center gap-2 text-foreground hover:opacity-80">
-          <Box className="h-5 w-5" />
-          <span className="font-bold text-sm tracking-tight">Aruct Editor</span>
+      <div className="flex h-14 items-center justify-between border-b border-border px-4">
+        <a href="/" className="flex items-center gap-2.5 text-foreground hover:opacity-80">
+          <AructMark className="h-5 w-5" />
+          <span className="font-bold text-sm tracking-tight" style={{ letterSpacing: '-0.02em' }}>
+            Aruct Editor
+          </span>
         </a>
+        {onClose && (
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-md p-1 text-muted-foreground hover:bg-accent md:hidden"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        )}
       </div>
 
-      {/* Open Editor */}
-      <div className="px-3 py-3 border-b border-border">
+      {/* Open Editor CTA */}
+      <div className="border-b border-border px-3 py-3">
         <a
           href="/"
-          className="flex items-center justify-between rounded-lg bg-foreground px-3 py-2 text-background text-sm font-medium hover:opacity-90"
+          className="flex items-center justify-between rounded-lg bg-brand px-3 py-2 text-brand-foreground text-sm font-semibold hover:opacity-90 transition-opacity"
         >
           <span>Open Editor</span>
           <ChevronRight className="h-3.5 w-3.5" />
@@ -82,21 +143,18 @@ export function AppSidebar({ user }: { user: User | null }) {
 
       {/* Nav */}
       <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-0.5">
-        {visibleNav.map((item) => {
+        {regularItems.map((item) => {
           const active = isActive(item.href)
           const Icon = item.icon
-          const isAdminItem = item.adminOnly
-
           return (
             <a
               key={item.href}
               href={item.href}
+              onClick={onClose}
               className={`flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors ${
                 active
-                  ? 'bg-accent text-foreground font-medium'
-                  : isAdminItem
-                    ? 'text-orange-600 hover:bg-orange-50'
-                    : 'text-muted-foreground hover:bg-accent hover:text-foreground'
+                  ? 'bg-sidebar-accent text-sidebar-accent-foreground font-semibold'
+                  : 'text-muted-foreground hover:bg-accent hover:text-foreground'
               }`}
             >
               <Icon className="h-4 w-4 shrink-0" />
@@ -104,48 +162,96 @@ export function AppSidebar({ user }: { user: User | null }) {
             </a>
           )
         })}
+
+        {adminItems.length > 0 && (
+          <>
+            <div className="my-2 px-3">
+              <div className="h-px bg-border" />
+            </div>
+            <p className="px-3 py-1 text-[10px] font-semibold uppercase tracking-widest text-warning">
+              Admin
+            </p>
+            {adminItems.map((item) => {
+              const active = isActive(item.href)
+              const Icon = item.icon
+              return (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  onClick={onClose}
+                  className={`flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors ${
+                    active
+                      ? 'bg-warning-muted text-warning font-semibold'
+                      : 'text-warning hover:bg-warning-muted'
+                  }`}
+                >
+                  <Icon className="h-4 w-4 shrink-0" />
+                  {item.label}
+                </a>
+              )
+            })}
+          </>
+        )}
       </nav>
 
       {/* User footer */}
-      <div className="border-t border-border px-3 py-3">
+      <div className="border-t border-border px-3 py-3 space-y-1">
         {user ? (
-          <div className="space-y-1">
+          <>
             <div className="flex items-center justify-between px-2 py-1">
               <div className="min-w-0">
-                <p className="truncate text-xs font-medium">{user.name}</p>
+                <p className="truncate text-xs font-semibold">{user.name}</p>
                 <p className="truncate text-muted-foreground text-[11px]">{user.email}</p>
               </div>
-              <span className={`ml-2 shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold ${PLAN_COLORS[user.plan as keyof typeof PLAN_COLORS] ?? ''}`}>
-                {PLAN_LABELS[user.plan]}
+              <span
+                className={`ml-2 shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold ${
+                  PLAN_COLORS[user.plan as keyof typeof PLAN_COLORS] ?? 'bg-muted text-muted-foreground'
+                }`}
+              >
+                {PLAN_LABELS[user.plan] ?? user.plan}
               </span>
             </div>
             {user.plan === 'free' && (
               <a
                 href="/pricing"
-                className="flex items-center gap-1.5 rounded-lg bg-foreground px-3 py-2 text-background text-xs font-semibold hover:opacity-90"
+                className="flex items-center gap-1.5 rounded-lg bg-brand px-3 py-2 text-brand-foreground text-xs font-semibold hover:opacity-90 transition-opacity"
               >
                 <Tag className="h-3.5 w-3.5" />
                 Upgrade to Pro
               </a>
             )}
+            <ThemeToggle />
             <button
               type="button"
               onClick={() => signOut()}
-              className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-destructive text-sm hover:bg-destructive/5"
+              className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-destructive text-sm hover:bg-destructive/10 transition-colors"
             >
               <LogOut className="h-4 w-4" />
               Sign out
             </button>
-          </div>
+          </>
         ) : (
-          <a
-            href="/login"
-            className="block w-full rounded-lg bg-foreground px-3 py-2 text-center text-background text-sm font-medium hover:opacity-90"
-          >
-            Sign in
-          </a>
+          <>
+            <ThemeToggle />
+            <a
+              href="/login"
+              className="block w-full rounded-lg bg-brand px-3 py-2 text-center text-brand-foreground text-sm font-semibold hover:opacity-90 transition-opacity"
+            >
+              Sign in
+            </a>
+          </>
         )}
       </div>
+    </>
+  )
+}
+
+export function AppSidebar({ user }: { user: User | null }) {
+  return (
+    <aside className="hidden md:flex w-60 flex-col border-r border-border bg-sidebar sticky top-0 h-screen">
+      <SidebarContent user={user} />
     </aside>
   )
 }
+
+export { SidebarContent }

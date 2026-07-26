@@ -163,6 +163,13 @@ const buildSceneGraphValue = (
   }
 }
 
+const HDRI_PRESETS = [
+  { label: 'Studio', value: null },
+  { label: 'Overcast', value: 'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/overcast_soil_1k.hdr' },
+  { label: 'Sunset', value: 'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/kloofendal_43d_clear_puresky_1k.hdr' },
+  { label: 'Interior', value: 'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/studio_small_09_1k.hdr' },
+] as const
+
 export interface ProjectVisibility {
   isPrivate: boolean
   showScansPublic: boolean
@@ -208,8 +215,10 @@ export function SettingsPanel({
   const resetSelection = useViewer((state) => state.resetSelection)
   const exportScene = useViewer((state) => state.exportScene)
   const shadows = useViewer((state) => state.shadows)
+  const hdriUrl = useViewer((state) => state.hdriUrl)
   const setPhase = useEditor((state) => state.setPhase)
   const [isGeneratingThumbnail, setIsGeneratingThumbnail] = useState(false)
+  const [customHdriUrl, setCustomHdriUrl] = useState('')
   const [pendingImport, setPendingImport] = useState<PendingImport | null>(null)
   const [editingName, setEditingName] = useState(sceneName ?? '')
   const [isRenaming, setIsRenaming] = useState(false)
@@ -473,6 +482,41 @@ export function SettingsPanel({
             <Switch
               checked={shadows}
               onCheckedChange={(checked) => useViewer.getState().setShadows(checked)}
+            />
+          </div>
+          <div className="space-y-2">
+            <div className="font-medium text-sm">Environment lighting</div>
+            <div className="grid grid-cols-4 gap-1">
+              {HDRI_PRESETS.map((preset) => {
+                const isActive = hdriUrl === preset.value
+                return (
+                  <button
+                    className={`rounded-md border px-2 py-1.5 text-xs transition-colors ${isActive ? 'border-primary bg-primary/10 text-primary' : 'border-border bg-background text-muted-foreground hover:border-primary/50 hover:text-foreground'}`}
+                    key={preset.label}
+                    onClick={() => useViewer.getState().setHdriUrl(preset.value)}
+                    type="button"
+                  >
+                    {preset.label}
+                  </button>
+                )
+              })}
+            </div>
+            <input
+              className="w-full rounded-md border border-border bg-background px-3 py-1.5 text-foreground text-xs focus:border-primary focus:outline-none"
+              onBlur={() => {
+                if (customHdriUrl.trim()) {
+                  useViewer.getState().setHdriUrl(customHdriUrl.trim())
+                }
+              }}
+              onChange={(e) => setCustomHdriUrl(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.currentTarget.blur()
+                }
+              }}
+              placeholder="Custom HDRI URL (.hdr)"
+              type="text"
+              value={customHdriUrl}
             />
           </div>
         </div>

@@ -83,7 +83,8 @@ export function SceneEnvironment() {
 
     if (hdriUrl) {
       const loader = new RGBELoader()
-      const pmremGenerator = new THREE.PMREMGenerator(gl as unknown as THREE.WebGLRenderer)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const pmremGenerator = new THREE.PMREMGenerator(gl as any)
       pmremGenerator.compileEquirectangularShader()
 
       loader.load(hdriUrl, (texture) => {

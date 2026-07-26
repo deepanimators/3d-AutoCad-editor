@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 32" fill="none">
+  <!-- Mark (scaled to 32px height) -->
+  <g transform="translate(0, 4) scale(1)">
+    <path d="M12 2 L22 7.5 L12 13 L2 7.5 Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="2" y1="13" x2="22" y2="13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M2 7.5 L2 16.5 L12 22 L12 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M22 7.5 L22 16.5 L12 22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <!-- Wordmark "Aruct Editor" -->
+  <text x="30" y="20" font-family="system-ui, sans-serif" font-size="13" font-weight="700" fill="currentColor" letter-spacing="-0.3">Aruct Editor</text>
+</svg>
