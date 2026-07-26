@@ -2,7 +2,9 @@
 # Run after `vercel link` to push all required env vars to Vercel (production + preview)
 set -e
 
-ENV_FILE="apps/editor/.env.local"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+ENV_FILE="$SCRIPT_DIR/apps/editor/.env.local"
+VERCEL_DIR="$SCRIPT_DIR/apps/editor"
 
 push_var() {
   local KEY=$1
@@ -13,8 +15,8 @@ push_var() {
     return
   fi
   echo "Pushing: $KEY"
-  printf '%s' "$VALUE" | vercel env add "$KEY" production --force 2>/dev/null || true
-  printf '%s' "$VALUE" | vercel env add "$KEY" preview --force 2>/dev/null || true
+  printf '%s' "$VALUE" | vercel env add "$KEY" production --force --cwd "$VERCEL_DIR" 2>&1 | tail -1
+  printf '%s' "$VALUE" | vercel env add "$KEY" preview --force --cwd "$VERCEL_DIR" 2>&1 | tail -1
 }
 
 VARS=(
