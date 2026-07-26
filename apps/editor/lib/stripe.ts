@@ -44,7 +44,7 @@ export async function createStripeCoupon(opts: {
 }
 
 export async function createStripePromoCode(couponId: string, code: string): Promise<Stripe.PromotionCode> {
-  return stripe.promotionCodes.create({ coupon: couponId, code })
+  return stripe.promotionCodes.create({ promotion: { type: 'coupon', coupon: couponId }, code })
 }
 
 export async function deactivateStripePromoCode(promoCodeId: string): Promise<void> {

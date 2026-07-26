@@ -11,7 +11,7 @@ type AppUser = {
   name: string
   image: string | null
   plan: 'free' | 'pro' | 'team'
-  role: 'user' | 'admin'
+  role: string
   subscriptionStatus: string | null
 }
 

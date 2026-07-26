@@ -52,7 +52,7 @@ export async function PATCH(
   const [updated] = await db
     .update(planConfig)
     .set(updates)
-    .where(eq(planConfig.planKey, planKey))
+    .where(eq(planConfig.planKey, planKey as 'free' | 'pro' | 'team'))
     .returning()
 
   if (!updated) return NextResponse.json({ error: 'plan not found' }, { status: 404 })

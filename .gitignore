@@ -53,4 +53,7 @@ og-test
 .claude/launch.json
 .claude/settings.local.json
 .vscode/launch.json
+# Firebase service account keys — never commit
 aruct-editor-firebase-adminsdk-fbsvc-9f3fcdc9bd.json
+*-firebase-adminsdk-*.json
+*.serviceAccountKey.json

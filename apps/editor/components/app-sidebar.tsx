@@ -20,7 +20,7 @@ type User = {
   name: string
   email: string
   plan: 'free' | 'pro' | 'team'
-  role: 'user' | 'admin'
+  role: string
 }
 
 const PLAN_COLORS = {

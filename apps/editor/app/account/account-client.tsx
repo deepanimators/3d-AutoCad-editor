@@ -9,7 +9,7 @@ type Props = {
     name: string
     email: string
     plan: 'free' | 'pro' | 'team'
-    role: 'user' | 'admin'
+    role: string
     subscriptionStatus: string | null
     planExpiresAt: string | null
     stripeCustomerId: string | null
