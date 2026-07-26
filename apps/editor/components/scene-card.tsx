@@ -1,6 +1,6 @@
 'use client'
 
-import { Pencil, Trash2, Check, X, Share2, UserPlus, Loader2 } from 'lucide-react'
+import { Pencil, Trash2, Check, X, Share2, UserPlus, Loader2, Building2 } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
@@ -12,6 +12,8 @@ interface SceneCardProps {
   updatedAt: string
   thumbnailUrl: string | null
   canShare?: boolean
+  userOrgId?: string | null
+  sceneOrgId?: string | null
 }
 
 function formatDate(iso: string): string {
@@ -140,13 +142,15 @@ function ShareDialog({ id, onClose }: { id: string; onClose: () => void }) {
   )
 }
 
-export function SceneCard({ id, name, nodeCount, updatedAt, thumbnailUrl, canShare }: SceneCardProps) {
+export function SceneCard({ id, name, nodeCount, updatedAt, thumbnailUrl, canShare, userOrgId, sceneOrgId }: SceneCardProps) {
   const router = useRouter()
   const [editing, setEditing] = useState(false)
   const [editName, setEditName] = useState(name)
   const [displayName, setDisplayName] = useState(name)
   const [deleting, setDeleting] = useState(false)
   const [sharing, setSharing] = useState(false)
+  const [currentSceneOrgId, setCurrentSceneOrgId] = useState(sceneOrgId ?? null)
+  const [workspaceToggling, setWorkspaceToggling] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
   const startEdit = (e: React.MouseEvent) => {
@@ -200,6 +204,25 @@ export function SceneCard({ id, name, nodeCount, updatedAt, thumbnailUrl, canSha
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') void saveEdit()
     if (e.key === 'Escape') cancelEdit()
+  }
+
+  const handleWorkspaceToggle = async (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (!userOrgId || workspaceToggling) return
+    setWorkspaceToggling(true)
+    const newOrgId = currentSceneOrgId === userOrgId ? null : userOrgId
+    try {
+      const res = await fetch(`/api/scenes/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orgId: newOrgId }),
+      })
+      if (res.ok) setCurrentSceneOrgId(newOrgId)
+    } catch {
+      // ignore
+    }
+    setWorkspaceToggling(false)
   }
 
   return (
@@ -259,6 +282,17 @@ export function SceneCard({ id, name, nodeCount, updatedAt, thumbnailUrl, canSha
                   type="button"
                 >
                   <Share2 className="h-3.5 w-3.5" />
+                </button>
+              )}
+              {userOrgId && (
+                <button
+                  className={`shrink-0 rounded p-0.5 opacity-0 transition-opacity group-hover:opacity-100 disabled:opacity-50 ${currentSceneOrgId === userOrgId ? 'text-brand hover:bg-brand-muted' : 'text-muted-foreground hover:bg-accent hover:text-foreground'}`}
+                  disabled={workspaceToggling}
+                  onClick={(e) => void handleWorkspaceToggle(e)}
+                  title={currentSceneOrgId === userOrgId ? 'Remove from workspace' : 'Add to workspace'}
+                  type="button"
+                >
+                  {workspaceToggling ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Building2 className="h-3.5 w-3.5" />}
                 </button>
               )}
               <button

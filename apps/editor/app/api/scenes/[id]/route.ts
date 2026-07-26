@@ -31,9 +31,10 @@ const patchSceneSchema = z.object({
   isPublic: z.boolean().optional(),
   showScansPublic: z.boolean().optional(),
   showGuidesPublic: z.boolean().optional(),
+  orgId: z.string().nullable().optional(),
   expectedVersion: z.number().int().nonnegative().optional(),
 }).refine(
-  (d) => d.name !== undefined || d.isPublic !== undefined || d.showScansPublic !== undefined || d.showGuidesPublic !== undefined,
+  (d) => d.name !== undefined || d.isPublic !== undefined || d.showScansPublic !== undefined || d.showGuidesPublic !== undefined || d.orgId !== undefined,
   { message: 'At least one field must be provided' },
 )
 
@@ -197,6 +198,12 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
         if (!updated) return sceneApiJson(request, { error: 'not_found' }, { status: 404 })
         return sceneApiJson(request, { id: updated.id, isPublic: updated.isPublic, showScansPublic: updated.showScansPublic, showGuidesPublic: updated.showGuidesPublic })
       }
+    }
+    if (parsed.data.orgId !== undefined) {
+      await db.update(scenes).set({ orgId: parsed.data.orgId }).where(eq(scenes.id, id))
+      const [updated] = await db.select().from(scenes).where(eq(scenes.id, id))
+      if (!updated) return sceneApiJson(request, { error: 'not_found' }, { status: 404 })
+      return sceneApiJson(request, { id: updated.id, orgId: updated.orgId })
     }
     if (name) {
       const meta = await operations.renameStoredScene(id, name, { expectedVersion })

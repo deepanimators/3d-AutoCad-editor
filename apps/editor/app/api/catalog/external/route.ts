@@ -23,7 +23,7 @@ type ExternalModel = {
   polyCount: number | null
 }
 
-async function fetchPolyHaven(q: string, limit: number): Promise<ExternalModel[]> {
+async function fetchPolyHaven(q: string, limit: number, baseUrl: string): Promise<ExternalModel[]> {
   const all = await listPolyHavenModels()
   const lower = q.toLowerCase()
 
@@ -39,8 +39,11 @@ async function fetchPolyHaven(q: string, limit: number): Promise<ExternalModel[]
   const settled = await Promise.allSettled(
     matches.map(async ([id, asset]) => {
       const files = await getPolyHavenFiles(id)
-      const glbUrl = getBestGltfUrl(files)
-      if (!glbUrl) return null
+      // Verify GLTF exists before returning proxy URL
+      const hasGltf = getBestGltfUrl(files) !== null
+      if (!hasGltf) return null
+      // Use server-side proxy that patches texture paths to avoid CDN 404s
+      const glbUrl = `${baseUrl}/api/proxy/polyhaven?id=${encodeURIComponent(id)}&res=2k`
       const result: ExternalModel = {
         sourceId: id,
         source: 'polyhaven',
@@ -98,11 +101,13 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ results: [], sources: [] })
   }
 
+  const origin = request.nextUrl.origin
+
   const wantHaven = source === 'polyhaven' || source === 'all'
   const wantPizza = source === 'polypizza' || source === 'all'
 
   const [havenResult, pizzaResult] = await Promise.allSettled([
-    wantHaven ? fetchPolyHaven(q, limit) : Promise.resolve(null),
+    wantHaven ? fetchPolyHaven(q, limit, origin) : Promise.resolve(null),
     wantPizza ? fetchPolyPizza(q, limit) : Promise.resolve(null),
   ])
 

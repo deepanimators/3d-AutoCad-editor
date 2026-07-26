@@ -1,30 +1,44 @@
 import { CreateSceneButton } from '@/components/save-button'
-import type { SceneMeta } from '@/components/scene-loader'
 import { SceneCard } from '@/components/scene-card'
 import { AppShell } from '@/components/app-shell'
 import { getSession } from '@/lib/auth-server'
-import { getSceneOperations } from '@/lib/scene-store-server'
+import { db } from '@/lib/db/client'
+import { scenes, orgMembers, organizations } from '@/lib/db/schema'
+import { eq } from 'drizzle-orm'
 
 export const dynamic = 'force-dynamic'
 
-async function fetchScenes(): Promise<SceneMeta[]> {
+type SceneRow = { id: string; name: string; nodeCount: number; updatedAt: string; thumbnailUrl: string | null; orgId: string | null }
+
+async function fetchScenesWithOrg(userId: string, isAdmin: boolean): Promise<SceneRow[]> {
   try {
-    const session = await getSession()
-    if (!session) return []
-    const operations = await getSceneOperations()
-    const scenes = await operations.listScenes({
-      limit: 50,
-      ownerId: session.role === 'admin' ? undefined : session.id,
-    })
-    return scenes as SceneMeta[]
+    const rows = isAdmin
+      ? await db.select({ id: scenes.id, name: scenes.name, nodeCount: scenes.nodeCount, updatedAt: scenes.updatedAt, thumbnailUrl: scenes.thumbnailUrl, orgId: scenes.orgId }).from(scenes).orderBy(scenes.updatedAt).limit(50)
+      : await db.select({ id: scenes.id, name: scenes.name, nodeCount: scenes.nodeCount, updatedAt: scenes.updatedAt, thumbnailUrl: scenes.thumbnailUrl, orgId: scenes.orgId }).from(scenes).where(eq(scenes.ownerId, userId)).orderBy(scenes.updatedAt).limit(50)
+    return rows
   } catch (error) {
     console.error('[ScenesPage] Failed to fetch scenes:', error)
     return []
   }
 }
 
+async function fetchUserOrg(userId: string): Promise<{ id: string; name: string; slug: string } | null> {
+  try {
+    const [row] = await db
+      .select({ id: organizations.id, name: organizations.name, slug: organizations.slug })
+      .from(orgMembers)
+      .innerJoin(organizations, eq(organizations.id, orgMembers.orgId))
+      .where(eq(orgMembers.userId, userId))
+      .limit(1)
+    return row ?? null
+  } catch { return null }
+}
+
 export default async function ScenesPage() {
-  const scenes = await fetchScenes()
+  const session = await getSession()
+  const userOrg = session ? await fetchUserOrg(session.id) : null
+  const sceneRows = session ? await fetchScenesWithOrg(session.id, session.role === 'admin') : []
+  const scenes = sceneRows
 
   return (
     <AppShell>
@@ -76,6 +90,9 @@ export default async function ScenesPage() {
                 nodeCount={scene.nodeCount}
                 updatedAt={scene.updatedAt}
                 thumbnailUrl={scene.thumbnailUrl}
+                canShare={!!session}
+                userOrgId={userOrg?.id ?? null}
+                sceneOrgId={scene.orgId}
               />
             ))}
           </ul>

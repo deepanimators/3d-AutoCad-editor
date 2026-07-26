@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, type FormEvent, type ChangeEvent } from 'react'
+import { useState, useEffect, type FormEvent, type ChangeEvent } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 type Member = {
   userId: string
@@ -16,6 +17,8 @@ type Invitation = {
   status: string
   expiresAt: string
 }
+
+type WorkspaceScene = { id: string; name: string; nodeCount: number; updatedAt: string; thumbnailUrl: string | null; ownerId: string | null }
 
 type Props = {
   slug: string
@@ -35,6 +38,16 @@ export function OrgDashboardClient({ slug, orgName, members, pendingInvites, cur
   const [submitting, setSubmitting] = useState(false)
 
   const canManage = currentUserOrgRole === 'owner' || currentUserOrgRole === 'admin'
+
+  const [orgScenes, setOrgScenes] = useState<WorkspaceScene[]>([])
+  const [scenesLoading, setScenesLoading] = useState(true)
+
+  useEffect(() => {
+    void fetch(`/api/orgs/${slug}/scenes`)
+      .then(r => r.json())
+      .then((data: { scenes?: WorkspaceScene[] }) => { setOrgScenes(data.scenes ?? []); setScenesLoading(false) })
+      .catch(() => setScenesLoading(false))
+  }, [slug])
 
   async function handleInvite(e: FormEvent) {
     e.preventDefault()
@@ -110,6 +123,38 @@ export function OrgDashboardClient({ slug, orgName, members, pendingInvites, cur
           </div>
         </section>
       )}
+
+      <section>
+        <h2 className="text-lg font-medium mb-4">Workspace Scenes</h2>
+        {scenesLoading ? (
+          <p className="text-sm text-muted-foreground">Loading scenes…</p>
+        ) : orgScenes.length === 0 ? (
+          <div className="rounded-lg border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
+            No scenes shared with this workspace yet.
+            <br />
+            <span className="text-xs">Open a scene and use &quot;Share with Workspace&quot; to add it here.</span>
+          </div>
+        ) : (
+          <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {orgScenes.map(scene => (
+              <li key={scene.id} className="rounded-lg border border-border bg-background p-3 hover:border-border/80 transition-colors">
+                <Link href={`/scene/${scene.id}`} className="block">
+                  <div className="mb-2 flex aspect-video items-center justify-center overflow-hidden rounded-md bg-muted">
+                    {scene.thumbnailUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={scene.thumbnailUrl} alt={scene.name} className="h-full w-full object-cover" />
+                    ) : (
+                      <span className="text-muted-foreground text-xs">No thumbnail</span>
+                    )}
+                  </div>
+                  <p className="truncate font-medium text-sm">{scene.name}</p>
+                  <p className="text-muted-foreground text-xs mt-0.5">{scene.nodeCount} nodes</p>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
 
       {canManage && (
         <section>
