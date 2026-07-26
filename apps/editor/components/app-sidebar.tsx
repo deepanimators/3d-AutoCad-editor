@@ -10,6 +10,8 @@ import {
   LogOut,
   ChevronRight,
   Box,
+  Users,
+  Layers,
 } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import { signOut } from '@/lib/auth-client'
@@ -41,6 +43,8 @@ const NAV: NavItem[] = [
   { href: '/account', label: 'Account', icon: Settings },
   { href: '/account#billing', label: 'Billing', icon: CreditCard },
   { href: '/admin', label: 'Admin Dashboard', icon: Shield, adminOnly: true },
+  { href: '/admin/roles', label: 'Roles & RBAC', icon: Users, adminOnly: true },
+  { href: '/admin/plans', label: 'Plans', icon: Layers, adminOnly: true },
   { href: '/admin/audit', label: 'Audit Log', icon: BarChart3, adminOnly: true },
 ]
 

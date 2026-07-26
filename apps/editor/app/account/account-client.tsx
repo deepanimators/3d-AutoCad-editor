@@ -1,6 +1,7 @@
 'use client'
 
-import { Crown, CreditCard, Settings, Shield } from 'lucide-react'
+import { useState } from 'react'
+import { Crown, CreditCard, Settings, Shield, Pencil, Check, X } from 'lucide-react'
 import { signOut } from '@/lib/auth-client'
 
 type Props = {
@@ -36,6 +37,27 @@ async function openBillingPortal() {
 }
 
 export function AccountClient({ user, sceneLimit }: Props) {
+  const [name, setName] = useState(user.name)
+  const [editingName, setEditingName] = useState(false)
+  const [nameInput, setNameInput] = useState(user.name)
+  const [saving, setSaving] = useState(false)
+
+  async function saveName() {
+    if (!nameInput.trim() || nameInput === name) { setEditingName(false); return }
+    setSaving(true)
+    const res = await fetch('/api/account/profile', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: nameInput.trim() }),
+    })
+    if (res.ok) {
+      const data = await res.json()
+      setName(data.name)
+    }
+    setSaving(false)
+    setEditingName(false)
+  }
+
   return (
     <div className="min-h-screen bg-background px-4 py-16">
       <div className="mx-auto max-w-2xl space-y-6">
@@ -59,7 +81,48 @@ export function AccountClient({ user, sceneLimit }: Props) {
             Profile
           </h2>
           <div className="space-y-3 text-sm">
-            <Row label="Name" value={user.name} />
+            {/* Editable name row */}
+            <div className="flex items-center justify-between border-b border-border/50 pb-3">
+              <span className="text-muted-foreground">Name</span>
+              {editingName ? (
+                <div className="flex items-center gap-2">
+                  <input
+                    autoFocus
+                    className="rounded-md border border-border bg-background px-2 py-1 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-ring"
+                    value={nameInput}
+                    onChange={(e) => setNameInput(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === 'Enter') saveName(); if (e.key === 'Escape') setEditingName(false) }}
+                    disabled={saving}
+                  />
+                  <button
+                    type="button"
+                    onClick={saveName}
+                    disabled={saving}
+                    className="rounded p-1 text-green-600 hover:bg-green-50 disabled:opacity-50"
+                  >
+                    <Check className="h-4 w-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { setNameInput(name); setEditingName(false) }}
+                    className="rounded p-1 text-muted-foreground hover:bg-accent"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <span className="font-medium">{name}</span>
+                  <button
+                    type="button"
+                    onClick={() => { setNameInput(name); setEditingName(true) }}
+                    className="rounded p-1 text-muted-foreground hover:bg-accent hover:text-foreground"
+                  >
+                    <Pencil className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              )}
+            </div>
             <Row label="Email" value={user.email} />
             <Row label="Role" value={<span className="capitalize">{user.role}</span>} />
           </div>
