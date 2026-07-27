@@ -55,9 +55,12 @@ function EditorItemsPanel() {
   )
   const [externalUnconfigured, setExternalUnconfigured] = useState<string[]>([])
   const [externalDisabled, setExternalDisabled] = useState<string[]>([])
+  const [externalHasMore, setExternalHasMore] = useState(false)
+  const [externalPage, setExternalPage] = useState(0)
   const [dbItems, setDbItems] = useState<AssetInput[]>([])
   const [enabledPlugins, setEnabledPlugins] = useState<string[]>([])
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const currentQueryRef = useRef('')
 
   const loadDbItems = useCallback(() => {
     fetch('/api/catalog?limit=48')
@@ -97,29 +100,53 @@ function EditorItemsPanel() {
     }).then((r) => { if (r.ok) loadDbItems() }).catch(() => {})
   }
 
-  const handleSearchChange = (q: string) => {
-    if (debounceRef.current) clearTimeout(debounceRef.current)
-    if (!q.trim()) {
-      setExternalResults(undefined)
-      setExternalUnconfigured([])
-      setExternalDisabled([])
-      return
-    }
-    setExternalResults(null) // loading
-    debounceRef.current = setTimeout(async () => {
-      try {
-        const res = await fetch(`/api/catalog/external?q=${encodeURIComponent(q)}&limit=12`)
-        if (!res.ok) throw new Error('fetch failed')
-        const data = (await res.json()) as { results: ExternalResult[]; unconfigured?: string[]; disabled?: string[] }
-        setExternalResults(data.results ?? [])
-        setExternalUnconfigured(data.unconfigured ?? [])
-        setExternalDisabled(data.disabled ?? [])
-      } catch {
+  const fetchExternal = async (q: string, page: number, append: boolean) => {
+    try {
+      const res = await fetch(`/api/catalog/external?q=${encodeURIComponent(q)}&limit=12&page=${page}`)
+      if (!res.ok) throw new Error('fetch failed')
+      const data = (await res.json()) as {
+        results: ExternalResult[]
+        unconfigured?: string[]
+        disabled?: string[]
+        hasMore?: boolean
+      }
+      setExternalResults((prev) =>
+        append && Array.isArray(prev) ? [...prev, ...(data.results ?? [])] : (data.results ?? [])
+      )
+      setExternalUnconfigured(data.unconfigured ?? [])
+      setExternalDisabled(data.disabled ?? [])
+      setExternalHasMore(data.hasMore ?? false)
+    } catch {
+      if (!append) {
         setExternalResults([])
         setExternalUnconfigured([])
         setExternalDisabled([])
       }
+      setExternalHasMore(false)
+    }
+  }
+
+  const handleSearchChange = (q: string) => {
+    if (debounceRef.current) clearTimeout(debounceRef.current)
+    currentQueryRef.current = q
+    setExternalPage(0)
+    if (!q.trim()) {
+      setExternalResults(undefined)
+      setExternalUnconfigured([])
+      setExternalDisabled([])
+      setExternalHasMore(false)
+      return
+    }
+    setExternalResults(null)
+    debounceRef.current = setTimeout(() => {
+      void fetchExternal(q, 0, false)
     }, 400)
+  }
+
+  const handleLoadMore = () => {
+    const nextPage = externalPage + 1
+    setExternalPage(nextPage)
+    void fetchExternal(currentQueryRef.current, nextPage, true)
   }
 
   const allItems = dbItems.length > 0 ? [...CATALOG_ITEMS, ...dbItems] : undefined
@@ -130,9 +157,11 @@ function EditorItemsPanel() {
       externalDisabled={externalDisabled}
       externalResults={externalResults}
       externalUnconfigured={externalUnconfigured}
+      hasMore={externalHasMore}
       items={allItems}
       leadingTile={aiGenEnabled ? <AiGenerateTile onGenerated={loadDbItems} /> : undefined}
       onExternalSelect={handleExternalSelect}
+      onLoadMore={handleLoadMore}
       onSearchChange={handleSearchChange}
       showSourceFilter={dbItems.length > 0}
       showTagFilters={false}

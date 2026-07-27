@@ -22,13 +22,14 @@ export type PolyPizzaSearchResult = {
 
 export async function searchPolyPizza(
   query: string,
-  options?: { limit?: number }
+  options?: { limit?: number; page?: number }
 ): Promise<PolyPizzaSearchResult> {
   const apiKey = process.env.POLY_PIZZA_API_KEY
   if (!apiKey) throw new Error('POLY_PIZZA_API_KEY not set')
 
   const params = new URLSearchParams()
   if (options?.limit) params.set('Limit', String(options.limit))
+  if (options?.page) params.set('Page', String(options.page))
 
   const qs = params.toString()
   const url = `${POLY_PIZZA_API}/search/${encodeURIComponent(query)}${qs ? '?' + qs : ''}`

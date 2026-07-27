@@ -41,6 +41,8 @@ export function ItemsPanel({
   externalUnconfigured,
   externalDisabled,
   onExternalSelect,
+  onLoadMore,
+  hasMore,
 }: {
   items?: AssetInput[]
   /** Called when the search query changes (community edition uses this for server-side search) */
@@ -83,6 +85,10 @@ export function ItemsPanel({
   externalDisabled?: string[]
   /** Called when user selects an external result (fire-and-forget import). */
   onExternalSelect?: (result: ExternalResult) => void
+  /** Called when user clicks Load more in external results. */
+  onLoadMore?: () => void
+  /** Whether more external results are available to load. */
+  hasMore?: boolean
 }) {
   // When the embedder supplies a function taxonomy, the hierarchical browse
   // replaces the legacy `furnishTools` category tabs entirely.
@@ -105,6 +111,8 @@ export function ItemsPanel({
     externalUnconfigured={externalUnconfigured}
     externalDisabled={externalDisabled}
     onExternalSelect={onExternalSelect}
+    onLoadMore={onLoadMore}
+    hasMore={hasMore}
     items={items}
     leadingTile={leadingTile}
     onSearchChange={onSearchChange}
@@ -126,6 +134,8 @@ function LegacyItemsPanel({
   externalUnconfigured,
   externalDisabled,
   onExternalSelect,
+  onLoadMore,
+  hasMore,
 }: {
   items?: AssetInput[]
   onSearchChange?: (query: string) => void
@@ -138,6 +148,8 @@ function LegacyItemsPanel({
   externalUnconfigured?: string[]
   externalDisabled?: string[]
   onExternalSelect?: (result: ExternalResult) => void
+  onLoadMore?: () => void
+  hasMore?: boolean
 }) {
   const mode = useEditor((s) => s.mode)
   const catalogCategory = useEditor((s) => s.catalogCategory)
@@ -470,7 +482,9 @@ function LegacyItemsPanel({
               <ExternalResultsSection
                 activeCategory={activeCategory.catalogCategory}
                 disabled={externalDisabled}
+                hasMore={hasMore}
                 onExternalSelect={onExternalSelect}
+                onLoadMore={onLoadMore}
                 results={externalResults}
                 setMode={setMode}
                 setSelectedItem={setSelectedItem}
@@ -702,6 +716,8 @@ function ExternalResultsSection({
   unconfigured,
   disabled,
   onExternalSelect,
+  onLoadMore,
+  hasMore,
 }: {
   results: ExternalResult[] | null
   activeCategory: string
@@ -711,6 +727,8 @@ function ExternalResultsSection({
   unconfigured?: string[]
   disabled?: string[]
   onExternalSelect?: (result: ExternalResult) => void
+  onLoadMore?: () => void
+  hasMore?: boolean
 }) {
   const handleSelect = (result: ExternalResult) => {
     triggerSFX('sfx:menu-click')
@@ -761,38 +779,49 @@ function ExternalResultsSection({
           )}
         </div>
       ) : (
-        <div className="grid gap-2" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(90px, 1fr))' }}>
-          {results.map((result) => (
+        <>
+          <div className="grid gap-2" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(90px, 1fr))' }}>
+            {results.map((result) => (
+              <button
+                className="group relative flex flex-col gap-1.5 rounded-xl p-1.5 transition-colors hover:cursor-pointer hover:bg-sidebar-accent"
+                key={`${result.source}-${result.sourceId}`}
+                onClick={() => handleSelect(result)}
+                onMouseEnter={() => triggerSFX('sfx:menu-hover')}
+                type="button"
+              >
+                <div className="relative aspect-square w-full overflow-hidden rounded-lg bg-muted">
+                  {result.thumbnailUrl ? (
+                    <img
+                      alt={result.name}
+                      className="h-full w-full object-cover"
+                      loading="lazy"
+                      src={result.thumbnailUrl}
+                    />
+                  ) : (
+                    <div className="flex h-full items-center justify-center text-muted-foreground text-[10px]">
+                      3D
+                    </div>
+                  )}
+                  <span className="absolute bottom-1 right-1 rounded-sm bg-black/60 px-1 py-0.5 text-[8px] text-white capitalize">
+                    {result.source === 'polyhaven' ? 'Haven' : result.source === 'polypizza' ? 'Pizza' : result.source}
+                  </span>
+                </div>
+                <span className="truncate px-0.5 text-left font-medium text-[11px] text-muted-foreground group-hover:text-foreground">
+                  {result.name}
+                </span>
+              </button>
+            ))}
+          </div>
+          {hasMore && onLoadMore && (
             <button
-              className="group relative flex flex-col gap-1.5 rounded-xl p-1.5 transition-colors hover:cursor-pointer hover:bg-sidebar-accent"
-              key={`${result.source}-${result.sourceId}`}
-              onClick={() => handleSelect(result)}
-              onMouseEnter={() => triggerSFX('sfx:menu-hover')}
+              className="mt-1 w-full rounded-lg border border-border/50 py-1.5 text-center text-[11px] text-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-foreground"
+              onClick={onLoadMore}
               type="button"
             >
-              <div className="relative aspect-square w-full overflow-hidden rounded-lg bg-muted">
-                {result.thumbnailUrl ? (
-                  <img
-                    alt={result.name}
-                    className="h-full w-full object-cover"
-                    loading="lazy"
-                    src={result.thumbnailUrl}
-                  />
-                ) : (
-                  <div className="flex h-full items-center justify-center text-muted-foreground text-[10px]">
-                    3D
-                  </div>
-                )}
-                <span className="absolute bottom-1 right-1 rounded-sm bg-black/60 px-1 py-0.5 text-[8px] text-white capitalize">
-                  {result.source === 'polyhaven' ? 'Haven' : result.source === 'polypizza' ? 'Pizza' : result.source}
-                </span>
-              </div>
-              <span className="truncate px-0.5 text-left font-medium text-[11px] text-muted-foreground group-hover:text-foreground">
-                {result.name}
-              </span>
+              Load more
             </button>
-          ))}
-        </div>
+          )}
+        </>
       )}
     </div>
   )

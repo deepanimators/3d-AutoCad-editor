@@ -25,9 +25,10 @@ type ExternalModel = {
   polyCount: number | null
 }
 
-async function fetchPolyHaven(q: string, limit: number, baseUrl: string): Promise<ExternalModel[]> {
+async function fetchPolyHaven(q: string, limit: number, page: number, baseUrl: string): Promise<ExternalModel[]> {
   const all = await listPolyHavenModels()
   const lower = q.toLowerCase()
+  const offset = page * limit
 
   const matches = Object.entries(all)
     .filter(([, asset]) => {
@@ -36,7 +37,7 @@ async function fetchPolyHaven(q: string, limit: number, baseUrl: string): Promis
         asset.tags.some((t) => t.toLowerCase().includes(lower))
       )
     })
-    .slice(0, limit)
+    .slice(offset, offset + limit)
 
   const settled = await Promise.allSettled(
     matches.map(async ([id, asset]) => {
@@ -70,8 +71,8 @@ async function fetchPolyHaven(q: string, limit: number, baseUrl: string): Promis
     .map((r) => r.value)
 }
 
-async function fetchPolyPizza(q: string, limit: number): Promise<ExternalModel[]> {
-  const { results } = await searchPolyPizza(q, { limit })
+async function fetchPolyPizza(q: string, limit: number, page: number): Promise<ExternalModel[]> {
+  const { results } = await searchPolyPizza(q, { limit, page })
 
   return results.reduce<ExternalModel[]>((acc, model: PolyPizzaModel) => {
     const glbUrl = getBestGlbUrl(model)
@@ -98,6 +99,7 @@ export async function GET(request: NextRequest) {
   const q = searchParams.get('q')?.trim()
   const source = searchParams.get('source') ?? 'all'
   const limit = Math.min(48, Math.max(1, parseInt(searchParams.get('limit') ?? '24', 10)))
+  const page = Math.max(0, parseInt(searchParams.get('page') ?? '0', 10))
 
   if (!q) {
     return NextResponse.json({ results: [], sources: [] })
@@ -123,8 +125,8 @@ export async function GET(request: NextRequest) {
   const wantPizza = (source === 'polypizza' || source === 'all') && pluginEnabled('aruct:plugin-polypizza')
 
   const [havenResult, pizzaResult] = await Promise.allSettled([
-    wantHaven ? fetchPolyHaven(q, limit, origin) : Promise.resolve(null),
-    wantPizza ? fetchPolyPizza(q, limit) : Promise.resolve(null),
+    wantHaven ? fetchPolyHaven(q, limit, page, origin) : Promise.resolve(null),
+    wantPizza ? fetchPolyPizza(q, limit, page) : Promise.resolve(null),
   ])
 
   const results: ExternalModel[] = []
@@ -149,5 +151,9 @@ export async function GET(request: NextRequest) {
     unconfigured.push('polypizza')
   }
 
-  return NextResponse.json({ results, sources, unconfigured, disabled })
+  const havenCount = havenResult.status === 'fulfilled' && havenResult.value ? havenResult.value.length : 0
+  const pizzaCount = pizzaResult.status === 'fulfilled' && pizzaResult.value ? pizzaResult.value.length : 0
+  const hasMore = havenCount >= limit || pizzaCount >= limit
+
+  return NextResponse.json({ results, sources, unconfigured, disabled, hasMore })
 }
