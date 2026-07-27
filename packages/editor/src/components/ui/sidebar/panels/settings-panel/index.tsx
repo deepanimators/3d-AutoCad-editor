@@ -389,7 +389,7 @@ export function SettingsPanel({
         : 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
 
   return (
-    <div className="flex flex-col gap-6 p-3" style="overflow-y: auto;">
+    <div className="flex flex-col gap-6 p-3" style={{ overflowY: 'auto' }}>
       {/* Scene Title & Cloud Auto-Save Status */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">

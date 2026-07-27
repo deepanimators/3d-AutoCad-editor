@@ -61,6 +61,8 @@ export async function upsertUser(params: {
       image: params.image ?? null,
       plan: 'free',
       role: 'user',
+      // Default-enable the free catalog plugins so new users see external search results
+      pluginPrefs: JSON.stringify(['aruct:plugin-polyhaven', 'aruct:plugin-polypizza']),
     })
     .returning()
 

@@ -7,7 +7,7 @@ import {
 import { searchPolyPizza, getBestGlbUrl } from '@/lib/free-sources/poly-pizza'
 import type { PolyPizzaModel } from '@/lib/free-sources/poly-pizza'
 import { getSession } from '@/lib/auth-server'
-import { getEnabledPlugins } from '@/lib/plugins/catalog'
+import { PLUGIN_CATALOG, getEnabledPlugins } from '@/lib/plugins/catalog'
 
 export const dynamic = 'force-dynamic'
 
@@ -103,11 +103,18 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ results: [], sources: [] })
   }
 
-  // Check which plugins the user has enabled — gates which external sources are searched
+  // Check which plugins the user has enabled — gates which external sources are searched.
+  // Free-tier plugins are accessible by default (no explicit enable needed).
+  // Pro/Team plugins require an explicit enable in plugin prefs.
   const session = await getSession()
   const enabledPlugins = session ? getEnabledPlugins(session.pluginPrefs) : null
+  const isFreePlugin = (id: string) =>
+    (PLUGIN_CATALOG.find((p) => p.id === id)?.requiredPlan ?? 'free') === 'free'
 
-  const pluginEnabled = (id: string) => enabledPlugins === null || enabledPlugins.includes(id)
+  const pluginEnabled = (id: string) =>
+    enabledPlugins === null ||   // no session → open
+    isFreePlugin(id) ||          // free plugins always accessible by default
+    enabledPlugins.includes(id)  // paid plugins require explicit enable
 
   const origin = request.nextUrl.origin
 
