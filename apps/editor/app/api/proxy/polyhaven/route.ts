@@ -23,6 +23,9 @@ type PHFilesResponse = {
       include?: Record<string, IncludeEntry>
     }
   }>
+  glb?: Record<string, {
+    glb?: { url?: string; size?: number }
+  }>
   [key: string]: unknown
 }
 
@@ -56,6 +59,18 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'upstream_unreachable' }, { status: 502 })
   }
 
+  // Prefer GLB — single packed file with embedded textures, no CDN 404 risk
+  const glbFormats = filesData.glb
+  if (glbFormats) {
+    const resolutions = [reqRes, ...RES_PRIORITY].filter((v, i, a) => a.indexOf(v) === i)
+    for (const res of resolutions) {
+      const url = glbFormats[res]?.glb?.url
+      if (url) {
+        return NextResponse.redirect(url)
+      }
+    }
+  }
+
   const gltfFormats = filesData.gltf
   if (!gltfFormats) {
     return NextResponse.json({ error: 'no_gltf_format' }, { status: 404 })
@@ -69,7 +84,7 @@ export async function GET(request: NextRequest) {
   for (const res of resolutions) {
     const entry = gltfFormats[res]?.gltf
     if (!entry) continue
-    const url = entry.url ?? Object.values(entry.include ?? {}).find((_, k) => String(k).endsWith('.gltf'))?.url
+    const url = entry.url ?? Object.entries(entry.include ?? {}).find(([k]) => k.endsWith('.gltf'))?.[1]?.url
     if (url) {
       gltfUrl = url
       includeMap = entry.include ?? {}
