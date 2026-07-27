@@ -144,12 +144,9 @@ export async function GET(request: NextRequest) {
   if (pizzaResult.status === 'fulfilled' && pizzaResult.value !== null) {
     results.push(...pizzaResult.value)
     if (pizzaResult.value.length > 0) sources.push('polypizza')
-  } else if (
-    pizzaResult.status === 'rejected' &&
-    pizzaResult.reason instanceof Error &&
-    pizzaResult.reason.message === 'POLY_PIZZA_API_KEY not set'
-  ) {
-    if (wantPizza) unconfigured.push('polypizza')
+  } else if (pizzaResult.status === 'rejected' && wantPizza) {
+    console.error('[external] polypizza failed:', (pizzaResult.reason as Error)?.message ?? pizzaResult.reason)
+    unconfigured.push('polypizza')
   }
 
   return NextResponse.json({ results, sources, unconfigured, disabled })

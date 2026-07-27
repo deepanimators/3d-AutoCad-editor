@@ -78,6 +78,25 @@ function EditorItemsPanel() {
       .catch(() => {})
   }, [loadDbItems])
 
+  const handleExternalSelect = (result: ExternalResult) => {
+    void fetch('/api/catalog/import', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        source: result.source,
+        sourceId: result.sourceId,
+        name: result.name,
+        description: result.description ?? undefined,
+        glbUrl: result.glbUrl,
+        thumbnailUrl: result.thumbnailUrl ?? undefined,
+        license: result.license,
+        attribution: result.attribution ?? undefined,
+        tags: result.tags ?? [],
+        category: result.category ?? undefined,
+      }),
+    }).then((r) => { if (r.ok) loadDbItems() }).catch(() => {})
+  }
+
   const handleSearchChange = (q: string) => {
     if (debounceRef.current) clearTimeout(debounceRef.current)
     if (!q.trim()) {
@@ -113,6 +132,7 @@ function EditorItemsPanel() {
       externalUnconfigured={externalUnconfigured}
       items={allItems}
       leadingTile={aiGenEnabled ? <AiGenerateTile onGenerated={loadDbItems} /> : undefined}
+      onExternalSelect={handleExternalSelect}
       onSearchChange={handleSearchChange}
       showSourceFilter={dbItems.length > 0}
       showTagFilters={false}

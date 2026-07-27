@@ -17,11 +17,13 @@ export type ExternalResult = {
   sourceId: string
   source: string
   name: string
+  description?: string | null
   thumbnailUrl?: string | null
   glbUrl: string
   license: string
   attribution?: string | null
   tags?: string[]
+  category?: string | null
 }
 
 const PLACEMENT_TAGS = new Set(['floor', 'wall', 'ceiling', 'countertop'])
@@ -38,6 +40,7 @@ export function ItemsPanel({
   externalResults,
   externalUnconfigured,
   externalDisabled,
+  onExternalSelect,
 }: {
   items?: AssetInput[]
   /** Called when the search query changes (community edition uses this for server-side search) */
@@ -78,6 +81,8 @@ export function ItemsPanel({
   externalUnconfigured?: string[]
   /** Source keys that are disabled because the user hasn't enabled the plugin. */
   externalDisabled?: string[]
+  /** Called when user selects an external result (fire-and-forget import). */
+  onExternalSelect?: (result: ExternalResult) => void
 }) {
   // When the embedder supplies a function taxonomy, the hierarchical browse
   // replaces the legacy `furnishTools` category tabs entirely.
@@ -99,6 +104,7 @@ export function ItemsPanel({
     externalResults={externalResults}
     externalUnconfigured={externalUnconfigured}
     externalDisabled={externalDisabled}
+    onExternalSelect={onExternalSelect}
     items={items}
     leadingTile={leadingTile}
     onSearchChange={onSearchChange}
@@ -119,6 +125,7 @@ function LegacyItemsPanel({
   externalResults,
   externalUnconfigured,
   externalDisabled,
+  onExternalSelect,
 }: {
   items?: AssetInput[]
   onSearchChange?: (query: string) => void
@@ -130,6 +137,7 @@ function LegacyItemsPanel({
   externalResults?: ExternalResult[] | null
   externalUnconfigured?: string[]
   externalDisabled?: string[]
+  onExternalSelect?: (result: ExternalResult) => void
 }) {
   const mode = useEditor((s) => s.mode)
   const catalogCategory = useEditor((s) => s.catalogCategory)
@@ -462,6 +470,7 @@ function LegacyItemsPanel({
               <ExternalResultsSection
                 activeCategory={activeCategory.catalogCategory}
                 disabled={externalDisabled}
+                onExternalSelect={onExternalSelect}
                 results={externalResults}
                 setMode={setMode}
                 setSelectedItem={setSelectedItem}
@@ -692,6 +701,7 @@ function ExternalResultsSection({
   setMode,
   unconfigured,
   disabled,
+  onExternalSelect,
 }: {
   results: ExternalResult[] | null
   activeCategory: string
@@ -700,6 +710,7 @@ function ExternalResultsSection({
   setMode: (mode: Mode) => void
   unconfigured?: string[]
   disabled?: string[]
+  onExternalSelect?: (result: ExternalResult) => void
 }) {
   const handleSelect = (result: ExternalResult) => {
     triggerSFX('sfx:menu-click')
@@ -719,6 +730,7 @@ function ExternalResultsSection({
     setSelectedItem(asset)
     setTool('item')
     setMode('build' as Mode)
+    onExternalSelect?.(result)
   }
 
   return (

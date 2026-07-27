@@ -3,19 +3,31 @@ import { getSession } from '@/lib/auth-server'
 import { z } from 'zod'
 import { createTripoTask, waitForTripoTask } from '@/lib/tripo-client'
 import { db } from '@/lib/db/client'
-import { globalModels } from '@/lib/db/schema'
+import { globalModels, users } from '@/lib/db/schema'
+import { eq } from 'drizzle-orm'
+import { getEnabledPlugins } from '@/lib/plugins/catalog'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 120
 
 const schema = z.object({
   prompt: z.string().min(1).max(500),
-  modelVersion: z.string().default('v2.5'),
 })
 
 export async function POST(request: NextRequest) {
   const session = await getSession()
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
+  // Check plugin is enabled for this user
+  const [userRow] = await db.select({ pluginPrefs: users.pluginPrefs }).from(users).where(eq(users.id, session.id))
+  const enabledPlugins = getEnabledPlugins(userRow?.pluginPrefs ?? '[]')
+  if (!enabledPlugins.includes('aruct:plugin-ai-gen')) {
+    return NextResponse.json({ error: 'AI Generation plugin not enabled' }, { status: 403 })
+  }
+
+  if (!process.env.TRIPO_API_KEY) {
+    return NextResponse.json({ error: 'AI generation not configured' }, { status: 503 })
+  }
 
   const body = await request.json().catch(() => null)
   const parsed = schema.safeParse(body)
@@ -23,18 +35,27 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Invalid input' }, { status: 400 })
   }
 
-  const { prompt, modelVersion } = parsed.data
+  const { prompt } = parsed.data
 
-  const taskId = await createTripoTask('text_to_model', {
-    prompt,
-    model_version: modelVersion,
-  })
+  let taskId: string
+  try {
+    taskId = await createTripoTask('text_to_model', { prompt })
+  } catch (err) {
+    console.error('[tripo/generate] createTripoTask failed:', err)
+    return NextResponse.json({ error: 'Failed to start generation' }, { status: 502 })
+  }
 
-  const task = await waitForTripoTask(taskId)
+  let task
+  try {
+    task = await waitForTripoTask(taskId)
+  } catch (err) {
+    console.error('[tripo/generate] waitForTripoTask failed:', err)
+    return NextResponse.json({ error: 'Generation failed or timed out', taskId }, { status: 502 })
+  }
 
   const modelUrl = task.output?.model
   if (!modelUrl) {
-    return NextResponse.json({ error: 'No model output' }, { status: 500 })
+    return NextResponse.json({ error: 'No model output from generation' }, { status: 500 })
   }
 
   void (async () => {
