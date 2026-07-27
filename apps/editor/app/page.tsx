@@ -238,14 +238,6 @@ const SIDEBAR_TABS = [
     mobileIcon: <Plus className="h-5 w-5" />,
     icon: <Plus className="h-5 w-5" />,
   },
-  {
-    id: 'collab',
-    label: 'Collab',
-    component: CollabPanel,
-    mobileDefaultSnap: 0.5,
-    mobileIcon: <Users className="h-5 w-5" />,
-    icon: <Users className="h-5 w-5" />,
-  },
 ]
 
 const PROJECT_ID = 'local-editor'
