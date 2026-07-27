@@ -83,11 +83,11 @@ async function fetchPolyPizza(q: string, limit: number): Promise<ExternalModel[]
       description: model.Description ?? null,
       glbUrl,
       thumbnailUrl: model.Thumbnail ?? null,
-      license: model.License,
-      attribution: model.Creator ?? null,
+      license: model.Licence,
+      attribution: model.Creator?.Username ?? null,
       tags: model.Tags ?? [],
       category: model.Category ?? null,
-      polyCount: model.TriangleCount ?? null,
+      polyCount: model['Tri Count'] ?? null,
     })
     return acc
   }, [])
