@@ -46,7 +46,7 @@ A key rule: **`packages/viewer` must never import from `apps/editor`**. The view
 
 ### Building a plugin
 
-New node kinds and sidebar panels can ship as a plugin instead of editing the built-ins. Read [Create a plugin](https://editor.aruct.app/docs/developers/plugins) for the contract, and clone [`aruct/plugin-trees`](https://github.com/aruct/plugin-trees) as a worked example.
+New node kinds and sidebar panels can ship as a plugin instead of editing the built-ins. Read [Create a plugin](https://aruct.com/docs/developers/plugins) for the contract, and clone [`aruct/plugin-trees`](https://github.com/aruct/plugin-trees) as a worked example.
 
 ## Submitting a PR
 
