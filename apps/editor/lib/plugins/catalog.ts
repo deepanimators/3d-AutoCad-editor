@@ -152,7 +152,7 @@ export const PLUGIN_CATALOG: PluginEntry[] = [
       'Work on the same scene with multiple team members at the same time. See live cursors, selections, and edits from collaborators in real-time. Powered by operational transforms with automatic conflict resolution.',
     category: 'collaboration',
     requiredPlan: 'team',
-    status: 'coming_soon',
+    status: 'beta',
     icon: '👥',
     features: [
       'Simultaneous multi-user editing',

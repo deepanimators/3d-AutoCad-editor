@@ -12,7 +12,6 @@ import { CollabPanel } from '@/components/collab-panel'
 import { SettingsPanel } from '@/components/settings-panel'
 import { SunStudyPanel } from '@/components/sun-study-panel'
 import { BuildTab } from '@/components/build-tab'
-import { SettingsPanel } from '@/components/settings-panel'
 import { UnifiedPluginsPanel } from '@/components/unified-plugins-panel'
 import { EditorTopBar } from '@/components/editor-top-bar'
 import { FloorplanConstructionPreflight } from '@/components/floorplan-construction-preflight'
@@ -238,6 +237,14 @@ const SIDEBAR_TABS = [
     mobileDefaultSnap: 0.5,
     mobileIcon: <Plus className="h-5 w-5" />,
     icon: <Plus className="h-5 w-5" />,
+  },
+  {
+    id: 'collab',
+    label: 'Collab',
+    component: CollabPanel,
+    mobileDefaultSnap: 0.5,
+    mobileIcon: <Users className="h-5 w-5" />,
+    icon: <Users className="h-5 w-5" />,
   },
 ]
 
