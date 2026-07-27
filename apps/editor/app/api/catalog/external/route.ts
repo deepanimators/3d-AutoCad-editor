@@ -111,10 +111,11 @@ export async function GET(request: NextRequest) {
   const isFreePlugin = (id: string) =>
     (PLUGIN_CATALOG.find((p) => p.id === id)?.requiredPlan ?? 'free') === 'free'
 
-  const pluginEnabled = (id: string) =>
-    enabledPlugins === null ||   // no session → open
-    isFreePlugin(id) ||          // free plugins always accessible by default
-    enabledPlugins.includes(id)  // paid plugins require explicit enable
+  const pluginEnabled = (id: string) => {
+    if (enabledPlugins === null) return true        // no session → open
+    if (enabledPlugins.length === 0) return isFreePlugin(id) // uninitialized prefs → free plugins on
+    return enabledPlugins.includes(id)              // initialized prefs → respect exactly
+  }
 
   const origin = request.nextUrl.origin
 

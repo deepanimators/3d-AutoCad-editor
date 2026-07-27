@@ -13,7 +13,11 @@ export async function GET() {
   if (!session) return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
 
   const [user] = await db.select({ pluginPrefs: users.pluginPrefs }).from(users).where(eq(users.id, session.id))
-  const enabled = getEnabledPlugins(user?.pluginPrefs ?? '[]')
+  const rawPrefs = user?.pluginPrefs ?? '[]'
+  const defaultFree = PLUGIN_CATALOG
+    .filter((p) => p.requiredPlan === 'free' && !p.builtIn)
+    .map((p) => p.id)
+  const enabled = rawPrefs === '[]' ? defaultFree : getEnabledPlugins(rawPrefs)
 
   return NextResponse.json({ enabled, plan: session.plan })
 }
@@ -43,7 +47,12 @@ export async function PUT(request: NextRequest) {
   }
 
   const [user] = await db.select({ pluginPrefs: users.pluginPrefs }).from(users).where(eq(users.id, session.id))
-  const current = getEnabledPlugins(user?.pluginPrefs ?? '[]')
+  const rawPrefs = user?.pluginPrefs ?? '[]'
+  // Seed free plugins on first interaction so the list is never missing them by accident
+  const defaultFree = PLUGIN_CATALOG
+    .filter((p) => p.requiredPlan === 'free' && !p.builtIn)
+    .map((p) => p.id)
+  const current = rawPrefs === '[]' ? defaultFree : getEnabledPlugins(rawPrefs)
 
   const next = enabled
     ? Array.from(new Set([...current, pluginId]))
