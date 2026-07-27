@@ -30,16 +30,27 @@ export async function POST(request: Request) {
   }
 
   // Upsert user record in Neon on first sign-in
-  await upsertUser({
-    uid: decoded.uid,
-    email: decoded.email ?? '',
-    name: decoded.name ?? null,
-    image: decoded.picture ?? null,
-  })
+  try {
+    await upsertUser({
+      uid: decoded.uid,
+      email: decoded.email ?? '',
+      name: decoded.name ?? null,
+      image: decoded.picture ?? null,
+    })
+  } catch (err) {
+    console.error('[session] upsertUser failed:', err)
+    return Response.json({ error: 'db_error' }, { status: 500 })
+  }
 
-  const sessionCookie = await auth.createSessionCookie(idToken, {
-    expiresIn: SESSION_DURATION_MS,
-  })
+  let sessionCookie: string
+  try {
+    sessionCookie = await auth.createSessionCookie(idToken, {
+      expiresIn: SESSION_DURATION_MS,
+    })
+  } catch (err) {
+    console.error('[session] createSessionCookie failed:', err)
+    return Response.json({ error: 'cookie_error' }, { status: 500 })
+  }
 
   const cookieStore = await cookies()
   cookieStore.set(SESSION_COOKIE, sessionCookie, {

@@ -136,6 +136,7 @@ try {
   await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "ai_generations_reset_at" timestamptz`
   await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "vision_calls_this_month" integer DEFAULT 0 NOT NULL`
   await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "vision_calls_reset_at" timestamptz`
+  await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "plugin_prefs" text DEFAULT '[]' NOT NULL`
   console.log('✓ users AI usage columns ready')
 
   // Sprint 3: Drop users.role enum constraint → allow custom roles
