@@ -7,7 +7,29 @@ const SESSION_DURATION_MS = 14 * 24 * 60 * 60 * 1000 // 14 days
 
 export const dynamic = 'force-dynamic'
 
+// Run once per Lambda cold start — idempotent so safe to re-run on every cold start
+let coldStartMigrationDone = false
+async function ensureMigrations() {
+  if (coldStartMigrationDone) return
+  coldStartMigrationDone = true
+  if (!process.env.DATABASE_URL) return
+  try {
+    const { neon } = await import('@neondatabase/serverless')
+    const sql = neon(process.env.DATABASE_URL)
+    await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "plugin_prefs" text DEFAULT '[]' NOT NULL`
+    await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "ai_generations_this_month" integer DEFAULT 0 NOT NULL`
+    await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "ai_generations_reset_at" timestamptz`
+    await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "vision_calls_this_month" integer DEFAULT 0 NOT NULL`
+    await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "vision_calls_reset_at" timestamptz`
+    await sql`ALTER TABLE scenes ADD COLUMN IF NOT EXISTS "org_id" text`
+  } catch (err) {
+    console.error('[session] cold-start migration failed:', err)
+  }
+}
+
 export async function POST(request: Request) {
+  await ensureMigrations()
+
   let idToken: string | undefined
   try {
     const body = await request.json()
