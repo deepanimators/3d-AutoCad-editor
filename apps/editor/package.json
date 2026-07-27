@@ -45,7 +45,8 @@
     "tailwind-merge": "^3.5.0",
     "tailwindcss": "^4.2.1",
     "three": "^0.185.0",
-    "zod": "^4.3.5"
+    "zod": "^4.3.5",
+    "zustand": "^5"
   },
   "devDependencies": {
     "@aruct/typescript-config": "*",

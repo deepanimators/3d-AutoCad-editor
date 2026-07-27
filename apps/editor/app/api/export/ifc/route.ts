@@ -62,7 +62,7 @@ export async function GET(request: NextRequest) {
 
   const safeName = row.name.replace(/[^a-zA-Z0-9_\- ]/g, '').trim() || 'scene'
 
-  return new Response(ifcBytes, {
+  return new Response(ifcBytes.buffer as ArrayBuffer, {
     status: 200,
     headers: {
       'Content-Type': 'application/octet-stream',

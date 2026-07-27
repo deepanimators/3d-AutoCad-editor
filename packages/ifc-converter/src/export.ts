@@ -325,9 +325,9 @@ export function exportSceneToIfc(
         const info = storeyById.get(current.id)
         if (info) return info
       }
-      const parentId = (current as { parentId?: string | null }).parentId
+      const parentId: string | null | undefined = (current as { parentId?: string | null }).parentId
       if (!parentId) break
-      current = nodes[parentId]
+      current = (nodes as Record<string, AnyNode>)[parentId]
     }
     // Also check metadata.levelId
     const levelId = (node.metadata as { levelId?: string } | undefined)?.levelId
@@ -516,8 +516,9 @@ export function exportSceneToIfc(
 
     // If parent is a wall, get the wall's position
     const parentId = (node as { parentId?: string | null }).parentId
-    if (parentId && nodes[parentId]?.type === 'wall') {
-      const parentWall = nodes[parentId] as {
+    const nodesMap = nodes as Record<string, AnyNode>
+    if (parentId && nodesMap[parentId]?.type === 'wall') {
+      const parentWall = nodesMap[parentId] as {
         start: [number, number]
         end: [number, number]
       }
@@ -608,8 +609,9 @@ export function exportSceneToIfc(
     let worldZ = (pos[1] ?? 0) - height / 2 // sill height
 
     const parentId = (node as { parentId?: string | null }).parentId
-    if (parentId && nodes[parentId]?.type === 'wall') {
-      const parentWall = nodes[parentId] as {
+    const nodesMapW = nodes as Record<string, AnyNode>
+    if (parentId && nodesMapW[parentId]?.type === 'wall') {
+      const parentWall = nodesMapW[parentId] as {
         start: [number, number]
         end: [number, number]
       }

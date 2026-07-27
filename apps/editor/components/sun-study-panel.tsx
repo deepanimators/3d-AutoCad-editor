@@ -1,6 +1,6 @@
 'use client'
 
-import useViewer from '@aruct/viewer'
+import { useViewer } from '@aruct/viewer'
 import { useEffect, useRef, useState } from 'react'
 
 const CITY_PRESETS = [
