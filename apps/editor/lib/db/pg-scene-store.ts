@@ -1,6 +1,9 @@
 import { createHash } from 'node:crypto'
-import { and, desc, eq } from 'drizzle-orm'
+import { and, desc, eq, gt } from 'drizzle-orm'
 import type {
+  SceneEvent,
+  SceneEventAppendOptions,
+  SceneEventListOptions,
   SceneListOptions,
   SceneMeta,
   SceneMutateOptions,
@@ -16,7 +19,7 @@ import {
   sanitizeSlug,
 } from '@aruct/mcp/storage'
 import { db } from './client'
-import { scenes, type SceneRow } from './schema'
+import { sceneEvents, scenes, type SceneRow } from './schema'
 
 const DEFAULT_MAX_SCENE_BYTES = 10 * 1024 * 1024
 
@@ -211,5 +214,54 @@ export class PgSceneStore implements SceneStore {
 
     const [updated] = await db.select().from(scenes).where(eq(scenes.id, id))
     return rowToMeta(updated!)
+  }
+
+  async appendSceneEvent(opts: SceneEventAppendOptions): Promise<SceneEvent> {
+    const [scene] = await db.select({ id: scenes.id }).from(scenes).where(eq(scenes.id, opts.sceneId))
+    if (!scene) throw new SceneNotFoundError()
+
+    const graphJson = JSON.stringify(opts.graph)
+    const now = new Date().toISOString()
+
+    const [inserted] = await db
+      .insert(sceneEvents)
+      .values({
+        sceneId: opts.sceneId,
+        version: opts.version,
+        kind: opts.kind,
+        graphJson,
+        createdAt: now,
+      })
+      .returning()
+
+    return {
+      eventId: inserted!.eventId,
+      sceneId: opts.sceneId,
+      version: opts.version,
+      kind: opts.kind,
+      createdAt: now,
+      graph: opts.graph,
+    }
+  }
+
+  async listSceneEvents(sceneId: string, opts: SceneEventListOptions = {}): Promise<SceneEvent[]> {
+    const afterEventId = Math.max(0, opts.afterEventId ?? 0)
+    const limit = Math.min(100, Math.max(1, opts.limit ?? 100))
+
+    const rows = await db
+      .select()
+      .from(sceneEvents)
+      .where(and(eq(sceneEvents.sceneId, sceneId), gt(sceneEvents.eventId, afterEventId)))
+      .orderBy(sceneEvents.eventId)
+      .limit(limit)
+
+    return rows.map((row) => ({
+      eventId: row.eventId,
+      sceneId: row.sceneId,
+      version: row.version,
+      kind: row.kind,
+      createdAt: row.createdAt,
+      graph: JSON.parse(row.graphJson) as SceneEvent['graph'],
+    }))
   }
 }

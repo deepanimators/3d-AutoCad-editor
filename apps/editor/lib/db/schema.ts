@@ -1,4 +1,4 @@
-import { boolean, integer, text, timestamp, pgTable, unique } from 'drizzle-orm/pg-core'
+import { boolean, integer, serial, text, timestamp, pgTable, unique } from 'drizzle-orm/pg-core'
 
 export const users = pgTable('users', {
   id: text('id').primaryKey(),                         // Firebase UID
@@ -215,3 +215,14 @@ export const globalModels = pgTable('global_models', {
 
 export type GlobalModelRow = typeof globalModels.$inferSelect
 export type NewGlobalModelRow = typeof globalModels.$inferInsert
+
+export const sceneEvents = pgTable('scene_events', {
+  eventId: serial('event_id').primaryKey(),
+  sceneId: text('scene_id').notNull(),
+  version: integer('version').notNull(),
+  kind: text('kind').notNull(),
+  graphJson: text('graph_json').notNull(),
+  createdAt: timestamp('created_at', { mode: 'string' }).notNull().defaultNow(),
+})
+
+export type SceneEventRow = typeof sceneEvents.$inferSelect

@@ -6,6 +6,7 @@ import { Hammer, Layers, Package, Plus, Settings } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { AiGenerateTile } from '@/components/ai-generate-tile'
 import { BuildTab } from '@/components/build-tab'
 import { UnifiedPluginsPanel } from '@/components/unified-plugins-panel'
 import { EditorTopBar } from '@/components/editor-top-bar'
@@ -53,10 +54,12 @@ function EditorItemsPanel() {
     undefined,
   )
   const [externalUnconfigured, setExternalUnconfigured] = useState<string[]>([])
+  const [externalDisabled, setExternalDisabled] = useState<string[]>([])
   const [dbItems, setDbItems] = useState<AssetInput[]>([])
+  const [enabledPlugins, setEnabledPlugins] = useState<string[]>([])
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  useEffect(() => {
+  const loadDbItems = useCallback(() => {
     fetch('/api/catalog?limit=48')
       .then((r) => r.ok ? r.json() : Promise.reject(r.status))
       .then((data: { models: CatalogApiModel[] }) => {
@@ -65,11 +68,22 @@ function EditorItemsPanel() {
       .catch(() => {})
   }, [])
 
+  useEffect(() => {
+    loadDbItems()
+    fetch('/api/user/plugins')
+      .then((r) => r.ok ? r.json() : null)
+      .then((data: { enabled?: string[] } | null) => {
+        if (data?.enabled) setEnabledPlugins(data.enabled)
+      })
+      .catch(() => {})
+  }, [loadDbItems])
+
   const handleSearchChange = (q: string) => {
     if (debounceRef.current) clearTimeout(debounceRef.current)
     if (!q.trim()) {
       setExternalResults(undefined)
       setExternalUnconfigured([])
+      setExternalDisabled([])
       return
     }
     setExternalResults(null) // loading
@@ -77,23 +91,28 @@ function EditorItemsPanel() {
       try {
         const res = await fetch(`/api/catalog/external?q=${encodeURIComponent(q)}&limit=12`)
         if (!res.ok) throw new Error('fetch failed')
-        const data = (await res.json()) as { results: ExternalResult[]; unconfigured?: string[] }
+        const data = (await res.json()) as { results: ExternalResult[]; unconfigured?: string[]; disabled?: string[] }
         setExternalResults(data.results ?? [])
         setExternalUnconfigured(data.unconfigured ?? [])
+        setExternalDisabled(data.disabled ?? [])
       } catch {
         setExternalResults([])
         setExternalUnconfigured([])
+        setExternalDisabled([])
       }
     }, 400)
   }
 
   const allItems = dbItems.length > 0 ? [...CATALOG_ITEMS, ...dbItems] : undefined
+  const aiGenEnabled = enabledPlugins.includes('aruct:plugin-ai-gen')
 
   return (
     <ItemsPanel
+      externalDisabled={externalDisabled}
       externalResults={externalResults}
       externalUnconfigured={externalUnconfigured}
       items={allItems}
+      leadingTile={aiGenEnabled ? <AiGenerateTile onGenerated={loadDbItems} /> : undefined}
       onSearchChange={handleSearchChange}
       showSourceFilter={dbItems.length > 0}
       showTagFilters={false}

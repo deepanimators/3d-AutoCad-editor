@@ -6,6 +6,8 @@ import {
 } from '@/lib/free-sources/poly-haven'
 import { searchPolyPizza, getBestGlbUrl } from '@/lib/free-sources/poly-pizza'
 import type { PolyPizzaModel } from '@/lib/free-sources/poly-pizza'
+import { getSession } from '@/lib/auth-server'
+import { getEnabledPlugins } from '@/lib/plugins/catalog'
 
 export const dynamic = 'force-dynamic'
 
@@ -101,10 +103,16 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ results: [], sources: [] })
   }
 
+  // Check which plugins the user has enabled — gates which external sources are searched
+  const session = await getSession()
+  const enabledPlugins = session ? getEnabledPlugins(session.pluginPrefs) : null
+
+  const pluginEnabled = (id: string) => enabledPlugins === null || enabledPlugins.includes(id)
+
   const origin = request.nextUrl.origin
 
-  const wantHaven = source === 'polyhaven' || source === 'all'
-  const wantPizza = source === 'polypizza' || source === 'all'
+  const wantHaven = (source === 'polyhaven' || source === 'all') && pluginEnabled('aruct:plugin-polyhaven')
+  const wantPizza = (source === 'polypizza' || source === 'all') && pluginEnabled('aruct:plugin-polypizza')
 
   const [havenResult, pizzaResult] = await Promise.allSettled([
     wantHaven ? fetchPolyHaven(q, limit, origin) : Promise.resolve(null),
@@ -114,6 +122,11 @@ export async function GET(request: NextRequest) {
   const results: ExternalModel[] = []
   const sources: string[] = []
   const unconfigured: string[] = []
+  const disabled: string[] = []
+
+  // Track which sources were skipped due to plugin not being enabled
+  if ((source === 'polyhaven' || source === 'all') && !wantHaven) disabled.push('polyhaven')
+  if ((source === 'polypizza' || source === 'all') && !wantPizza) disabled.push('polypizza')
 
   if (havenResult.status === 'fulfilled' && havenResult.value !== null) {
     results.push(...havenResult.value)
@@ -131,5 +144,5 @@ export async function GET(request: NextRequest) {
     if (wantPizza) unconfigured.push('polypizza')
   }
 
-  return NextResponse.json({ results, sources, unconfigured })
+  return NextResponse.json({ results, sources, unconfigured, disabled })
 }

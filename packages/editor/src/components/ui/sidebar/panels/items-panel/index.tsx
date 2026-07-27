@@ -37,6 +37,7 @@ export function ItemsPanel({
   showTagFilters = true,
   externalResults,
   externalUnconfigured,
+  externalDisabled,
 }: {
   items?: AssetInput[]
   /** Called when the search query changes (community edition uses this for server-side search) */
@@ -75,6 +76,8 @@ export function ItemsPanel({
   externalResults?: ExternalResult[] | null
   /** Source keys (e.g. 'polypizza') that are not configured in the environment. */
   externalUnconfigured?: string[]
+  /** Source keys that are disabled because the user hasn't enabled the plugin. */
+  externalDisabled?: string[]
 }) {
   // When the embedder supplies a function taxonomy, the hierarchical browse
   // replaces the legacy `furnishTools` category tabs entirely.
@@ -95,6 +98,7 @@ export function ItemsPanel({
     emptyState={emptyState}
     externalResults={externalResults}
     externalUnconfigured={externalUnconfigured}
+    externalDisabled={externalDisabled}
     items={items}
     leadingTile={leadingTile}
     onSearchChange={onSearchChange}
@@ -114,6 +118,7 @@ function LegacyItemsPanel({
   showTagFilters = true,
   externalResults,
   externalUnconfigured,
+  externalDisabled,
 }: {
   items?: AssetInput[]
   onSearchChange?: (query: string) => void
@@ -124,6 +129,7 @@ function LegacyItemsPanel({
   showTagFilters?: boolean
   externalResults?: ExternalResult[] | null
   externalUnconfigured?: string[]
+  externalDisabled?: string[]
 }) {
   const mode = useEditor((s) => s.mode)
   const catalogCategory = useEditor((s) => s.catalogCategory)
@@ -455,6 +461,7 @@ function LegacyItemsPanel({
             {search && externalResults !== undefined && (
               <ExternalResultsSection
                 activeCategory={activeCategory.catalogCategory}
+                disabled={externalDisabled}
                 results={externalResults}
                 setMode={setMode}
                 setSelectedItem={setSelectedItem}
@@ -684,6 +691,7 @@ function ExternalResultsSection({
   setTool,
   setMode,
   unconfigured,
+  disabled,
 }: {
   results: ExternalResult[] | null
   activeCategory: string
@@ -691,6 +699,7 @@ function ExternalResultsSection({
   setTool: (tool: string) => void
   setMode: (mode: Mode) => void
   unconfigured?: string[]
+  disabled?: string[]
 }) {
   const handleSelect = (result: ExternalResult) => {
     triggerSFX('sfx:menu-click')
@@ -728,6 +737,11 @@ function ExternalResultsSection({
       ) : results.length === 0 ? (
         <div className="py-2 text-center text-muted-foreground text-xs space-y-1">
           <p>No external results</p>
+          {disabled && disabled.length > 0 && (
+            <p className="text-[10px]">
+              Enable {disabled.map((s) => SOURCE_LABELS[s] ?? s).join(', ')} in Plugins settings
+            </p>
+          )}
           {unconfigured && unconfigured.length > 0 && (
             <p className="text-[10px]">
               {unconfigured.map((s) => SOURCE_LABELS[s] ?? s).join(', ')} not configured

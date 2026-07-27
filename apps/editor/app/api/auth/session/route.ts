@@ -22,6 +22,15 @@ async function ensureMigrations() {
     await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "vision_calls_this_month" integer DEFAULT 0 NOT NULL`
     await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "vision_calls_reset_at" timestamptz`
     await sql`ALTER TABLE scenes ADD COLUMN IF NOT EXISTS "org_id" text`
+    await sql`CREATE TABLE IF NOT EXISTS "scene_events" (
+      "event_id" serial PRIMARY KEY,
+      "scene_id" text NOT NULL,
+      "version" integer NOT NULL,
+      "kind" text NOT NULL,
+      "graph_json" text NOT NULL,
+      "created_at" timestamptz NOT NULL DEFAULT now()
+    )`
+    await sql`CREATE INDEX IF NOT EXISTS "scene_events_scene_id_idx" ON "scene_events" ("scene_id", "event_id")`
   } catch (err) {
     console.error('[session] cold-start migration failed:', err)
   }
