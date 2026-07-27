@@ -134,7 +134,7 @@ export const PLUGIN_CATALOG: PluginEntry[] = [
       'Export your Aruct scene to Industry Foundation Classes (IFC) format, enabling handoff to BIM tools like Revit, ArchiCAD, and BIMx. Preserves element types, materials, and geometry with full BIM metadata.',
     category: 'export',
     requiredPlan: 'team',
-    status: 'coming_soon',
+    status: 'stable',
     icon: '🏛️',
     features: [
       'IFC 2x3 and IFC 4 export',

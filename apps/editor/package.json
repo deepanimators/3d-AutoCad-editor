@@ -16,6 +16,7 @@
   "dependencies": {
     "@aruct/core": "*",
     "@aruct/editor": "*",
+    "@aruct/ifc-converter": "*",
     "@aruct/mcp": "*",
     "@aruct/nodes": "*",
     "@aruct/plugin-trees": "github:pascalorg/plugin-trees#56d978cd9b409b716207b3f3d269455d3cd6f067",

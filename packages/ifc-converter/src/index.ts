@@ -23,6 +23,9 @@ export type {
   IfcConversionSimplificationStats,
 } from './cleanup'
 
+export { exportSceneToIfc } from './export'
+export type { AructToIfcOptions } from './export'
+
 export type AructNode = AnyNode
 
 export interface AructSceneGraph {
