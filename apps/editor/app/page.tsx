@@ -2,11 +2,12 @@
 
 import { type AssetInput, useScene } from '@aruct/core'
 import { CATALOG_ITEMS, Editor, type ExternalResult, ItemsPanel } from '@aruct/editor'
-import { Hammer, Layers, Package, Plus, Settings } from 'lucide-react'
+import { BarChart2, Hammer, Layers, Package, Plus, Settings } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { AiGenerateTile } from '@/components/ai-generate-tile'
+import { BomPanel } from '@/components/bom-panel'
 import { BuildTab } from '@/components/build-tab'
 import { UnifiedPluginsPanel } from '@/components/unified-plugins-panel'
 import { EditorTopBar } from '@/components/editor-top-bar'
@@ -193,6 +194,14 @@ const SIDEBAR_TABS = [
     mobileDefaultSnap: 0.5,
     mobileIcon: <Package className="h-5 w-5" />,
     icon: <Package className="h-5 w-5" />,
+  },
+  {
+    id: 'bom',
+    label: 'BOM',
+    component: BomPanel,
+    mobileDefaultSnap: 0.5,
+    mobileIcon: <BarChart2 className="h-5 w-5" />,
+    icon: <BarChart2 className="h-5 w-5" />,
   },
   {
     id: 'settings',

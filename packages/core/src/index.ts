@@ -161,6 +161,11 @@ export {
   type ZoneQuantityValue,
 } from './lib/zone-quantities'
 export {
+  computeSceneBom,
+  type BomLineItem,
+  type BomReport,
+} from './lib/scene-bom'
+export {
   getCatalogMaterialById,
   getDynamicLibraryMaterials,
   getLibraryMaterialIdFromRef,

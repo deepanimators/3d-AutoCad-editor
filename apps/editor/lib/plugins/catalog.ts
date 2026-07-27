@@ -116,7 +116,7 @@ export const PLUGIN_CATALOG: PluginEntry[] = [
       'Automatically count and quantify all building elements in your scene. Export a Bill of Materials (BOM) as CSV or PDF for use in cost estimation, procurement, and construction documentation.',
     category: 'export',
     requiredPlan: 'pro',
-    status: 'coming_soon',
+    status: 'stable',
     icon: '📋',
     features: [
       'Auto-count walls, doors, windows',
