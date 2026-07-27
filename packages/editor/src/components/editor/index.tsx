@@ -1364,6 +1364,10 @@ export default function Editor({
       return <Component />
     }
 
+    // Explicit sidebarTabs win on id collisions — dedup so a host-provided
+    // 'plugins' tab overrides the built-in pluginsManagerPanel without
+    // producing a duplicate entry in the rail.
+    const tabBarSeenIds = new Set<string>()
     const tabBarTabs = [
       ...(sidebarTabs?.map(({ id, label, mobileDefaultSnap, mobileIcon, icon }) => ({
         id,
@@ -1381,7 +1385,11 @@ export default function Editor({
         mobileIcon: p.icon,
         icon: p.icon,
       })),
-    ]
+    ].filter((t) => {
+      if (tabBarSeenIds.has(t.id)) return false
+      tabBarSeenIds.add(t.id)
+      return true
+    })
 
     return (
       <>

@@ -2,11 +2,12 @@
 
 import { type AssetInput, useScene } from '@aruct/core'
 import { CATALOG_ITEMS, Editor, type ExternalResult, ItemsPanel } from '@aruct/editor'
-import { Hammer, Layers, Package, Settings } from 'lucide-react'
+import { Hammer, Layers, Package, Plus, Settings } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { BuildTab } from '@/components/build-tab'
+import { UnifiedPluginsPanel } from '@/components/unified-plugins-panel'
 import { EditorTopBar } from '@/components/editor-top-bar'
 import { FloorplanConstructionPreflight } from '@/components/floorplan-construction-preflight'
 import { RailAccountNav } from '@/components/rail-account-nav'
@@ -132,6 +133,14 @@ const SIDEBAR_TABS = [
     mobileDefaultSnap: 0.5,
     mobileIcon: <Settings className="h-5 w-5" />,
     icon: <Settings className="h-5 w-5" />,
+  },
+  {
+    id: 'plugins',
+    label: 'Plugins',
+    component: UnifiedPluginsPanel,
+    mobileDefaultSnap: 0.5,
+    mobileIcon: <Plus className="h-5 w-5" />,
+    icon: <Plus className="h-5 w-5" />,
   },
 ]
 

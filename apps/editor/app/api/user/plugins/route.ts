@@ -15,7 +15,7 @@ export async function GET() {
   const [user] = await db.select({ pluginPrefs: users.pluginPrefs }).from(users).where(eq(users.id, session.id))
   const enabled = getEnabledPlugins(user?.pluginPrefs ?? '[]')
 
-  return NextResponse.json({ enabled })
+  return NextResponse.json({ enabled, plan: session.plan })
 }
 
 const schema = z.object({
