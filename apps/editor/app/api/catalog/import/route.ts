@@ -98,8 +98,8 @@ export async function POST(request: NextRequest) {
   return NextResponse.json({
     model: {
       ...inserted,
-      glbUrl: `${S3_BASE}/${inserted.s3Key}`,
-      thumbnailUrl: inserted.s3Thumbnail ? `${S3_BASE}/${inserted.s3Thumbnail}` : null,
+      glbUrl: resolveGlbUrl(inserted.s3Key),
+      thumbnailUrl: inserted.s3Thumbnail ? resolveGlbUrl(inserted.s3Thumbnail) : null,
       isNew: true,
       tags,
     },

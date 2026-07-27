@@ -8,7 +8,7 @@ import { editorHostPanelRegistry } from '../../../../lib/plugin-panels'
 import { Button } from '../../primitives/button'
 
 const PLUGIN_AUTHORING_URL =
-  'https://editor.aruct.app/docs/developers/plugins'
+  'https://github.com/deepanimators/3d-AutoCad-editor/blob/main/CONTRIBUTING.md'
 
 function renderPluginIcon(ref: IconRef): ReactNode {
   if (ref.kind === 'url') {
@@ -202,7 +202,14 @@ export function PluginsPanel() {
         })}
       </div>
 
-      <div className="mt-auto pt-6">
+      <div className="mt-auto pt-6 flex flex-col gap-2">
+        <a
+          className="inline-flex items-center gap-1.5 text-sidebar-foreground/70 text-sm underline-offset-4 hover:text-sidebar-foreground hover:underline"
+          href="/plugins"
+        >
+          Manage catalog &amp; service plugins
+          <ExternalLink className="h-3.5 w-3.5" />
+        </a>
         <a
           className="inline-flex items-center gap-1.5 text-sidebar-foreground/70 text-sm underline-offset-4 hover:text-sidebar-foreground hover:underline"
           href={PLUGIN_AUTHORING_URL}
