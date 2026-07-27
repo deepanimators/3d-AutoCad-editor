@@ -1,6 +1,6 @@
 import { loadAssetUrl } from '@aruct/core'
 
-export const ASSETS_CDN_URL = process.env.NEXT_PUBLIC_ASSETS_CDN_URL || 'https://editor.aruct.app'
+export const ASSETS_CDN_URL = process.env.NEXT_PUBLIC_ASSETS_CDN_URL || 'https://aruct.com'
 
 /**
  * Resolves an asset URL to the appropriate format:
