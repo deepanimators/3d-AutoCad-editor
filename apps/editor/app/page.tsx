@@ -2,12 +2,15 @@
 
 import { type AssetInput, useScene } from '@aruct/core'
 import { CATALOG_ITEMS, Editor, type ExternalResult, ItemsPanel } from '@aruct/editor'
-import { BarChart2, Hammer, Layers, Package, Plus, Settings } from 'lucide-react'
+import { BarChart2, Hammer, Layers, Package, Plus, Settings, Sun, Users } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { AiGenerateTile } from '@/components/ai-generate-tile'
 import { BomPanel } from '@/components/bom-panel'
+import { CollabPanel } from '@/components/collab-panel'
+import { SettingsPanel } from '@/components/settings-panel'
+import { SunStudyPanel } from '@/components/sun-study-panel'
 import { BuildTab } from '@/components/build-tab'
 import { UnifiedPluginsPanel } from '@/components/unified-plugins-panel'
 import { EditorTopBar } from '@/components/editor-top-bar'
@@ -204,12 +207,28 @@ const SIDEBAR_TABS = [
     icon: <BarChart2 className="h-5 w-5" />,
   },
   {
+    id: 'sun-study',
+    label: 'Sun Study',
+    component: SunStudyPanel,
+    mobileDefaultSnap: 0.5,
+    mobileIcon: <Sun className="h-5 w-5" />,
+    icon: <Sun className="h-5 w-5" />,
+  },
+  {
     id: 'settings',
     label: 'Settings',
-    component: () => null,
+    component: SettingsPanel,
     mobileDefaultSnap: 0.5,
     mobileIcon: <Settings className="h-5 w-5" />,
     icon: <Settings className="h-5 w-5" />,
+  },
+  {
+    id: 'collab',
+    label: 'Collab',
+    component: CollabPanel,
+    mobileDefaultSnap: 0.5,
+    mobileIcon: <Users className="h-5 w-5" />,
+    icon: <Users className="h-5 w-5" />,
   },
   {
     id: 'plugins',

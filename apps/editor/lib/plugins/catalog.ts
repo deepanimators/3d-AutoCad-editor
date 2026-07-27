@@ -98,7 +98,7 @@ export const PLUGIN_CATALOG: PluginEntry[] = [
       'Overlay accurate sun position and shadow simulation based on geographic coordinates and time of day. Essential for passive solar design, daylighting analysis, and building orientation decisions.',
     category: 'analysis',
     requiredPlan: 'pro',
-    status: 'coming_soon',
+    status: 'stable',
     icon: '☀️',
     features: [
       'Real solar path simulation',

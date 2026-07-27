@@ -181,6 +181,9 @@ type ViewerState = {
    * null = use the procedural gradient sky fallback. Transient (never persisted). */
   hdriUrl: string | null
   setHdriUrl: (url: string | null) => void
+
+  sunStudy: { enabled: boolean; latitude: number; longitude: number; dateMs: number; timeOfDay: number } | null
+  setSunStudy: (config: ViewerState['sunStudy']) => void
 }
 
 type PersistedViewerState = Partial<
@@ -199,6 +202,7 @@ type PersistedViewerState = Partial<
     | 'levelMode'
     | 'wallMode'
     | 'projectPreferences'
+    | 'sunStudy'
   >
 >
 
@@ -546,6 +550,9 @@ const useViewer = create<ViewerState>()(
 
       hdriUrl: null,
       setHdriUrl: (url) => set({ hdriUrl: url }),
+
+      sunStudy: null,
+      setSunStudy: (config) => set({ sunStudy: config }),
     }),
     {
       name: 'viewer-preferences',
@@ -566,6 +573,7 @@ const useViewer = create<ViewerState>()(
         levelMode: state.levelMode,
         wallMode: state.wallMode,
         projectPreferences: state.projectPreferences,
+        sunStudy: state.sunStudy,
       }),
     },
   ),

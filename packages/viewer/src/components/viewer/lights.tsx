@@ -74,10 +74,52 @@ const SHADOW_BACKOFF = 10
 // Fallback radius when the scene has no building geometry yet (empty scene).
 const SHADOW_FALLBACK_RADIUS = 30
 
+// Compute solar azimuth (radians, clockwise from north) and altitude (radians)
+// for a given lat/lng and local time. Uses the standard astronomical formulas
+// (hour angle / declination / elevation).
+function solarPosition(
+  lat: number,
+  lng: number,
+  date: Date,
+): { azimuth: number; altitude: number } {
+  const DEG = Math.PI / 180
+  const start = new Date(date.getFullYear(), 0, 0)
+  const diff = date.getTime() - start.getTime()
+  const dayOfYear = Math.floor(diff / 86400000)
+
+  // Solar declination
+  const declination = 23.45 * Math.sin(DEG * ((360 / 365) * (dayOfYear - 81))) * DEG
+
+  // Approximate local solar time: use UTC hour + longitude offset
+  const utcHour = date.getUTCHours() + date.getUTCMinutes() / 60 + date.getUTCSeconds() / 3600
+  const localSolarHour = utcHour + lng / 15
+
+  // Hour angle (positive = afternoon)
+  const hourAngle = (localSolarHour - 12) * 15 * DEG
+
+  const latRad = lat * DEG
+
+  // Solar altitude (elevation above horizon)
+  const sinAlt =
+    Math.sin(latRad) * Math.sin(declination) +
+    Math.cos(latRad) * Math.cos(declination) * Math.cos(hourAngle)
+  const altitude = Math.asin(Math.max(-1, Math.min(1, sinAlt)))
+
+  // Solar azimuth (clockwise from north)
+  const cosAz =
+    (Math.sin(declination) - Math.sin(latRad) * sinAlt) /
+    (Math.cos(latRad) * Math.cos(altitude) || 1e-9)
+  let azimuth = Math.acos(Math.max(-1, Math.min(1, cosAz)))
+  if (hourAngle > 0) azimuth = 2 * Math.PI - azimuth
+
+  return { azimuth, altitude }
+}
+
 export function Lights() {
   const sceneTheme = useViewer((state) => state.sceneTheme)
   const theme = getSceneTheme(sceneTheme)
   const shadows = useViewer((state) => state.shadows)
+  const sunStudy = useViewer((state) => state.sunStudy)
 
   const lightRefs = useRef<Array<DirectionalLight | null>>([])
   const shadowCamera = useRef<OrthographicCamera>(null)
@@ -193,6 +235,45 @@ export function Lights() {
               state.scene.add(helper)
             }
             helper.update()
+          }
+        }
+      }
+    }
+
+    // Sun study: override primary shadow light direction and intensity
+    if (sunStudy?.enabled) {
+      const date = new Date(sunStudy.dateMs)
+      // Inject time-of-day: set hours from timeOfDay (fractional hours)
+      const hours = Math.floor(sunStudy.timeOfDay)
+      const minutes = Math.round((sunStudy.timeOfDay - hours) * 60)
+      date.setUTCHours(hours - Math.round(sunStudy.longitude / 15), minutes, 0, 0)
+
+      const { azimuth, altitude } = solarPosition(sunStudy.latitude, sunStudy.longitude, date)
+      const light = lightRefs.current[0]
+      if (light) {
+        if (altitude <= 0) {
+          // Night — kill the primary light
+          light.intensity = 0
+          if (light.shadow) light.shadow.intensity = 0
+        } else {
+          // Convert spherical solar angles to Three.js directional light position
+          // (the light shines FROM this position toward the origin/focus)
+          const focus = shadowFocus.current
+          const distance = shadowRadius.current * SHADOW_MARGIN_SCALE + SHADOW_MARGIN + SHADOW_BACKOFF
+          const lx = -Math.sin(azimuth) * Math.cos(altitude) * distance
+          const ly = Math.sin(altitude) * distance
+          const lz = -Math.cos(azimuth) * Math.cos(altitude) * distance
+          light.position.set(focus.x + lx, focus.y + ly, focus.z + lz)
+          light.target.position.copy(focus)
+          light.target.updateMatrixWorld()
+          // Restore intensity if it was zeroed by a previous night pass
+          const config = theme.lights[0]
+          if (config) {
+            const targetIntensity = config.intensity
+            light.intensity = targetIntensity
+            if (light.shadow) {
+              light.shadow.intensity = targetIntensity <= 1 ? targetIntensity : MAX_SHADOW_INTENSITY
+            }
           }
         }
       }
