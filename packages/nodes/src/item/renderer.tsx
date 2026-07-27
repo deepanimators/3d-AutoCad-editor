@@ -39,7 +39,7 @@ import { Clone } from '@react-three/drei/core/Clone'
 import { useFrame, useLoader, useThree } from '@react-three/fiber'
 import { Suspense, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import type { AnimationAction, Group, Material, Mesh, Object3D } from 'three'
-import { MathUtils, Texture } from 'three'
+import { Box3, MathUtils, Texture, Vector3 } from 'three'
 import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
 import type { GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js'
@@ -578,6 +578,31 @@ const LoadedModelRenderer = ({
   useEffect(() => {
     markSettled()
   }, [markSettled])
+
+  // Compute real bounding-box dimensions from the loaded GLB and write them
+  // back to the scene node so the 2D floorplan reflects the actual footprint.
+  // Only runs when dimensions are the [1,1,1] placeholder (external/AI models).
+  useEffect(() => {
+    const [dw, dh, dd] = node.asset.dimensions
+    if (dw !== 1 || dh !== 1 || dd !== 1) return // already has real dimensions
+
+    const bbox = new Box3().setFromObject(scene)
+    const size = new Vector3()
+    bbox.getSize(size)
+    if (!isFinite(size.x) || !isFinite(size.y) || !isFinite(size.z)) return
+    if (size.x < 0.001 || size.y < 0.001 || size.z < 0.001) return // empty model
+
+    // Divide by asset.scale since getScaledDimensions multiplies dimensions × scale
+    const [asx, asy, asz] = node.asset.scale ?? [1, 1, 1]
+    const dims: [number, number, number] = [
+      size.x / (asx || 1),
+      size.y / (asy || 1),
+      size.z / (asz || 1),
+    ]
+    useScene.getState().updateNode(node.id, { asset: { ...node.asset, dimensions: dims } } as never)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [node.id, scene]) // run once per (node, loaded scene) pair
+
   const shading = useViewer((s) => s.shading)
   const textures = useViewer((s) => s.textures)
   const colorPreset = useViewer((s) => s.colorPreset)
