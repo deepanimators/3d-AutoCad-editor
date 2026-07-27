@@ -37,12 +37,16 @@ export async function POST(request: NextRequest) {
 
   const { prompt } = parsed.data
 
+  // model_version is required by Tripo API; format: v{major}.{minor}-{YYYYMMDD}
+  const modelVersion = process.env.TRIPO_MODEL_VERSION ?? 'v2.5-20250123'
+
   let taskId: string
   try {
-    taskId = await createTripoTask('text_to_model', { prompt })
+    taskId = await createTripoTask('text_to_model', { prompt, model_version: modelVersion })
   } catch (err) {
-    console.error('[tripo/generate] createTripoTask failed:', err)
-    return NextResponse.json({ error: 'Failed to start generation' }, { status: 502 })
+    const msg = (err as Error)?.message ?? String(err)
+    console.error('[tripo/generate] createTripoTask failed:', msg)
+    return NextResponse.json({ error: `Failed to start generation: ${msg}` }, { status: 502 })
   }
 
   let task
