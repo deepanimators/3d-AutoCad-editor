@@ -3,6 +3,7 @@ import { getSession } from '@/lib/auth-server'
 import { db } from '@/lib/db/client'
 import { globalModels } from '@/lib/db/schema'
 import { desc } from 'drizzle-orm'
+import { MigrateCatalogButton } from './migrate-catalog-button'
 
 export const dynamic = 'force-dynamic'
 
@@ -33,12 +34,15 @@ export default async function AdminCatalogPage() {
           <h1 className="font-bold text-2xl text-foreground">Model Catalog</h1>
           <p className="mt-1 text-muted-foreground text-sm">{models.length} global models</p>
         </div>
-        <a
-          href="/catalog"
-          className="rounded-lg border border-border px-3 py-1.5 text-sm text-muted-foreground hover:bg-accent transition-colors"
-        >
-          View user catalog →
-        </a>
+        <div className="flex items-center gap-2">
+          <MigrateCatalogButton />
+          <a
+            href="/catalog"
+            className="rounded-lg border border-border px-3 py-1.5 text-sm text-muted-foreground hover:bg-accent transition-colors"
+          >
+            View user catalog →
+          </a>
+        </div>
       </div>
 
       {models.length === 0 ? (

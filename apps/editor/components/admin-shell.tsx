@@ -10,6 +10,7 @@ import {
   Globe,
   HardDrive,
   LayoutGrid,
+  Puzzle,
   ChevronRight,
 } from 'lucide-react'
 
@@ -22,6 +23,7 @@ const NAV: NavItem[] = [
   { href: '/admin/coupons', label: 'Coupons', icon: Tag },
   { href: '/admin/audit', label: 'Audit Log', icon: BarChart3 },
   { href: '/admin/catalog', label: 'Catalog', icon: Globe },
+  { href: '/admin/plugins', label: 'Plugins', icon: Puzzle },
   { href: '/admin/storage', label: 'Storage', icon: HardDrive },
   { href: '/admin/scenes', label: 'Scenes', icon: LayoutGrid },
 ]

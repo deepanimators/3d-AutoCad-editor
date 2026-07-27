@@ -113,22 +113,23 @@ export async function GET(request: NextRequest) {
 
   const results: ExternalModel[] = []
   const sources: string[] = []
+  const unconfigured: string[] = []
 
   if (havenResult.status === 'fulfilled' && havenResult.value !== null) {
     results.push(...havenResult.value)
-    sources.push('polyhaven')
+    if (havenResult.value.length > 0) sources.push('polyhaven')
   }
 
   if (pizzaResult.status === 'fulfilled' && pizzaResult.value !== null) {
     results.push(...pizzaResult.value)
-    sources.push('polypizza')
+    if (pizzaResult.value.length > 0) sources.push('polypizza')
   } else if (
     pizzaResult.status === 'rejected' &&
     pizzaResult.reason instanceof Error &&
     pizzaResult.reason.message === 'POLY_PIZZA_API_KEY not set'
   ) {
-    // silently skip — API key not configured
+    if (wantPizza) unconfigured.push('polypizza')
   }
 
-  return NextResponse.json({ results, sources })
+  return NextResponse.json({ results, sources, unconfigured })
 }

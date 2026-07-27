@@ -18,6 +18,7 @@ export const users = pgTable('users', {
   aiGenerationsResetAt: timestamp('ai_generations_reset_at', { mode: 'string' }),
   visionCallsThisMonth: integer('vision_calls_this_month').notNull().default(0),
   visionCallsResetAt: timestamp('vision_calls_reset_at', { mode: 'string' }),
+  pluginPrefs: text('plugin_prefs').notNull().default('[]'),
   createdAt: timestamp('created_at', { mode: 'string' }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { mode: 'string' }).notNull().defaultNow(),
 })

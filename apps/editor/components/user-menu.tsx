@@ -1,6 +1,6 @@
 'use client'
 
-import { LogOut, Settings, Layers, CreditCard, Shield, BarChart3, Crown } from 'lucide-react'
+import { LogOut, Settings, Layers, CreditCard, Shield, BarChart3, Crown, Puzzle } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { useFirebaseUser } from '@/lib/use-auth'
 import { signOut } from '@/lib/auth-client'
@@ -104,6 +104,14 @@ export function UserMenu() {
             >
               <Layers className="h-4 w-4 text-muted-foreground" />
               My scenes
+            </a>
+            <a
+              className="flex items-center gap-2.5 px-4 py-2 text-sm hover:bg-accent"
+              href="/plugins"
+              onClick={() => setOpen(false)}
+            >
+              <Puzzle className="h-4 w-4 text-muted-foreground" />
+              Plugins
             </a>
             <a
               className="flex items-center gap-2.5 px-4 py-2 text-sm hover:bg-accent"

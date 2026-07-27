@@ -9,6 +9,14 @@ export const dynamic = 'force-dynamic'
 
 const S3_BASE = 'https://assets.aruct.com'
 
+function resolveGlbUrl(s3Key: string): string {
+  // s3Key can be a full absolute URL (external CDN/proxy) or a relative S3 path
+  if (s3Key.startsWith('http://') || s3Key.startsWith('https://') || s3Key.startsWith('/')) {
+    return s3Key
+  }
+  return `${S3_BASE}/${s3Key}`
+}
+
 const schema = z.object({
   source: z.enum(['tripo3d', 'sketchfab', 'polyhaven', 'polypizza', 'smithsonian']),
   sourceId: z.string().min(1),
@@ -50,8 +58,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       model: {
         ...m,
-        glbUrl: `${S3_BASE}/${m.s3Key}`,
-        thumbnailUrl: m.s3Thumbnail ? `${S3_BASE}/${m.s3Thumbnail}` : null,
+        glbUrl: resolveGlbUrl(m.s3Key),
+        thumbnailUrl: m.s3Thumbnail ? resolveGlbUrl(m.s3Thumbnail) : null,
         isNew: new Date(m.addedAt) > new Date(Date.now() - 10 * 24 * 60 * 60 * 1000),
         tags: (() => { try { return JSON.parse(m.tags) as string[] } catch { return [] } })(),
       },

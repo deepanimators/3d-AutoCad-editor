@@ -51,6 +51,7 @@ function EditorItemsPanel() {
   const [externalResults, setExternalResults] = useState<ExternalResult[] | null | undefined>(
     undefined,
   )
+  const [externalUnconfigured, setExternalUnconfigured] = useState<string[]>([])
   const [dbItems, setDbItems] = useState<AssetInput[]>([])
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -67,6 +68,7 @@ function EditorItemsPanel() {
     if (debounceRef.current) clearTimeout(debounceRef.current)
     if (!q.trim()) {
       setExternalResults(undefined)
+      setExternalUnconfigured([])
       return
     }
     setExternalResults(null) // loading
@@ -74,10 +76,12 @@ function EditorItemsPanel() {
       try {
         const res = await fetch(`/api/catalog/external?q=${encodeURIComponent(q)}&limit=12`)
         if (!res.ok) throw new Error('fetch failed')
-        const data = (await res.json()) as { results: ExternalResult[] }
+        const data = (await res.json()) as { results: ExternalResult[]; unconfigured?: string[] }
         setExternalResults(data.results ?? [])
+        setExternalUnconfigured(data.unconfigured ?? [])
       } catch {
         setExternalResults([])
+        setExternalUnconfigured([])
       }
     }, 400)
   }
@@ -87,6 +91,7 @@ function EditorItemsPanel() {
   return (
     <ItemsPanel
       externalResults={externalResults}
+      externalUnconfigured={externalUnconfigured}
       items={allItems}
       onSearchChange={handleSearchChange}
       showSourceFilter={dbItems.length > 0}

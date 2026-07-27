@@ -36,6 +36,7 @@ export function ItemsPanel({
   showSourceFilter = true,
   showTagFilters = true,
   externalResults,
+  externalUnconfigured,
 }: {
   items?: AssetInput[]
   /** Called when the search query changes (community edition uses this for server-side search) */
@@ -72,6 +73,8 @@ export function ItemsPanel({
    * active, null = loading, array = results ready.
    */
   externalResults?: ExternalResult[] | null
+  /** Source keys (e.g. 'polypizza') that are not configured in the environment. */
+  externalUnconfigured?: string[]
 }) {
   // When the embedder supplies a function taxonomy, the hierarchical browse
   // replaces the legacy `furnishTools` category tabs entirely.
@@ -91,6 +94,7 @@ export function ItemsPanel({
   return <LegacyItemsPanel
     emptyState={emptyState}
     externalResults={externalResults}
+    externalUnconfigured={externalUnconfigured}
     items={items}
     leadingTile={leadingTile}
     onSearchChange={onSearchChange}
@@ -109,6 +113,7 @@ function LegacyItemsPanel({
   showSourceFilter = true,
   showTagFilters = true,
   externalResults,
+  externalUnconfigured,
 }: {
   items?: AssetInput[]
   onSearchChange?: (query: string) => void
@@ -118,6 +123,7 @@ function LegacyItemsPanel({
   showSourceFilter?: boolean
   showTagFilters?: boolean
   externalResults?: ExternalResult[] | null
+  externalUnconfigured?: string[]
 }) {
   const mode = useEditor((s) => s.mode)
   const catalogCategory = useEditor((s) => s.catalogCategory)
@@ -453,6 +459,7 @@ function LegacyItemsPanel({
                 setMode={setMode}
                 setSelectedItem={setSelectedItem}
                 setTool={setTool}
+                unconfigured={externalUnconfigured}
               />
             )}
           </>
@@ -665,18 +672,25 @@ function StructuralTypePicker({
   )
 }
 
+const SOURCE_LABELS: Record<string, string> = {
+  polypizza: 'Poly Pizza',
+  polyhaven: 'Poly Haven',
+}
+
 function ExternalResultsSection({
   results,
   activeCategory,
   setSelectedItem,
   setTool,
   setMode,
+  unconfigured,
 }: {
   results: ExternalResult[] | null
   activeCategory: string
   setSelectedItem: (item: AssetInput) => void
   setTool: (tool: string) => void
   setMode: (mode: Mode) => void
+  unconfigured?: string[]
 }) {
   const handleSelect = (result: ExternalResult) => {
     triggerSFX('sfx:menu-click')
@@ -712,7 +726,14 @@ function ExternalResultsSection({
           <div className="size-4 animate-spin rounded-full border-2 border-muted-foreground/20 border-t-muted-foreground" />
         </div>
       ) : results.length === 0 ? (
-        <div className="py-3 text-center text-muted-foreground text-xs">No external results</div>
+        <div className="py-2 text-center text-muted-foreground text-xs space-y-1">
+          <p>No external results</p>
+          {unconfigured && unconfigured.length > 0 && (
+            <p className="text-[10px]">
+              {unconfigured.map((s) => SOURCE_LABELS[s] ?? s).join(', ')} not configured
+            </p>
+          )}
+        </div>
       ) : (
         <div className="grid gap-2" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(90px, 1fr))' }}>
           {results.map((result) => (
