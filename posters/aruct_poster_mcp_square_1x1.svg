@@ -1,0 +1,109 @@
+<svg viewBox="0 0 1200 1200" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <linearGradient id="glow6sq" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0e7490" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#0e7490" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="edgeGlow6sq" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2.6" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="haloBlur6sq" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="14"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="1200" fill="#05070d"/>
+  <rect width="1200" height="320" fill="url(#glow6sq)"/>
+
+  <!-- logo -->
+  <g transform="translate(60,52) scale(1.0)" stroke="#ffffff" stroke-width="1.75" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 2 L22 7.5 L12 13 L2 7.5 Z"/>
+    <line x1="2" y1="13" x2="22" y2="13"/>
+    <path d="M2 7.5 L2 16.5 L12 22 L12 13"/>
+    <path d="M22 7.5 L22 16.5 L12 22"/>
+  </g>
+  <text x="96" y="71" font-size="18" font-weight="600" fill="#ffffff" letter-spacing="-0.3">Aruct</text>
+
+  <!-- eyebrow -->
+  <text x="60" y="118" font-size="13" font-weight="700" fill="#22d3ee" letter-spacing="2.5" font-family="'SFMono-Regular','Menlo','Consolas',monospace">MCP / AI INTEGRATION</text>
+
+  <!-- headline -->
+  <text x="58" y="180" font-size="46" font-weight="700" fill="#ffffff" letter-spacing="-1">Describe a building.</text>
+  <text x="58" y="234" font-size="46" font-weight="700" fill="#ffffff" letter-spacing="-1">Watch it appear.</text>
+
+  <!-- sub-headline -->
+  <text x="60" y="270" font-size="16" fill="#94a3b8">Aruct is the only architectural editor with MCP support.</text>
+  <text x="60" y="294" font-size="16" fill="#94a3b8">Connect Claude, Cursor, or any MCP client and let AI</text>
+  <text x="60" y="318" font-size="16" fill="#94a3b8">manipulate your 3D scene directly.</text>
+
+  <!-- chat prompt panel -->
+  <g>
+    <rect x="60" y="350" width="1080" height="86" rx="10" fill="#0a0e14" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+    <circle cx="92" cy="376" r="9" fill="none" stroke="#22d3ee" stroke-width="1.3"/>
+    <text x="92" y="380" font-size="10" fill="#22d3ee" text-anchor="middle" font-weight="700">AI</text>
+    <text x="116" y="382" font-size="15" fill="#e2e8f0" font-family="'SFMono-Regular','Menlo','Consolas',monospace">"add a bedroom with two windows facing north"<tspan fill="#22d3ee">▍</tspan></text>
+  </g>
+
+  <text x="600" y="472" font-size="26" fill="#475569" text-anchor="middle">↓</text>
+
+  <!-- 3D scene panel -->
+  <g>
+    <rect x="180" y="490" width="840" height="470" rx="12" fill="#05070d" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+    <path d="M180 502 a12 12 0 0 1 12 -12 h816 a12 12 0 0 1 12 12 v18 h-840 z" fill="#0a0e14"/>
+    <circle cx="206" cy="508" r="4.2" fill="#ef4444"/>
+    <circle cx="222" cy="508" r="4.2" fill="#f59e0b"/>
+    <circle cx="238" cy="508" r="4.2" fill="#22c55e"/>
+    <text x="998" y="512" font-size="11" fill="#64748b" text-anchor="end">scene.json</text>
+
+    <g stroke="#475569" stroke-width="2.2" fill="none" stroke-linecap="round" opacity="0.85">
+      <line x1="620" y1="840" x2="740" y2="908"/>
+      <line x1="740" y1="908" x2="680" y2="942"/>
+      <line x1="680" y1="942" x2="560" y2="874"/>
+      <line x1="560" y1="874" x2="620" y2="840"/>
+      <line x1="620" y1="840" x2="620" y2="590"/>
+      <line x1="740" y1="908" x2="740" y2="658"/>
+      <line x1="680" y1="942" x2="680" y2="692"/>
+      <line x1="560" y1="874" x2="560" y2="624"/>
+      <line x1="620" y1="590" x2="740" y2="658"/>
+      <line x1="740" y1="658" x2="680" y2="692"/>
+      <line x1="680" y1="692" x2="560" y2="624"/>
+      <line x1="560" y1="624" x2="620" y2="590"/>
+    </g>
+
+    <line x1="560" y1="436" x2="500" y2="740" stroke="#22d3ee" stroke-width="1" stroke-dasharray="2,5" opacity="0.35"/>
+    <circle cx="500" cy="752" r="52" fill="#22d3ee" opacity="0.22" filter="url(#haloBlur6sq)"/>
+
+    <g filter="url(#edgeGlow6sq)" stroke="#22d3ee" stroke-width="2.4" fill="none" stroke-linecap="round">
+      <line x1="500" y1="788" x2="528" y2="804"/>
+      <line x1="528" y1="804" x2="500" y2="820"/>
+      <line x1="500" y1="820" x2="472" y2="804"/>
+      <line x1="472" y1="804" x2="500" y2="788"/>
+      <line x1="500" y1="788" x2="500" y2="678"/>
+      <line x1="528" y1="804" x2="528" y2="694"/>
+      <line x1="500" y1="820" x2="500" y2="710"/>
+      <line x1="472" y1="804" x2="472" y2="694"/>
+      <line x1="500" y1="678" x2="528" y2="694"/>
+      <line x1="528" y1="694" x2="500" y2="710"/>
+      <line x1="500" y1="710" x2="472" y2="694"/>
+      <line x1="472" y1="694" x2="500" y2="678"/>
+    </g>
+    <g stroke="#67e8f9" stroke-width="1.8">
+      <line x1="486" y1="684" x2="486" y2="696"/>
+      <line x1="514" y1="684" x2="514" y2="696"/>
+    </g>
+  </g>
+
+  <!-- terminal block -->
+  <g>
+    <rect x="60" y="1000" width="700" height="112" rx="10" fill="#000000" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+    <path d="M60 1010 a10 10 0 0 1 10 -10 h680 a10 10 0 0 1 10 10 v18 h-700 z" fill="#0d1117"/>
+    <circle cx="82" cy="1019" r="4.5" fill="#ef4444"/>
+    <circle cx="98" cy="1019" r="4.5" fill="#f59e0b"/>
+    <circle cx="114" cy="1019" r="4.5" fill="#22c55e"/>
+    <text x="86" y="1058" font-size="17" fill="#4ade80" font-family="'SFMono-Regular','Menlo','Consolas',monospace">$ npx @aruct/mcp</text>
+    <text x="86" y="1086" font-size="14" fill="#22d3ee" font-family="'SFMono-Regular','Menlo','Consolas',monospace">→ Claude now has access to your scene graph.</text>
+  </g>
+
+  <text x="60" y="1156" font-size="16" fill="#cbd5e1">Available on Pro — <tspan fill="#22d3ee" font-weight="700">$29/month</tspan> <tspan fill="#64748b">· aruct.com</tspan></text>
+</svg>

@@ -1,0 +1,69 @@
+<svg viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <radialGradient id="warmGlowA" cx="70%" cy="30%" r="60%">
+      <stop offset="0%" stop-color="#7c3aed" stop-opacity="0.16"/>
+      <stop offset="45%" stop-color="#3b82f6" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="tagGlowA" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="900" fill="#0f172a"/>
+  <rect width="1600" height="900" fill="url(#warmGlowA)"/>
+
+  <!-- faint brand cube watermark -->
+  <g transform="translate(1230,560) scale(2.1)" stroke="#3b82f6" stroke-width="1" fill="none" opacity="0.08">
+    <path d="M12 2 L22 7.5 L12 13 L2 7.5 Z"/>
+    <line x1="2" y1="13" x2="22" y2="13"/>
+    <path d="M2 7.5 L2 16.5 L12 22 L12 13"/>
+    <path d="M22 7.5 L22 16.5 L12 22"/>
+  </g>
+
+  <!-- logo -->
+  <g transform="translate(80,60) scale(1.1)" stroke="#ffffff" stroke-width="1.75" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 2 L22 7.5 L12 13 L2 7.5 Z"/>
+    <line x1="2" y1="13" x2="22" y2="13"/>
+    <path d="M2 7.5 L2 16.5 L12 22 L12 13"/>
+    <path d="M22 7.5 L22 16.5 L12 22"/>
+  </g>
+  <text x="120" y="81" font-size="20" font-weight="600" fill="#ffffff" letter-spacing="-0.3">Aruct</text>
+
+  <!-- urgency badge -->
+  <rect x="1310" y="56" width="210" height="36" rx="18" fill="#3b82f6" fill-opacity="0.12" stroke="#3b82f6" stroke-width="1.2"/>
+  <text x="1415" y="79" font-size="12" font-weight="700" fill="#93c5fd" letter-spacing="1" text-anchor="middle">OFFER ENDS [DATE]</text>
+
+  <!-- headline -->
+  <text x="78" y="198" font-size="52" font-weight="700" fill="#ffffff" letter-spacing="-1">Your first month free.</text>
+  <text x="78" y="258" font-size="52" font-weight="700" fill="#ffffff" letter-spacing="-1">Pro plan. No catch.</text>
+
+  <text x="80" y="300" font-size="14" font-weight="700" fill="#94a3b8" letter-spacing="2">FIRST 30 DAYS</text>
+  <text x="76" y="392" font-size="104" font-weight="700" fill="#3b82f6" letter-spacing="-2">$0<tspan font-size="26" font-weight="500" fill="#64748b">  then $29/mo</tspan></text>
+
+  <line x1="80" y1="420" x2="680" y2="420" stroke="rgba(255,255,255,0.08)"/>
+
+  <g font-size="16.5" fill="#e2e8f0">
+    <text x="80" y="456"><tspan fill="#3b82f6" font-weight="700">✓</tspan>  Unlimited scenes</text>
+    <text x="80" y="490"><tspan fill="#3b82f6" font-weight="700">✓</tspan>  GLB export</text>
+    <text x="80" y="524"><tspan fill="#3b82f6" font-weight="700">✓</tspan>  MCP server access</text>
+    <text x="80" y="558"><tspan fill="#3b82f6" font-weight="700">✓</tspan>  Sun &amp; Shadow Study</text>
+    <text x="80" y="592"><tspan fill="#3b82f6" font-weight="700">✓</tspan>  Bill of Materials</text>
+    <text x="80" y="626"><tspan fill="#3b82f6" font-weight="700">✓</tspan>  AI model generation</text>
+  </g>
+
+  <text x="80" y="668" font-size="16" font-weight="600" fill="#22c55e">No credit card required · Cancel anytime</text>
+
+  <rect x="80" y="700" width="420" height="56" rx="8" fill="#3b82f6"/>
+  <text x="290" y="735" font-size="18" font-weight="700" fill="#ffffff" text-anchor="middle">Claim your free month</text>
+  <text x="80" y="782" font-size="15" fill="#64748b">aruct.com/pricing</text>
+
+  <!-- price tag graphic -->
+  <g transform="translate(960,300) rotate(-6)">
+    <path d="M60,0 L480,0 L480,300 L60,300 L0,150 Z" fill="#3b82f6" fill-opacity="0.08" stroke="#3b82f6" stroke-width="2.4" filter="url(#tagGlowA)"/>
+    <circle cx="60" cy="150" r="13" fill="#05070d" stroke="#3b82f6" stroke-width="2"/>
+    <text x="290" y="185" font-size="96" font-weight="700" fill="#ffffff" text-anchor="middle">FREE</text>
+    <text x="290" y="225" font-size="18" fill="#93c5fd" text-anchor="middle" letter-spacing="1">YOUR FIRST MONTH</text>
+  </g>
+</svg>

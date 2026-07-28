@@ -1,0 +1,70 @@
+<svg viewBox="0 0 600 440" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <filter id="edgeGlowModal" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="1.6" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="shadowBlurModal" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="7"/>
+    </filter>
+  </defs>
+
+  <rect x="1" y="1" width="598" height="438" rx="16" fill="#0f172a" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+
+  <!-- usage bar -->
+  <text x="40" y="30" font-size="13" fill="#94a3b8">4 of 5 scenes used</text>
+  <rect x="40" y="38" width="520" height="7" rx="3.5" fill="#1e293b"/>
+  <rect x="40" y="38" width="416" height="7" rx="3.5" fill="#3b82f6"/>
+
+  <!-- mini before/after illustration -->
+  <text x="130" y="76" font-size="11" font-weight="700" fill="#64748b" letter-spacing="1.5">FREE</text>
+  <g stroke="#475569" stroke-width="1.2" fill="none" stroke-linecap="round">
+    <line x1="150" y1="175" x2="190" y2="197"/>
+    <line x1="190" y1="197" x2="170" y2="208"/>
+    <line x1="170" y1="208" x2="130" y2="186"/>
+    <line x1="130" y1="186" x2="150" y2="175"/>
+    <line x1="150" y1="175" x2="150" y2="90"/>
+    <line x1="190" y1="197" x2="190" y2="112"/>
+    <line x1="170" y1="208" x2="170" y2="123"/>
+    <line x1="130" y1="186" x2="130" y2="101"/>
+    <line x1="150" y1="90" x2="190" y2="112"/>
+    <line x1="190" y1="112" x2="170" y2="123"/>
+    <line x1="170" y1="123" x2="130" y2="101"/>
+    <line x1="130" y1="101" x2="150" y2="90"/>
+  </g>
+
+  <text x="300" y="158" font-size="26" fill="#475569" text-anchor="middle">→</text>
+
+  <text x="436" y="76" font-size="12" font-weight="700" fill="#93c5fd" letter-spacing="1.5">PRO</text>
+  <g stroke="#93c5fd" stroke-width="1.1" fill="none" opacity="0.75">
+    <circle cx="500" cy="90" r="7"/>
+    <line x1="500" y1="79" x2="500" y2="74"/>
+    <line x1="489" y1="90" x2="484" y2="90"/>
+  </g>
+  <ellipse cx="450" cy="228" rx="58" ry="15" fill="#000000" opacity="0.4" filter="url(#shadowBlurModal)"/>
+  <g filter="url(#edgeGlowModal)" stroke="#60a5fa" stroke-width="1.7" fill="none" stroke-linecap="round">
+    <line x1="450" y1="185" x2="498" y2="211"/>
+    <line x1="498" y1="211" x2="474" y2="224"/>
+    <line x1="474" y1="224" x2="426" y2="198"/>
+    <line x1="426" y1="198" x2="450" y2="185"/>
+    <line x1="450" y1="185" x2="450" y2="85"/>
+    <line x1="498" y1="211" x2="498" y2="111"/>
+    <line x1="474" y1="224" x2="474" y2="124"/>
+    <line x1="426" y1="198" x2="426" y2="98"/>
+    <line x1="450" y1="85" x2="498" y2="111"/>
+    <line x1="498" y1="111" x2="474" y2="124"/>
+    <line x1="474" y1="124" x2="426" y2="98"/>
+    <line x1="426" y1="98" x2="450" y2="85"/>
+  </g>
+
+  <!-- copy -->
+  <text x="40" y="264" font-size="21" font-weight="700" fill="#ffffff">You've used 4 of 5 free scenes.</text>
+  <text x="40" y="292" font-size="14" fill="#94a3b8">Go Pro for $29/month — unlimited scenes, GLB</text>
+  <text x="40" y="312" font-size="14" fill="#94a3b8">export, and AI integration.</text>
+
+  <!-- buttons -->
+  <rect x="40" y="350" width="230" height="46" rx="8" fill="#3b82f6"/>
+  <text x="155" y="378" font-size="15" font-weight="700" fill="#ffffff" text-anchor="middle">Start 14-day trial</text>
+  <rect x="286" y="350" width="130" height="46" rx="8" fill="none" stroke="#334155" stroke-width="1.2"/>
+  <text x="351" y="378" font-size="15" font-weight="600" fill="#94a3b8" text-anchor="middle">Not now</text>
+</svg>

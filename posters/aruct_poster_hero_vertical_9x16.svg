@@ -1,0 +1,88 @@
+<svg viewBox="0 0 900 1600" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <radialGradient id="glowbgv" cx="50%" cy="34%" r="45%">
+      <stop offset="0%" stop-color="#1e3a8a" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#1e3a8a" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="edgeGlowV" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2.2" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- background -->
+  <rect width="900" height="1600" fill="#0f172a"/>
+  <rect width="900" height="1600" fill="url(#glowbgv)"/>
+
+  <!-- logo -->
+  <g transform="translate(60,52) scale(1)" stroke="#ffffff" stroke-width="1.75" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 2 L22 7.5 L12 13 L2 7.5 Z"/>
+    <line x1="2" y1="13" x2="22" y2="13"/>
+    <path d="M2 7.5 L2 16.5 L12 22 L12 13"/>
+    <path d="M22 7.5 L22 16.5 L12 22"/>
+  </g>
+  <text x="90" y="70" font-size="19" font-weight="600" fill="#ffffff" letter-spacing="-0.3">Aruct</text>
+
+  <!-- blueprint ground grid -->
+  <g stroke="#3b82f6" stroke-width="1" opacity="0.14">
+    <line x1="450" y1="486" x2="685" y2="621"/>
+    <line x1="403" y1="513" x2="638" y2="648"/>
+    <line x1="356" y1="540" x2="591" y2="675"/>
+    <line x1="309" y1="567" x2="544" y2="702"/>
+    <line x1="450" y1="486" x2="262" y2="594"/>
+    <line x1="544" y1="540" x2="356" y2="648"/>
+    <line x1="638" y1="594" x2="450" y2="702"/>
+    <line x1="732" y1="648" x2="544" y2="756"/>
+  </g>
+
+  <!-- isometric wireframe building -->
+  <g filter="url(#edgeGlowV)" stroke="#60a5fa" stroke-width="2" fill="none" stroke-linecap="round">
+    <!-- bottom face -->
+    <line x1="450" y1="540" x2="591" y2="621"/>
+    <line x1="591" y1="621" x2="497" y2="675"/>
+    <line x1="497" y1="675" x2="356" y2="594"/>
+    <line x1="356" y1="594" x2="450" y2="540"/>
+    <!-- verticals -->
+    <line x1="450" y1="540" x2="450" y2="332"/>
+    <line x1="591" y1="621" x2="591" y2="413"/>
+    <line x1="497" y1="675" x2="497" y2="467"/>
+    <line x1="356" y1="594" x2="356" y2="386"/>
+    <!-- top face -->
+    <line x1="450" y1="332" x2="591" y2="413"/>
+    <line x1="591" y1="413" x2="497" y2="467"/>
+    <line x1="497" y1="467" x2="356" y2="386"/>
+    <line x1="356" y1="386" x2="450" y2="332"/>
+  </g>
+
+  <!-- dimension line + ticks -->
+  <g stroke="#64748b" stroke-width="1.1">
+    <line x1="459" y1="565" x2="598" y2="647"/>
+    <line x1="452" y1="553" x2="466" y2="577"/>
+    <line x1="591" y1="635" x2="605" y2="659"/>
+  </g>
+  <text x="490" y="633" font-size="13" fill="#64748b" letter-spacing="1">14.6 m</text>
+
+  <!-- compass -->
+  <g transform="translate(760,300)" stroke="#475569" fill="none" stroke-width="1.1">
+    <circle r="18"/>
+    <line x1="0" y1="7" x2="0" y2="-14"/>
+    <line x1="0" y1="-14" x2="-4" y2="-7"/>
+    <line x1="0" y1="-14" x2="4" y2="-7"/>
+  </g>
+  <text x="760" y="335" font-size="11" fill="#475569" text-anchor="middle">N</text>
+
+  <!-- headline -->
+  <text x="58" y="900" font-size="66" font-weight="700" fill="#ffffff" letter-spacing="-1">Architecture,</text>
+  <text x="58" y="978" font-size="66" font-weight="700" fill="#ffffff" letter-spacing="-1">rethought.</text>
+
+  <!-- sub-headline -->
+  <text x="60" y="1026" font-size="21" fill="#94a3b8">Design in 2D and 3D — from your</text>
+  <text x="60" y="1056" font-size="21" fill="#94a3b8">browser. No install. No limits.</text>
+
+  <!-- CTA -->
+  <line x1="60" y1="1470" x2="840" y2="1470" stroke="#1e293b" stroke-width="1"/>
+  <text x="60" y="1518" font-size="26" font-weight="600" fill="#ffffff">Free forever <tspan fill="#3b82f6">→ aruct.com</tspan></text>
+</svg>

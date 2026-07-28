@@ -1,0 +1,62 @@
+<svg viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <radialGradient id="warmGlowD" cx="70%" cy="30%" r="60%">
+      <stop offset="0%" stop-color="#7c3aed" stop-opacity="0.16"/>
+      <stop offset="45%" stop-color="#3b82f6" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="barGlowD" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="900" fill="#0f172a"/>
+  <rect width="1600" height="900" fill="url(#warmGlowD)"/>
+
+  <!-- logo -->
+  <g transform="translate(80,60) scale(1.1)" stroke="#ffffff" stroke-width="1.75" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 2 L22 7.5 L12 13 L2 7.5 Z"/>
+    <line x1="2" y1="13" x2="22" y2="13"/>
+    <path d="M2 7.5 L2 16.5 L12 22 L12 13"/>
+    <path d="M22 7.5 L22 16.5 L12 22"/>
+  </g>
+  <text x="120" y="81" font-size="20" font-weight="600" fill="#ffffff" letter-spacing="-0.3">Aruct</text>
+
+  <!-- badge -->
+  <rect x="1290" y="56" width="230" height="36" rx="18" fill="#3b82f6" fill-opacity="0.12" stroke="#3b82f6" stroke-width="1.2"/>
+  <text x="1405" y="79" font-size="12" font-weight="700" fill="#93c5fd" letter-spacing="1" text-anchor="middle">PRICE COMPARISON</text>
+
+  <!-- headline -->
+  <text x="78" y="198" font-size="48" font-weight="700" fill="#ffffff" letter-spacing="-1">Still paying $500/year</text>
+  <text x="78" y="258" font-size="48" font-weight="700" fill="#ffffff" letter-spacing="-1">for SketchUp?</text>
+
+  <text x="80" y="296" font-size="17" fill="#94a3b8">Browser-based. No install. MCP server included.</text>
+  <text x="80" y="320" font-size="17" fill="#94a3b8">IFC export on Team. Switch in minutes.</text>
+
+  <text x="80" y="362" font-size="16" font-weight="600" fill="#22c55e">14-day free trial · No credit card required</text>
+
+  <rect x="80" y="392" width="300" height="54" rx="8" fill="#3b82f6"/>
+  <text x="230" y="426" font-size="17" font-weight="700" fill="#ffffff" text-anchor="middle">Switch today</text>
+  <text x="80" y="472" font-size="15" fill="#64748b">aruct.com</text>
+
+  <!-- cost comparison chart -->
+  <text x="1050" y="250" font-size="13" font-weight="700" fill="#64748b" letter-spacing="1.5">ANNUAL COST PER SEAT</text>
+  <line x1="1050" y1="264" x2="1050" y2="592" stroke="rgba(255,255,255,0.1)"/>
+
+  <text x="1040" y="298" font-size="15" fill="#94a3b8" text-anchor="end">SketchUp Pro</text>
+  <rect x="1050" y="278" width="43" height="34" rx="4" fill="#334155"/>
+  <text x="1105" y="298" font-size="15" fill="#94a3b8">$299/yr</text>
+
+  <text x="1040" y="388" font-size="15" fill="#94a3b8" text-anchor="end">AutoCAD LT</text>
+  <rect x="1050" y="368" width="79" height="34" rx="4" fill="#334155"/>
+  <text x="1141" y="388" font-size="15" fill="#94a3b8">$545/yr</text>
+
+  <text x="1040" y="478" font-size="15" fill="#94a3b8" text-anchor="end">Revit</text>
+  <rect x="1050" y="458" width="430" height="34" rx="4" fill="#334155"/>
+  <text x="1492" y="478" font-size="15" fill="#94a3b8">$2,985/yr</text>
+
+  <text x="1040" y="568" font-size="16" font-weight="700" fill="#93c5fd" text-anchor="end">Aruct Pro</text>
+  <rect x="1050" y="548" width="50" height="34" rx="4" fill="#3b82f6" filter="url(#barGlowD)"/>
+  <text x="1112" y="568" font-size="17" font-weight="700" fill="#3b82f6">$348/yr</text>
+</svg>

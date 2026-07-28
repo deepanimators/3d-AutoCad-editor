@@ -1,0 +1,65 @@
+<svg viewBox="0 0 1200 628" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <linearGradient id="glowLp" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#1e3a8a" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#1e3a8a" stop-opacity="0.3"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="628" fill="#0f172a"/>
+  <rect width="1200" height="628" fill="url(#glowLp)"/>
+
+  <!-- logo -->
+  <g transform="translate(56,44) scale(0.95)" stroke="#ffffff" stroke-width="1.75" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 2 L22 7.5 L12 13 L2 7.5 Z"/>
+    <line x1="2" y1="13" x2="22" y2="13"/>
+    <path d="M2 7.5 L2 16.5 L12 22 L12 13"/>
+    <path d="M22 7.5 L22 16.5 L12 22"/>
+  </g>
+  <text x="90" y="62" font-size="17" font-weight="600" fill="#ffffff" letter-spacing="-0.3">Aruct</text>
+
+  <!-- headline (left column) -->
+  <text x="56" y="200" font-size="58" font-weight="700" fill="#ffffff" letter-spacing="-1">Free. <tspan fill="#3b82f6">Forever.</tspan></text>
+  <text x="58" y="238" font-size="22" font-weight="600" fill="#cbd5e1">No credit card. No expiry.</text>
+  <text x="58" y="270" font-size="16" fill="#94a3b8">The full 3D architectural editor — free,</text>
+  <text x="58" y="292" font-size="16" fill="#94a3b8">right in your browser.</text>
+
+  <g font-size="15" fill="#e2e8f0">
+    <text x="58" y="336"><tspan fill="#22c55e" font-weight="700">✓</tspan>  Up to 5 scenes  <tspan fill="#22c55e" font-weight="700">✓</tspan>  JSON export</text>
+    <text x="58" y="366"><tspan fill="#22c55e" font-weight="700">✓</tspan>  Basic 3D editor  <tspan fill="#22c55e" font-weight="700">✓</tspan>  Community support</text>
+  </g>
+
+  <rect x="58" y="410" width="290" height="50" rx="8" fill="#3b82f6"/>
+  <text x="203" y="442" font-size="17" font-weight="700" fill="#ffffff" text-anchor="middle">Get started free</text>
+  <text x="58" y="494" font-size="14" fill="#64748b">aruct.com · No install required</text>
+
+  <!-- browser mockup (right column) -->
+  <g>
+    <rect x="660" y="90" width="500" height="448" rx="12" fill="#0c1526" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+    <path d="M660 102 a12 12 0 0 1 12 -12 h476 a12 12 0 0 1 12 12 v20 h-500 z" fill="#111c33"/>
+    <line x1="660" y1="122" x2="1160" y2="122" stroke="rgba(255,255,255,0.08)"/>
+    <circle cx="682" cy="112" r="4.5" fill="#ef4444"/>
+    <circle cx="698" cy="112" r="4.5" fill="#f59e0b"/>
+    <circle cx="714" cy="112" r="4.5" fill="#22c55e"/>
+    <text x="910" y="116" font-size="11" fill="#64748b" text-anchor="middle">aruct.com/editor</text>
+
+    <g stroke="#60a5fa" stroke-width="2.6" fill="none" stroke-linecap="square">
+      <line x1="730" y1="190" x2="1000" y2="190"/>
+      <line x1="1000" y1="190" x2="1090" y2="190"/>
+      <line x1="1090" y1="190" x2="1090" y2="480"/>
+      <line x1="1090" y1="480" x2="730" y2="480"/>
+      <line x1="730" y1="480" x2="730" y2="190"/>
+      <line x1="900" y1="190" x2="900" y2="300"/>
+      <line x1="900" y1="335" x2="900" y2="480"/>
+      <line x1="1000" y1="345" x2="1055" y2="345"/>
+      <line x1="1090" y1="345" x2="1090" y2="345"/>
+    </g>
+    <path d="M900 300 A32 32 0 0 1 932 335" stroke="#93c5fd" stroke-width="1.1" fill="none" opacity="0.6"/>
+    <g stroke="#60a5fa" stroke-width="2.2">
+      <line x1="770" y1="182" x2="770" y2="196"/>
+      <line x1="810" y1="182" x2="810" y2="196"/>
+      <line x1="1010" y1="182" x2="1010" y2="196"/>
+      <line x1="1050" y1="182" x2="1050" y2="196"/>
+    </g>
+  </g>
+</svg>
