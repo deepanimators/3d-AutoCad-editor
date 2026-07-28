@@ -8,7 +8,7 @@ export default function BillingSuccessPage() {
           Your subscription is now active. Start building.
         </p>
         <a
-          href="/"
+          href="/editor"
           className="mt-6 inline-block rounded-lg bg-foreground px-6 py-2.5 text-background text-sm font-medium hover:opacity-90"
         >
           Open editor

@@ -1,477 +1,318 @@
-'use client'
-
-import { type AssetInput, useScene } from '@aruct/core'
-import { CATALOG_ITEMS, Editor, type ExternalResult, ItemsPanel, useEditor } from '@aruct/editor'
-import { BarChart2, Building2, Camera, ClipboardList, Clock, CloudSnow, Hammer, LayoutGrid, Layers, Mountain, Package, Palette, PenTool, Plus, Scissors, Settings, Sun, Users, Zap } from 'lucide-react'
+import type { Metadata } from 'next'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { AiGenerateTile } from '@/components/ai-generate-tile'
-import { BomPanel } from '@/components/bom-panel'
-import { CollabPanel } from '@/components/collab-panel'
-import { SunStudyPanel } from '@/components/sun-study-panel'
-import { BuildTab } from '@/components/build-tab'
-import { TextureManagerPanel } from '@/components/texture-manager-panel'
-import { SectionsPanel } from '@/components/sections-panel'
-import { MeshEditorPanel } from '@/components/mesh-editor-panel'
-import { TerrainPanel } from '@/components/terrain-panel'
-import { SchedulesPanel } from '@/components/schedules-panel'
-import { RenderPanel } from '@/components/render-panel'
-import { CurtainWallPanel } from '@/components/curtain-wall-panel'
-import { PointCloudPanel } from '@/components/point-cloud-panel'
-import { EnergyPanel } from '@/components/energy-panel'
-import { VersionHistoryPanel } from '@/components/version-history-panel'
-import { ZoneRollupPanel } from '@/components/zone-rollup-panel'
-import { UnifiedPluginsPanel } from '@/components/unified-plugins-panel'
-import { EditorTopBar } from '@/components/editor-top-bar'
-import { FloorplanConstructionPreflight } from '@/components/floorplan-construction-preflight'
-import { RailAccountNav } from '@/components/rail-account-nav'
 import {
-  CommunityViewerToolbarLeft,
-  CommunityViewerToolbarRight,
-} from '@/components/viewer-toolbar'
+  Box,
+  Building2,
+  ChevronRight,
+  Cloud,
+  Download,
+  Layers,
+  Palette,
+  Puzzle,
+  Sparkles,
+  Sun,
+} from 'lucide-react'
 
-type CatalogApiModel = {
-  id: string
-  name: string
-  category: string | null
-  glbUrl: string
-  thumbnailUrl: string | null
-  source: string | null
-  tags: string[]
+const FEATURES = [
+  {
+    icon: Layers,
+    title: '3D + 2D Views',
+    description:
+      'Switch between a full perspective viewport and a top-down floorplan. Every change syncs instantly across both views.',
+  },
+  {
+    icon: Sparkles,
+    title: 'AI Generation',
+    description:
+      'Describe a room, floor plan, or building in plain language and watch Aruct generate the geometry for you.',
+  },
+  {
+    icon: Palette,
+    title: 'Material Library',
+    description:
+      'Apply photorealistic PBR materials from a curated library. Import custom textures or source from Poly Haven.',
+  },
+  {
+    icon: Puzzle,
+    title: 'Plugin Ecosystem',
+    description:
+      'BOM reports, sun studies, section cuts, mesh editing, terrain, energy analysis, curtain walls — enable what you need.',
+  },
+  {
+    icon: Cloud,
+    title: 'Cloud Scenes',
+    description:
+      'Save scenes to your account and open them from any device. Invite teammates to view or edit in real-time.',
+  },
+  {
+    icon: Download,
+    title: 'Open Formats',
+    description:
+      'Export to GLB, STL, OBJ, or DXF. Import DWG drawings to trace over. Full interop with your existing toolchain.',
+  },
+]
+
+const PLUGINS = [
+  { label: 'BOM Reports', color: 'bg-blue-500/10 text-blue-400 border-blue-500/20' },
+  { label: 'Sun Study', color: 'bg-amber-500/10 text-amber-400 border-amber-500/20' },
+  { label: 'Section Cuts', color: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' },
+  { label: 'Mesh Editor', color: 'bg-purple-500/10 text-purple-400 border-purple-500/20' },
+  { label: 'Terrain', color: 'bg-green-500/10 text-green-400 border-green-500/20' },
+  { label: 'Energy Analysis', color: 'bg-orange-500/10 text-orange-400 border-orange-500/20' },
+  { label: 'Curtain Walls', color: 'bg-sky-500/10 text-sky-400 border-sky-500/20' },
+  { label: 'Point Cloud', color: 'bg-pink-500/10 text-pink-400 border-pink-500/20' },
+  { label: 'Schedules', color: 'bg-violet-500/10 text-violet-400 border-violet-500/20' },
+  { label: 'Collaboration', color: 'bg-teal-500/10 text-teal-400 border-teal-500/20' },
+  { label: 'Version History', color: 'bg-rose-500/10 text-rose-400 border-rose-500/20' },
+  { label: 'Zone Rollup', color: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' },
+]
+
+export const metadata: Metadata = {
+  title: 'Aruct — Design Buildings in Your Browser',
+  description:
+    'Professional 3D architectural design with AI assistance, PBR materials, a plugin ecosystem, and team collaboration. No installation required.',
 }
 
-function mapDbModelToAsset(m: CatalogApiModel): AssetInput {
-  const source =
-    m.source === 'mine' || m.source === 'tripo3d'
-      ? ('mine' as const)
-      : m.source === 'polyhaven' || m.source === 'polypizza' || m.source === 'community'
-        ? ('community' as const)
-        : ('library' as const)
-  return {
-    id: m.id,
-    name: m.name,
-    category: m.category ?? 'furniture',
-    thumbnail: m.thumbnailUrl ?? '',
-    src: m.glbUrl as AssetInput['src'],
-    dimensions: [1, 1, 1],
-    offset: [0, 0, 0],
-    rotation: [0, 0, 0],
-    scale: [1, 1, 1],
-    tags: m.tags,
-    source,
-  }
-}
-
-function EditorItemsPanel() {
-  const [externalResults, setExternalResults] = useState<ExternalResult[] | null | undefined>(
-    undefined,
-  )
-  const [externalUnconfigured, setExternalUnconfigured] = useState<string[]>([])
-  const [externalDisabled, setExternalDisabled] = useState<string[]>([])
-  const [externalHasMore, setExternalHasMore] = useState(false)
-  const [externalPage, setExternalPage] = useState(0)
-  const [dbItems, setDbItems] = useState<AssetInput[]>([])
-  const [enabledPlugins, setEnabledPlugins] = useState<string[]>([])
-  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const currentQueryRef = useRef('')
-
-  const loadDbItems = useCallback(() => {
-    fetch('/api/catalog?limit=48')
-      .then((r) => r.ok ? r.json() : Promise.reject(r.status))
-      .then((data: { models: CatalogApiModel[] }) => {
-        setDbItems(data.models.map(mapDbModelToAsset))
-      })
-      .catch(() => {})
-  }, [])
-
-  useEffect(() => {
-    loadDbItems()
-    fetch('/api/user/plugins', { cache: 'no-store' })
-      .then((r) => r.ok ? r.json() : null)
-      .then((data: { enabled?: string[] } | null) => {
-        if (data?.enabled) setEnabledPlugins(data.enabled)
-      })
-      .catch(() => {})
-  }, [loadDbItems])
-
-  const handleExternalSelect = (result: ExternalResult) => {
-    void fetch('/api/catalog/import', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        source: result.source,
-        sourceId: result.sourceId,
-        name: result.name,
-        description: result.description ?? undefined,
-        glbUrl: result.glbUrl,
-        thumbnailUrl: result.thumbnailUrl ?? undefined,
-        license: result.license,
-        attribution: result.attribution ?? undefined,
-        tags: result.tags ?? [],
-        category: result.category ?? undefined,
-      }),
-    }).then((r) => { if (r.ok) loadDbItems() }).catch(() => {})
-  }
-
-  const fetchExternal = async (q: string, page: number, append: boolean) => {
-    try {
-      const res = await fetch(`/api/catalog/external?q=${encodeURIComponent(q)}&limit=12&page=${page}`)
-      if (!res.ok) throw new Error('fetch failed')
-      const data = (await res.json()) as {
-        results: ExternalResult[]
-        unconfigured?: string[]
-        disabled?: string[]
-        hasMore?: boolean
-      }
-      setExternalResults((prev) =>
-        append && Array.isArray(prev) ? [...prev, ...(data.results ?? [])] : (data.results ?? [])
-      )
-      setExternalUnconfigured(data.unconfigured ?? [])
-      setExternalDisabled(data.disabled ?? [])
-      setExternalHasMore(data.hasMore ?? false)
-    } catch {
-      if (!append) {
-        setExternalResults([])
-        setExternalUnconfigured([])
-        setExternalDisabled([])
-      }
-      setExternalHasMore(false)
-    }
-  }
-
-  const handleSearchChange = (q: string) => {
-    if (debounceRef.current) clearTimeout(debounceRef.current)
-    currentQueryRef.current = q
-    setExternalPage(0)
-    if (!q.trim()) {
-      setExternalResults(undefined)
-      setExternalUnconfigured([])
-      setExternalDisabled([])
-      setExternalHasMore(false)
-      return
-    }
-    setExternalResults(null)
-    debounceRef.current = setTimeout(() => {
-      void fetchExternal(q, 0, false)
-    }, 400)
-  }
-
-  const handleLoadMore = () => {
-    const nextPage = externalPage + 1
-    setExternalPage(nextPage)
-    void fetchExternal(currentQueryRef.current, nextPage, true)
-  }
-
-  const allItems = dbItems.length > 0 ? [...CATALOG_ITEMS, ...dbItems] : undefined
-  const aiGenEnabled = enabledPlugins.includes('aruct:plugin-ai-gen')
-
+export default function LandingPage() {
   return (
-    <ItemsPanel
-      externalDisabled={externalDisabled}
-      externalResults={externalResults}
-      externalUnconfigured={externalUnconfigured}
-      hasMore={externalHasMore}
-      items={allItems}
-      leadingTile={aiGenEnabled ? <AiGenerateTile onGenerated={loadDbItems} /> : undefined}
-      onExternalSelect={handleExternalSelect}
-      onLoadMore={handleLoadMore}
-      onSearchChange={handleSearchChange}
-      showSourceFilter={dbItems.length > 0}
-      showTagFilters={false}
-    />
-  )
-}
-
-function TabUrlSync({ validTabIds }: { validTabIds: string[] }) {
-  const router = useRouter()
-  const activePanel = useEditor((s) => s.activeSidebarPanel)
-  const setActivePanel = useEditor((s) => s.setActiveSidebarPanel)
-  const mounted = useRef(false)
-
-  // On mount: apply tab from URL
-  useEffect(() => {
-    if (mounted.current) return
-    mounted.current = true
-    const tab = new URLSearchParams(window.location.search).get('tab')
-    if (tab && validTabIds.includes(tab)) setActivePanel(tab)
-  }, [setActivePanel, validTabIds])
-
-  // Sync active panel to URL
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search)
-    if (params.get('tab') === activePanel) return
-    params.set('tab', activePanel)
-    router.replace(`${window.location.pathname}?${params.toString()}`, { scroll: false })
-  }, [activePanel, router])
-
-  return null
-}
-
-const PROJECT_ID = 'local-editor'
-
-export default function Home() {
-  const router = useRouter()
-  const [enabledPlugins, setEnabledPlugins] = useState<string[]>([])
-
-  useEffect(() => {
-    fetch('/api/user/plugins', { cache: 'no-store' })
-      .then((r) => r.ok ? r.json() : null)
-      .then((data: { enabled?: string[] } | null) => {
-        if (data?.enabled) setEnabledPlugins(data.enabled)
-      })
-      .catch(() => {})
-
-    const onChanged = (e: Event) => {
-      const detail = (e as CustomEvent<{ enabled: string[] }>).detail
-      if (detail?.enabled) setEnabledPlugins(detail.enabled)
-    }
-    window.addEventListener('aruct:plugins-changed', onChanged)
-    return () => window.removeEventListener('aruct:plugins-changed', onChanged)
-  }, [])
-
-  const sidebarTabs = [
-    {
-      id: 'site',
-      label: 'Scene',
-      component: () => null,
-      mobileDefaultSnap: 0.5,
-      mobileIcon: <Layers className="h-5 w-5" />,
-      icon: <Layers className="h-5 w-5" />,
-    },
-    {
-      id: 'build',
-      label: 'Build',
-      component: BuildTab,
-      mobileDefaultSnap: 0.5,
-      mobileIcon: <Hammer className="h-5 w-5" />,
-      icon: <Hammer className="h-5 w-5" />,
-    },
-    {
-      id: 'items',
-      label: 'Items',
-      component: EditorItemsPanel,
-      mobileDefaultSnap: 0.5,
-      mobileIcon: <Package className="h-5 w-5" />,
-      icon: <Package className="h-5 w-5" />,
-    },
-    ...(enabledPlugins.includes('aruct:plugin-bom') ? [{
-      id: 'bom',
-      label: 'BOM',
-      component: BomPanel,
-      mobileDefaultSnap: 0.5,
-      mobileIcon: <BarChart2 className="h-5 w-5" />,
-      icon: <BarChart2 className="h-5 w-5" />,
-    }] : []),
-    ...(enabledPlugins.includes('aruct:plugin-sun-study') ? [{
-      id: 'sun-study',
-      label: 'Sun Study',
-      component: SunStudyPanel,
-      mobileDefaultSnap: 0.5,
-      mobileIcon: <Sun className="h-5 w-5" />,
-      icon: <Sun className="h-5 w-5" />,
-    }] : []),
-    ...(enabledPlugins.includes('aruct:plugin-collab') ? [{
-      id: 'collab',
-      label: 'Collab',
-      component: CollabPanel,
-      mobileDefaultSnap: 0.5,
-      mobileIcon: <Users className="h-5 w-5" />,
-      icon: <Users className="h-5 w-5" />,
-    }] : []),
-    ...(enabledPlugins.includes('aruct:plugin-texture-manager') ? [{
-      id: 'textures',
-      label: 'Textures',
-      component: TextureManagerPanel,
-      mobileDefaultSnap: 0.5,
-      mobileIcon: <Palette className="h-5 w-5" />,
-      icon: <Palette className="h-5 w-5" />,
-    }] : []),
-    ...(enabledPlugins.includes('aruct:plugin-sections') ? [{
-      id: 'sections',
-      label: 'Sections',
-      component: SectionsPanel,
-      mobileDefaultSnap: 0.5,
-      mobileIcon: <Scissors className="h-5 w-5" />,
-      icon: <Scissors className="h-5 w-5" />,
-    }] : []),
-    ...(enabledPlugins.includes('aruct:plugin-mesh-editor') ? [{
-      id: 'mesh-editor',
-      label: 'Mesh',
-      component: MeshEditorPanel,
-      mobileDefaultSnap: 0.5,
-      mobileIcon: <PenTool className="h-5 w-5" />,
-      icon: <PenTool className="h-5 w-5" />,
-    }] : []),
-    ...(enabledPlugins.includes('aruct:plugin-terrain') ? [{
-      id: 'terrain',
-      label: 'Terrain',
-      component: TerrainPanel,
-      mobileDefaultSnap: 0.5,
-      mobileIcon: <Mountain className="h-5 w-5" />,
-      icon: <Mountain className="h-5 w-5" />,
-    }] : []),
-    ...(enabledPlugins.includes('aruct:plugin-schedules') ? [{
-      id: 'schedules',
-      label: 'Schedules',
-      component: SchedulesPanel,
-      mobileDefaultSnap: 0.5,
-      mobileIcon: <ClipboardList className="h-5 w-5" />,
-      icon: <ClipboardList className="h-5 w-5" />,
-    }] : []),
-    ...(enabledPlugins.includes('aruct:plugin-render') ? [{
-      id: 'render',
-      label: 'Render',
-      component: RenderPanel,
-      mobileDefaultSnap: 0.5,
-      mobileIcon: <Camera className="h-5 w-5" />,
-      icon: <Camera className="h-5 w-5" />,
-    }] : []),
-    ...(enabledPlugins.includes('aruct:plugin-curtain-wall') ? [{
-      id: 'curtain-wall',
-      label: 'Curtain Wall',
-      component: CurtainWallPanel,
-      mobileDefaultSnap: 0.5,
-      mobileIcon: <Building2 className="h-5 w-5" />,
-      icon: <Building2 className="h-5 w-5" />,
-    }] : []),
-    ...(enabledPlugins.includes('aruct:plugin-point-cloud') ? [{
-      id: 'point-cloud',
-      label: 'Point Cloud',
-      component: PointCloudPanel,
-      mobileDefaultSnap: 0.5,
-      mobileIcon: <CloudSnow className="h-5 w-5" />,
-      icon: <CloudSnow className="h-5 w-5" />,
-    }] : []),
-    ...(enabledPlugins.includes('aruct:plugin-energy') ? [{
-      id: 'energy',
-      label: 'Energy',
-      component: EnergyPanel,
-      mobileDefaultSnap: 0.5,
-      mobileIcon: <Zap className="h-5 w-5" />,
-      icon: <Zap className="h-5 w-5" />,
-    }] : []),
-    ...(enabledPlugins.includes('aruct:plugin-version-history') ? [{
-      id: 'version-history',
-      label: 'History',
-      component: VersionHistoryPanel,
-      mobileDefaultSnap: 0.5,
-      mobileIcon: <Clock className="h-5 w-5" />,
-      icon: <Clock className="h-5 w-5" />,
-    }] : []),
-    ...(enabledPlugins.includes('aruct:plugin-zone-rollup') ? [{
-      id: 'zone-rollup',
-      label: 'Zones',
-      component: ZoneRollupPanel,
-      mobileDefaultSnap: 0.5,
-      mobileIcon: <LayoutGrid className="h-5 w-5" />,
-      icon: <LayoutGrid className="h-5 w-5" />,
-    }] : []),
-    {
-      id: 'settings',
-      label: 'Settings',
-      component: () => null, // Editor renders its own SettingsPanel via settingsPanelProps
-      mobileDefaultSnap: 0.5,
-      mobileIcon: <Settings className="h-5 w-5" />,
-      icon: <Settings className="h-5 w-5" />,
-    },
-    {
-      id: 'plugins',
-      label: 'Plugins',
-      component: UnifiedPluginsPanel,
-      mobileDefaultSnap: 0.5,
-      mobileIcon: <Plus className="h-5 w-5" />,
-      icon: <Plus className="h-5 w-5" />,
-    },
-  ]
-
-  const handleSaveAsNewCloud = useCallback(async () => {
-    const name =
-      typeof window !== 'undefined'
-        ? window.prompt('Enter scene name to save to account:', 'My Scene')
-        : null
-    if (!name) return
-    const currentState = useScene.getState()
-    const graph = {
-      nodes: currentState.nodes,
-      rootNodeIds: currentState.rootNodeIds,
-      collections: currentState.collections,
-      materials: currentState.materials,
-      installedPlugins: currentState.installedPlugins,
-    }
-    try {
-      const response = await fetch('/api/scenes', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, graph }),
-      })
-      if (response.status === 401) {
-        router.push('/login?next=/scenes')
-        return
-      }
-      if (response.ok) {
-        const created = (await response.json()) as { id: string }
-        router.push(`/scene/${created.id}`)
-      }
-    } catch (err) {
-      console.error('Failed to create scene:', err)
-    }
-  }, [router])
-
-  return (
-    <div className="relative h-screen w-screen">
-      <FloorplanConstructionPreflight />
-      <TabUrlSync validTabIds={sidebarTabs.map((t) => t.id)} />
-      {PROJECT_ID === 'local-editor' && (
-        <div className="pointer-events-none absolute top-3 left-1/2 z-40 -translate-x-1/2">
-          <div className="pointer-events-auto flex items-center gap-3 rounded-full border border-border/60 bg-background/90 px-4 py-1.5 text-xs shadow-sm backdrop-blur">
-            <span className="text-muted-foreground">Local editor — scenes are not saved.</span>
-            <Link className="font-medium text-foreground hover:underline" href="/scenes">
-              Open recent scenes
+    <div className="min-h-screen bg-background text-foreground">
+      {/* Nav */}
+      <header className="sticky top-0 z-50 border-b border-border/60 bg-background/90 backdrop-blur">
+        <div className="mx-auto flex max-w-6xl items-center gap-6 px-4 py-3 sm:px-6">
+          <Link href="/" className="flex items-center gap-2 font-bold text-foreground">
+            <Building2 className="h-5 w-5 text-primary" />
+            <span className="text-lg tracking-tight">Aruct</span>
+          </Link>
+          <nav className="hidden items-center gap-5 text-sm text-muted-foreground sm:flex">
+            <Link href="/pricing" className="hover:text-foreground transition-colors">
+              Pricing
             </Link>
-            <span aria-hidden className="text-muted-foreground">
-              ·
-            </span>
-            <Link className="font-medium text-foreground hover:underline" href="/scenes">
-              Create new
+            <Link href="/scenes" className="hover:text-foreground transition-colors">
+              My Scenes
+            </Link>
+            <Link href="/plugins" className="hover:text-foreground transition-colors">
+              Plugins
+            </Link>
+          </nav>
+          <div className="ml-auto flex items-center gap-2">
+            <Link
+              href="/login"
+              className="hidden rounded-lg px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors sm:block"
+            >
+              Sign in
+            </Link>
+            <Link
+              href="/editor"
+              className="rounded-lg bg-primary px-3.5 py-1.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+            >
+              Open editor
             </Link>
           </div>
         </div>
-      )}
-      <Editor
-        layoutVersion="v2"
-        navbarSlot={<EditorTopBar />}
-        projectId={PROJECT_ID}
-        railBottomSlot={<RailAccountNav />}
-        settingsPanelProps={{
-          sceneName: 'Local Workspace',
-          onSaveAsNewCloud: handleSaveAsNewCloud,
-          onDxfImport: enabledPlugins.includes('aruct:plugin-dwg') ? async (file: File) => {
-            const fd = new FormData()
-            fd.append('file', file)
-            const res = await fetch('/api/import/dxf', { method: 'POST', body: fd })
-            if (!res.ok) {
-              const body = (await res.json().catch(() => ({}))) as { error?: string }
-              throw new Error(body.error ?? `Server error ${res.status}`)
-            }
-            const data = (await res.json()) as {
-              nodes: Array<{ type: string }>
-              stats: { lines: number; polylines: number; skipped: number; inserts: number }
-            }
-            const { createNode } = useScene.getState()
-            let nodesAdded = 0
-            for (const node of data.nodes) {
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              createNode(node as any)
-              nodesAdded++
-            }
-            return { nodesAdded, stats: data.stats }
-          } : undefined,
-        }}
-        sidebarTabs={sidebarTabs}
-        viewerToolbarLeft={<CommunityViewerToolbarLeft />}
-        viewerToolbarRight={<CommunityViewerToolbarRight />}
-      />
+      </header>
+
+      {/* Hero */}
+      <section className="relative overflow-hidden border-b border-border/60 px-4 py-20 text-center sm:px-6 sm:py-28 lg:py-36">
+        {/* Blueprint grid background */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 opacity-[0.04] dark:opacity-[0.06]"
+          style={{
+            backgroundImage:
+              'linear-gradient(var(--color-primary) 1px, transparent 1px), linear-gradient(90deg, var(--color-primary) 1px, transparent 1px)',
+            backgroundSize: '40px 40px',
+          }}
+        />
+        <div className="relative mx-auto max-w-3xl">
+          <div className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-medium text-primary">
+            <Sparkles className="h-3.5 w-3.5" />
+            Open-source · Browser-native · WebGPU powered
+          </div>
+          <h1 className="mb-5 text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+            Design Buildings.{' '}
+            <span className="text-primary">In Your Browser.</span>
+          </h1>
+          <p className="mb-8 text-base text-muted-foreground sm:text-lg">
+            Professional 3D architectural design with AI assistance, PBR materials, a plugin
+            ecosystem, and team collaboration — no installation required.
+          </p>
+          <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <Link
+              href="/editor"
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90 transition-colors sm:w-auto"
+            >
+              Start designing
+              <ChevronRight className="h-4 w-4" />
+            </Link>
+            <Link
+              href="/signup"
+              className="flex w-full items-center justify-center gap-2 rounded-xl border border-border bg-background px-6 py-3 text-sm font-semibold text-foreground hover:bg-accent transition-colors sm:w-auto"
+            >
+              Create free account
+            </Link>
+          </div>
+          <p className="mt-4 text-xs text-muted-foreground">
+            No credit card required · Local editor is always free
+          </p>
+        </div>
+      </section>
+
+      {/* Features grid */}
+      <section className="border-b border-border/60 px-4 py-16 sm:px-6 sm:py-20">
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-12 text-center">
+            <h2 className="mb-3 text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+              Everything you need to design
+            </h2>
+            <p className="text-muted-foreground">
+              From concept to construction documents, Aruct has you covered.
+            </p>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {FEATURES.map((f) => (
+              <div
+                key={f.title}
+                className="rounded-2xl border border-border/60 bg-card p-5 transition-colors hover:border-primary/30 hover:bg-accent/30"
+              >
+                <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                  <f.icon className="h-4.5 w-4.5" />
+                </div>
+                <h3 className="mb-1.5 text-sm font-semibold text-foreground">{f.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{f.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Plugin ecosystem */}
+      <section className="border-b border-border/60 px-4 py-16 sm:px-6 sm:py-20">
+        <div className="mx-auto max-w-6xl">
+          <div className="grid items-center gap-10 lg:grid-cols-2">
+            <div>
+              <div className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-purple-500/20 bg-purple-500/5 px-3 py-1 text-xs font-medium text-purple-400">
+                <Puzzle className="h-3.5 w-3.5" />
+                Plugin ecosystem
+              </div>
+              <h2 className="mb-4 text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+                Extend only what you need
+              </h2>
+              <p className="mb-6 text-muted-foreground leading-relaxed">
+                Aruct ships with a core that stays lean. Enable plugins from the marketplace to add
+                BOM reports, sun studies, terrain generation, energy analysis, curtain walls, and
+                more — each plugin is isolated and can be toggled without affecting your workflow.
+              </p>
+              <Link
+                href="/plugins"
+                className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
+              >
+                Browse plugins
+                <ChevronRight className="h-4 w-4" />
+              </Link>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {PLUGINS.map((p) => (
+                <span
+                  key={p.label}
+                  className={`rounded-full border px-3 py-1 text-xs font-medium ${p.color}`}
+                >
+                  {p.label}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Open source */}
+      <section className="border-b border-border/60 px-4 py-16 sm:px-6 sm:py-20">
+        <div className="mx-auto max-w-6xl">
+          <div className="rounded-2xl border border-border/60 bg-accent/20 px-6 py-10 text-center sm:px-12">
+            <div className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1 text-xs font-medium text-muted-foreground">
+              <Box className="h-3.5 w-3.5" />
+              Open source packages
+            </div>
+            <h2 className="mb-3 text-xl font-bold tracking-tight text-foreground sm:text-2xl">
+              Build on top of Aruct
+            </h2>
+            <p className="mx-auto mb-6 max-w-xl text-muted-foreground">
+              The core scene graph, viewer, editor UI, and MCP server are published as open-source
+              npm packages under <code className="font-mono text-sm">@aruct/core</code>,{' '}
+              <code className="font-mono text-sm">@aruct/viewer</code>, and{' '}
+              <code className="font-mono text-sm">@aruct/editor</code>. Embed the viewer in your
+              own app or build custom tooling on the scene graph.
+            </p>
+            <a
+              href="https://github.com/aruct/editor"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-4 py-2 text-sm font-medium text-foreground hover:bg-accent transition-colors"
+            >
+              View on GitHub
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing CTA */}
+      <section className="border-b border-border/60 px-4 py-16 text-center sm:px-6 sm:py-20">
+        <div className="mx-auto max-w-2xl">
+          <Sun className="mx-auto mb-4 h-8 w-8 text-amber-400" />
+          <h2 className="mb-3 text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+            Free to start. Scales with your work.
+          </h2>
+          <p className="mb-8 text-muted-foreground">
+            The local editor is always free with no sign-in required. Cloud saves, collaboration,
+            and advanced plugins are available on Pro and Studio plans.
+          </p>
+          <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <Link
+              href="/pricing"
+              className="flex w-full items-center justify-center gap-2 rounded-xl border border-border bg-background px-6 py-3 text-sm font-semibold text-foreground hover:bg-accent transition-colors sm:w-auto"
+            >
+              View pricing
+            </Link>
+            <Link
+              href="/signup"
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90 transition-colors sm:w-auto"
+            >
+              Get started free
+              <ChevronRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="px-4 py-10 sm:px-6">
+        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 text-sm text-muted-foreground sm:flex-row">
+          <div className="flex items-center gap-2 font-semibold text-foreground">
+            <Building2 className="h-4 w-4 text-primary" />
+            Aruct
+          </div>
+          <nav className="flex flex-wrap justify-center gap-x-5 gap-y-2">
+            <Link href="/editor" className="hover:text-foreground transition-colors">
+              Editor
+            </Link>
+            <Link href="/scenes" className="hover:text-foreground transition-colors">
+              Scenes
+            </Link>
+            <Link href="/pricing" className="hover:text-foreground transition-colors">
+              Pricing
+            </Link>
+            <Link href="/plugins" className="hover:text-foreground transition-colors">
+              Plugins
+            </Link>
+            <Link href="/privacy" className="hover:text-foreground transition-colors">
+              Privacy
+            </Link>
+            <Link href="/terms" className="hover:text-foreground transition-colors">
+              Terms
+            </Link>
+          </nav>
+          <p className="text-xs">© {new Date().getFullYear()} Aruct. Open source.</p>
+        </div>
+      </footer>
     </div>
   )
 }

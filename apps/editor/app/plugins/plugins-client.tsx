@@ -217,7 +217,7 @@ export function PluginsClient({ plugins, userPlan }: Props) {
       <p className="text-center text-muted-foreground text-xs pt-4">
         Changes take effect the next time you open or refresh a scene.
         {' '}
-        <a href="/" className="underline">Back to editor</a>
+        <a href="/editor" className="underline">Back to editor</a>
       </p>
     </div>
   )
