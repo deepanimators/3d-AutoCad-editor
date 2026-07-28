@@ -38,6 +38,8 @@ export function PointCloudPanel() {
         type: 'point-cloud',
         parentId: null,
         visible: true,
+        position: [0, 0, 0],
+        rotation: [0, 0, 0],
         fileUrl: data.url,
         fileName: data.fileName,
         pointCount: data.pointCount,

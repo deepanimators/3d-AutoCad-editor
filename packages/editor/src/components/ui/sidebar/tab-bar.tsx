@@ -111,15 +111,19 @@ export function IconRail({
 
   return (
     <TooltipProvider delayDuration={0} disableHoverableContent>
-      <div className="flex h-full w-14 shrink-0 flex-col items-center gap-1 border-border/50 border-r py-2">
-        {defaultTabs.map(renderTab)}
-        {pluginTabs.length > 0 && (
-          <div className="mt-1 flex w-11 flex-col items-center gap-1 border-border/70 border-t pt-2">
-            {pluginTabs.map(renderTab)}
-          </div>
-        )}
+      <div className="flex h-full w-14 shrink-0 flex-col border-border/50 border-r">
+        {/* Scrollable tabs area */}
+        <div className="flex min-h-0 flex-1 flex-col items-center gap-1 overflow-y-auto py-2" style={{ scrollbarWidth: 'none' }}>
+          {defaultTabs.map(renderTab)}
+          {pluginTabs.length > 0 && (
+            <div className="mt-1 flex w-11 flex-col items-center gap-1 border-border/70 border-t pt-2">
+              {pluginTabs.map(renderTab)}
+            </div>
+          )}
+        </div>
+        {/* Always-visible bottom slot */}
         {bottomSlot != null && (
-          <div className="mt-auto flex w-11 flex-col items-center gap-1 border-border/70 border-t pt-2">
+          <div className="flex w-full shrink-0 flex-col items-center gap-1 border-border/70 border-t pt-2 pb-2">
             {bottomSlot}
           </div>
         )}

@@ -31,6 +31,8 @@ export function MeshEditorPanel() {
       parentId: null,
       visible: true,
       metadata: {},
+      position: [0, 0, 0],
+      rotation: [0, 0, 0],
       positions: [],
       normals: [],
       uvs: [],

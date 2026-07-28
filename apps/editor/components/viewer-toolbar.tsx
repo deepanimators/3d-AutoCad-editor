@@ -20,6 +20,7 @@ import {
   type ViewMode,
 } from '@aruct/editor'
 import { useScene } from '@aruct/core'
+// useScene.temporal used for undo/redo availability tracking
 import {
   CLAY_PALETTE,
   type EdgeMode,
@@ -41,6 +42,7 @@ import {
   Layers3,
   Magnet,
   PenLine,
+  Redo2,
   Ruler,
   ScanLine,
   SlidersHorizontal,
@@ -48,8 +50,9 @@ import {
   SquareUserRound,
   SwatchBook,
   Tag,
+  Undo2,
 } from 'lucide-react'
-import React, { type ReactNode, useCallback } from 'react'
+import React, { type ReactNode, useCallback, useSyncExternalStore } from 'react'
 import { flushSync } from 'react-dom'
 import { cn } from '@/lib/utils'
 import { Tooltip, TooltipContent, TooltipTrigger } from './toolbar-tooltip'
@@ -675,10 +678,48 @@ function PreviewButton() {
   )
 }
 
+function UndoRedoControls() {
+  const temporal = useSyncExternalStore(
+    useScene.temporal.subscribe,
+    () => useScene.temporal.getState(),
+    () => useScene.temporal.getState(),
+  )
+  const pastLength = temporal.pastStates.length
+  const futureLength = temporal.futureStates.length
+
+  return (
+    <div className={TOOLBAR_CONTAINER}>
+      <ToolbarTooltip label="Undo (⌘Z)">
+        <button
+          aria-label="Undo"
+          className={cn(TOOLBAR_BTN, pastLength === 0 && 'opacity-40 cursor-not-allowed')}
+          disabled={pastLength === 0}
+          onClick={() => runUndo()}
+          type="button"
+        >
+          <Undo2 className="h-3.5 w-3.5" />
+        </button>
+      </ToolbarTooltip>
+      <ToolbarTooltip label="Redo (⌘⇧Z)">
+        <button
+          aria-label="Redo"
+          className={cn(TOOLBAR_BTN, futureLength === 0 && 'opacity-40 cursor-not-allowed')}
+          disabled={futureLength === 0}
+          onClick={() => runRedo()}
+          type="button"
+        >
+          <Redo2 className="h-3.5 w-3.5" />
+        </button>
+      </ToolbarTooltip>
+    </div>
+  )
+}
+
 export function CommunityViewerToolbarLeft() {
   return (
     <>
       <CollapseSidebarButton />
+      <UndoRedoControls />
       <ViewModeControl />
       <DrawingTypeControl />
     </>
