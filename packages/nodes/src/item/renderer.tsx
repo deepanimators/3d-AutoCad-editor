@@ -561,6 +561,30 @@ const ModelRenderer = ({ node, markSettled }: { node: ItemNode; markSettled: () 
   return <LoadedModelRenderer gltf={gltf} markSettled={markSettled} node={node} />
 }
 
+// Gift-wrapping convex hull for the 2D XZ footprint.
+function convexHull2D(pts: Array<[number, number]>): Array<[number, number]> {
+  if (pts.length < 3) return pts
+  let lo = 0
+  for (let i = 1; i < pts.length; i++) {
+    if (pts[i]![0] < pts[lo]![0] || (pts[i]![0] === pts[lo]![0] && pts[i]![1] < pts[lo]![1])) lo = i
+  }
+  const hull: Array<[number, number]> = []
+  let cur = lo
+  do {
+    hull.push(pts[cur]!)
+    let next = (cur + 1) % pts.length
+    for (let i = 0; i < pts.length; i++) {
+      const [cx, cy] = pts[cur]!
+      const [nx, ny] = pts[next]!
+      const [ix, iy] = pts[i]!
+      const cross = (nx - cx) * (iy - cy) - (ny - cy) * (ix - cx)
+      if (cross < 0) next = i
+    }
+    cur = next
+  } while (cur !== lo && hull.length <= pts.length)
+  return hull
+}
+
 const LoadedModelRenderer = ({
   gltf: { scene, nodes, animations },
   node,
@@ -579,29 +603,57 @@ const LoadedModelRenderer = ({
     markSettled()
   }, [markSettled])
 
-  // Compute real bounding-box dimensions from the loaded GLB and write them
-  // back to the scene node so the 2D floorplan reflects the actual footprint.
-  // Only runs when dimensions are the [1,1,1] placeholder (external/AI models).
+  // Compute real bounding-box dimensions and XZ convex-hull footprint from
+  // the loaded GLB. Dimensions run only for [1,1,1] placeholder items;
+  // footprint2d runs for any item that doesn't have one yet.
   useEffect(() => {
     const [dw, dh, dd] = node.asset.dimensions
-    if (dw !== 1 || dh !== 1 || dd !== 1) return // already has real dimensions
+    const needsDims = dw === 1 && dh === 1 && dd === 1
+    const needsFootprint = !node.asset.footprint2d
+    if (!needsDims && !needsFootprint) return
 
     const bbox = new Box3().setFromObject(scene)
     const size = new Vector3()
     bbox.getSize(size)
     if (!isFinite(size.x) || !isFinite(size.y) || !isFinite(size.z)) return
-    if (size.x < 0.001 || size.y < 0.001 || size.z < 0.001) return // empty model
+    if (size.x < 0.001 || size.y < 0.001 || size.z < 0.001) return
 
-    // Divide by asset.scale since getScaledDimensions multiplies dimensions × scale
     const [asx, asy, asz] = node.asset.scale ?? [1, 1, 1]
-    const dims: [number, number, number] = [
-      size.x / (asx || 1),
-      size.y / (asy || 1),
-      size.z / (asz || 1),
-    ]
-    useScene.getState().updateNode(node.id, { asset: { ...node.asset, dimensions: dims } } as never)
+    const assetUpdate: Record<string, unknown> = {}
+
+    if (needsDims) {
+      assetUpdate.dimensions = [
+        size.x / (asx || 1),
+        size.y / (asy || 1),
+        size.z / (asz || 1),
+      ]
+    }
+
+    if (needsFootprint) {
+      const center = new Vector3()
+      bbox.getCenter(center)
+      const xzPoints: Array<[number, number]> = []
+      const vertex = new Vector3()
+      scene.traverse((obj) => {
+        if (!(obj as unknown as Record<string, unknown>).isMesh) return
+        const mesh = obj as Mesh
+        const pos = mesh.geometry.attributes.position
+        if (!pos) return
+        const step = Math.max(1, Math.floor(pos.count / 150))
+        for (let i = 0; i < pos.count; i += step) {
+          vertex.fromBufferAttribute(pos, i).applyMatrix4(mesh.matrixWorld)
+          xzPoints.push([vertex.x - center.x, vertex.z - center.z])
+        }
+      })
+      const hull = convexHull2D(xzPoints)
+      if (hull.length >= 3) assetUpdate.footprint2d = hull
+    }
+
+    if (Object.keys(assetUpdate).length > 0) {
+      useScene.getState().updateNode(node.id, { asset: { ...node.asset, ...assetUpdate } } as never)
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [node.id, scene]) // run once per (node, loaded scene) pair
+  }, [node.id, scene])
 
   const shading = useViewer((s) => s.shading)
   const textures = useViewer((s) => s.textures)

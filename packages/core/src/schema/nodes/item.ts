@@ -118,6 +118,11 @@ const assetSchema = z.object({
     })
     .optional(), // undefined = can't place things on it
   interactive: interactiveSchema.optional(),
+  // Convex-hull XZ footprint computed from GLB geometry when the model first
+  // loads in 3D. Points are in GLTF-local space, centered at the model's
+  // bounding-box center. Used by the 2D floorplan to draw the actual outline
+  // instead of a plain bounding-box rectangle.
+  footprint2d: z.array(z.tuple([z.number(), z.number()])).optional(),
 })
 
 export type AssetInput = z.input<typeof assetSchema>

@@ -178,19 +178,30 @@ export function buildItemFloorplan(node: ItemNode, ctx: GeometryContext): Floorp
   const cx = transform.x + centerOffsetX
   const cy = transform.y + centerOffsetY
 
-  // Rectangle corners in local space, rotated and translated.
+  // Use stored convex-hull footprint when available — gives the actual object
+  // outline instead of a plain bounding-box rectangle.
+  // Footprint points are in GLTF-local XZ space (centered at bbox center,
+  // unscaled). Apply asset scale before rotating into world space.
   const halfW = width / 2
   const halfD = depth / 2
-  const corners: Array<[number, number]> = [
-    [-halfW, -halfD],
-    [halfW, -halfD],
-    [halfW, halfD],
-    [-halfW, halfD],
-  ]
-  const points: readonly FloorplanPoint[] = corners.map(([x, y]) => {
-    const [rx, ry] = rotateVec(x, y, transform.rotation)
-    return [cx + rx, cy + ry] as FloorplanPoint
-  })
+  const [asx, , asz] = node.asset.scale ?? [1, 1, 1]
+  const points: readonly FloorplanPoint[] = node.asset.footprint2d && node.asset.footprint2d.length >= 3
+    ? node.asset.footprint2d.map(([fx, fz]) => {
+        const [rx, ry] = rotateVec(fx * (asx || 1), fz * (asz || 1), transform.rotation)
+        return [cx + rx, cy + ry] as FloorplanPoint
+      })
+    : ((): readonly FloorplanPoint[] => {
+        const corners: Array<[number, number]> = [
+          [-halfW, -halfD],
+          [halfW, -halfD],
+          [halfW, halfD],
+          [-halfW, halfD],
+        ]
+        return corners.map(([x, y]) => {
+          const [rx, ry] = rotateVec(x, y, transform.rotation)
+          return [cx + rx, cy + ry] as FloorplanPoint
+        })
+      })()
 
   const isSelected = ctx.viewState?.selected ?? false
   // Marquee preview — the about-to-be-selected tint every other kind shows.
