@@ -320,16 +320,68 @@ function FeaturesSection() {
 
 // ─── Plugin marquee ───────────────────────────────────────────────────────────
 
-const PLUGINS = [
-  'BOM Reports', 'Sun Study', 'Section Cuts', 'Mesh Editor', 'Terrain',
-  'Energy Analysis', 'Curtain Walls', 'Point Cloud', 'Schedules', 'Collaboration',
-  'Version History', 'Zone Rollup', 'DXF Export', 'Tripo AI', 'Poly Haven',
+// Each plugin gets a visual style: 'light' = white bg + dark text, others = colored
+const PLUGINS_ROW1 = [
+  { label: 'BOM Reports',    style: 'light' },
+  { label: 'Sun Study',      style: 'amber' },
+  { label: 'Section Cuts',   style: 'emerald' },
+  { label: 'Mesh Editor',    style: 'light' },
+  { label: 'Terrain',        style: 'green' },
+  { label: 'Energy Analysis', style: 'orange' },
+  { label: 'Tripo AI',       style: 'blue' },
+  { label: 'DXF Export',     style: 'light' },
 ]
 
-function PluginMarquee() {
-  // Duplicate for seamless infinite loop
-  const items = [...PLUGINS, ...PLUGINS]
+const PLUGINS_ROW2 = [
+  { label: 'Curtain Walls',  style: 'sky' },
+  { label: 'Point Cloud',    style: 'light' },
+  { label: 'Schedules',      style: 'violet' },
+  { label: 'Collaboration',  style: 'teal' },
+  { label: 'Version History', style: 'light' },
+  { label: 'Zone Rollup',    style: 'indigo' },
+  { label: 'Poly Haven',     style: 'light' },
+  { label: 'Sun Study',      style: 'rose' },
+]
 
+const PILL_STYLES: Record<string, string> = {
+  light:   'bg-white text-[#06080f] border-white/80 font-semibold',
+  blue:    'bg-blue-500/15 text-blue-300 border-blue-500/30',
+  amber:   'bg-amber-500/15 text-amber-300 border-amber-500/30',
+  emerald: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30',
+  green:   'bg-green-500/15 text-green-300 border-green-500/30',
+  orange:  'bg-orange-500/15 text-orange-300 border-orange-500/30',
+  sky:     'bg-sky-500/15 text-sky-300 border-sky-500/30',
+  violet:  'bg-violet-500/15 text-violet-300 border-violet-500/30',
+  teal:    'bg-teal-500/15 text-teal-300 border-teal-500/30',
+  indigo:  'bg-indigo-500/15 text-indigo-300 border-indigo-500/30',
+  rose:    'bg-rose-500/15 text-rose-300 border-rose-500/30',
+}
+
+function MarqueeRow({ items, reverse = false }: { items: typeof PLUGINS_ROW1; reverse?: boolean }) {
+  const doubled = [...items, ...items]
+  return (
+    <div className="relative overflow-hidden">
+      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-[#06080f] to-transparent" />
+      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-[#06080f] to-transparent" />
+      <motion.div
+        className="flex w-max gap-3 py-1"
+        animate={{ x: reverse ? ['-50%', '0%'] : ['0%', '-50%'] }}
+        transition={{ duration: 30, ease: 'linear', repeat: Infinity }}
+      >
+        {doubled.map((p, i) => (
+          <span
+            key={i}
+            className={`whitespace-nowrap rounded-full border px-4 py-2 text-[13px] font-medium transition-none ${PILL_STYLES[p.style]}`}
+          >
+            {p.label}
+          </span>
+        ))}
+      </motion.div>
+    </div>
+  )
+}
+
+function PluginMarquee() {
   return (
     <section className="overflow-hidden border-y border-white/[0.07] bg-[#06080f] py-20">
       <div className="mx-auto mb-12 max-w-6xl px-6 text-center">
@@ -342,25 +394,9 @@ function PluginMarquee() {
         </p>
       </div>
 
-      <div className="relative">
-        {/* Fade edges */}
-        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-28 bg-gradient-to-r from-[#06080f] to-transparent" />
-        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-28 bg-gradient-to-l from-[#06080f] to-transparent" />
-
-        <motion.div
-          className="flex w-max gap-3"
-          animate={{ x: ['0%', '-50%'] }}
-          transition={{ duration: 28, ease: 'linear', repeat: Infinity }}
-        >
-          {items.map((p, i) => (
-            <span
-              key={i}
-              className="whitespace-nowrap rounded-full border border-white/[0.1] bg-white/[0.04] px-4 py-2 text-[13px] font-medium text-white/55"
-            >
-              {p}
-            </span>
-          ))}
-        </motion.div>
+      <div className="flex flex-col gap-3">
+        <MarqueeRow items={PLUGINS_ROW1} />
+        <MarqueeRow items={PLUGINS_ROW2} reverse />
       </div>
     </section>
   )
