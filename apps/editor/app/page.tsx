@@ -12,6 +12,12 @@ import {
   Sun,
 } from 'lucide-react'
 
+export const metadata: Metadata = {
+  title: 'Aruct Editor — Build in three dimensions.',
+  description:
+    'Professional 3D architectural editor for architects, designers, and space planners. AI-assisted design, PBR materials, plugins, and cloud collaboration.',
+}
+
 function AructMark({ className }: { className?: string }) {
   return (
     <svg
@@ -41,33 +47,33 @@ const FEATURES = [
   },
   {
     icon: Sparkles,
-    title: 'AI Generation',
+    title: 'AI-Assisted Design',
     description:
-      'Describe a room, floor plan, or building in plain language and watch Aruct generate the geometry for you.',
+      'Describe a room, floor plan, or building in plain language and let Aruct generate the geometry for you.',
   },
   {
     icon: Palette,
-    title: 'Material Library',
+    title: 'PBR Material Library',
     description:
-      'Apply photorealistic PBR materials from a curated library. Import custom textures or source from Poly Haven.',
+      'Apply photorealistic physically-based materials from a curated library. Import custom textures or source from Poly Haven.',
   },
   {
     icon: Puzzle,
     title: 'Plugin Ecosystem',
     description:
-      'BOM reports, sun studies, section cuts, mesh editing, terrain, energy analysis, curtain walls — enable what you need.',
+      'BOM reports, sun studies, section cuts, mesh editing, terrain, energy analysis, curtain walls — enable only what you need.',
   },
   {
     icon: Cloud,
     title: 'Cloud Scenes',
     description:
-      'Save scenes to your account and open them from any device. Invite teammates to view or edit in real-time.',
+      'Save scenes to your account and access them from any device. Invite teammates to view or collaborate in real-time.',
   },
   {
     icon: Download,
-    title: 'Open Formats',
+    title: 'Open Format Export',
     description:
-      'Export to GLB, STL, OBJ, or DXF. Import DWG drawings to trace over. Full interop with your existing toolchain.',
+      'Export to GLB, STL, OBJ, or DXF. Import DWG drawings to trace and model over. Full interop with your toolchain.',
   },
 ]
 
@@ -85,12 +91,6 @@ const PLUGINS = [
   { label: 'Version History', color: 'bg-rose-500/10 text-rose-400 border-rose-500/20' },
   { label: 'Zone Rollup', color: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' },
 ]
-
-export const metadata: Metadata = {
-  title: 'Aruct — Design Buildings in Your Browser',
-  description:
-    'Professional 3D architectural design with AI assistance, PBR materials, a plugin ecosystem, and team collaboration. No installation required.',
-}
 
 export default function LandingPage() {
   return (
@@ -121,10 +121,10 @@ export default function LandingPage() {
               Sign in
             </Link>
             <Link
-              href="/editor"
+              href="/signup"
               className="rounded-lg bg-primary px-3.5 py-1.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
             >
-              Open editor
+              Get started
             </Link>
           </div>
         </div>
@@ -143,36 +143,32 @@ export default function LandingPage() {
           }}
         />
         <div className="relative mx-auto max-w-3xl">
-          <div className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-medium text-primary">
-            <Sparkles className="h-3.5 w-3.5" />
-            Open-source · Browser-native · WebGPU powered
-          </div>
+          <p className="mb-5 text-xs font-semibold uppercase tracking-widest text-primary/70">
+            The precision tool for spatial design
+          </p>
           <h1 className="mb-5 text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
-            Design Buildings.{' '}
-            <span className="text-primary">In Your Browser.</span>
+            Build in{' '}
+            <span className="text-primary">three dimensions.</span>
           </h1>
           <p className="mb-8 text-base text-muted-foreground sm:text-lg">
-            Professional 3D architectural design with AI assistance, PBR materials, a plugin
-            ecosystem, and team collaboration — no installation required.
+            A professional 3D architectural editor for architects, designers, and space planners.
+            AI-assisted, material-rich, and built for teams.
           </p>
           <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link
-              href="/editor"
+              href="/signup"
               className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90 transition-colors sm:w-auto"
             >
-              Start designing
+              Create free account
               <ChevronRight className="h-4 w-4" />
             </Link>
             <Link
-              href="/signup"
+              href="/editor"
               className="flex w-full items-center justify-center gap-2 rounded-xl border border-border bg-background px-6 py-3 text-sm font-semibold text-foreground hover:bg-accent transition-colors sm:w-auto"
             >
-              Create free account
+              Try without signing in
             </Link>
           </div>
-          <p className="mt-4 text-xs text-muted-foreground">
-            No credit card required · Local editor is always free
-          </p>
         </div>
       </section>
 
@@ -217,9 +213,9 @@ export default function LandingPage() {
                 Extend only what you need
               </h2>
               <p className="mb-6 text-muted-foreground leading-relaxed">
-                Aruct ships with a core that stays lean. Enable plugins from the marketplace to add
-                BOM reports, sun studies, terrain generation, energy analysis, curtain walls, and
-                more — each plugin is isolated and can be toggled without affecting your workflow.
+                Aruct ships with a focused core. Enable plugins from the marketplace to add BOM
+                reports, sun studies, terrain generation, energy analysis, curtain walls, and
+                more — each plugin is isolated and toggleable without disrupting your workflow.
               </p>
               <Link
                 href="/plugins"
@@ -243,46 +239,16 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Open source */}
-      <section className="border-b border-border/60 px-4 py-16 sm:px-6 sm:py-20">
-        <div className="mx-auto max-w-6xl">
-          <div className="rounded-2xl border border-border/60 bg-accent/20 px-6 py-10 text-center sm:px-12">
-            <div className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1 text-xs font-medium text-muted-foreground">
-              <Box className="h-3.5 w-3.5" />
-              Open source packages
-            </div>
-            <h2 className="mb-3 text-xl font-bold tracking-tight text-foreground sm:text-2xl">
-              Build on top of Aruct
-            </h2>
-            <p className="mx-auto mb-6 max-w-xl text-muted-foreground">
-              The core scene graph, viewer, editor UI, and MCP server are published as open-source
-              npm packages under <code className="font-mono text-sm">@aruct/core</code>,{' '}
-              <code className="font-mono text-sm">@aruct/viewer</code>, and{' '}
-              <code className="font-mono text-sm">@aruct/editor</code>. Embed the viewer in your
-              own app or build custom tooling on the scene graph.
-            </p>
-            <a
-              href="https://github.com/aruct/editor"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-4 py-2 text-sm font-medium text-foreground hover:bg-accent transition-colors"
-            >
-              View on GitHub
-            </a>
-          </div>
-        </div>
-      </section>
-
       {/* Pricing CTA */}
       <section className="border-b border-border/60 px-4 py-16 text-center sm:px-6 sm:py-20">
         <div className="mx-auto max-w-2xl">
           <Sun className="mx-auto mb-4 h-8 w-8 text-amber-400" />
           <h2 className="mb-3 text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-            Free to start. Scales with your work.
+            Free to start. Scales with your team.
           </h2>
           <p className="mb-8 text-muted-foreground">
-            The local editor is always free with no sign-in required. Cloud saves, collaboration,
-            and advanced plugins are available on Pro and Studio plans.
+            Start designing with no account required. Unlock cloud saves, real-time collaboration,
+            and advanced plugins with a Pro or Studio plan.
           </p>
           <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link
@@ -329,7 +295,7 @@ export default function LandingPage() {
               Terms
             </Link>
           </nav>
-          <p className="text-xs">© {new Date().getFullYear()} Aruct. Open source.</p>
+          <p className="text-xs">© {new Date().getFullYear()} Aruct. All rights reserved.</p>
         </div>
       </footer>
     </div>
