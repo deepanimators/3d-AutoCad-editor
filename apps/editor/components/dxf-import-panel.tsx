@@ -59,7 +59,9 @@ export function DxfImportPanel() {
 
   const handleFiles = (files: FileList | null) => {
     if (!files || files.length === 0) return
-    void doImport(files[0])
+    const file = files[0]
+    if (!file) return
+    void doImport(file)
   }
 
   return (

@@ -51,6 +51,7 @@
   "devDependencies": {
     "@aruct/typescript-config": "*",
     "@types/howler": "^2.2.12",
+    "@types/three": "^0.184.0",
     "@types/node": "^22.19.12",
     "@types/react": "19.2.2",
     "@types/react-dom": "19.2.2",

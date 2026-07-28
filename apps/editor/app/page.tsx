@@ -447,6 +447,27 @@ export default function Home() {
         settingsPanelProps={{
           sceneName: 'Local Workspace',
           onSaveAsNewCloud: handleSaveAsNewCloud,
+          onDxfImport: enabledPlugins.includes('aruct:plugin-dwg') ? async (file: File) => {
+            const fd = new FormData()
+            fd.append('file', file)
+            const res = await fetch('/api/import/dxf', { method: 'POST', body: fd })
+            if (!res.ok) {
+              const body = (await res.json().catch(() => ({}))) as { error?: string }
+              throw new Error(body.error ?? `Server error ${res.status}`)
+            }
+            const data = (await res.json()) as {
+              nodes: Array<{ type: string }>
+              stats: { lines: number; polylines: number; skipped: number; inserts: number }
+            }
+            const { createNode } = useScene.getState()
+            let nodesAdded = 0
+            for (const node of data.nodes) {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              createNode(node as any)
+              nodesAdded++
+            }
+            return { nodesAdded, stats: data.stats }
+          } : undefined,
         }}
         sidebarTabs={sidebarTabs}
         viewerToolbarLeft={<CommunityViewerToolbarLeft />}

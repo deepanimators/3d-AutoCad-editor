@@ -12,8 +12,8 @@ function parseDxfGroups(text: string): Array<[number, string]> {
   const lines = text.split(/\r?\n/)
   const groups: Array<[number, string]> = []
   for (let i = 0; i + 1 < lines.length; i += 2) {
-    const code = parseInt(lines[i].trim(), 10)
-    const value = lines[i + 1].trim()
+    const code = parseInt(lines[i]!.trim(), 10)
+    const value = lines[i + 1]!.trim()
     if (!isNaN(code)) groups.push([code, value])
   }
   return groups
@@ -105,14 +105,14 @@ function dxfToNodes(text: string): {
       const flag = getNumericGroup(entity.groups, 70, 0)
       const isClosed = (flag & 1) === 1 || (
         vertices.length >= 3 &&
-        Math.abs(vertices[0][0] - vertices[vertices.length - 1][0]) < 1e-6 &&
-        Math.abs(vertices[0][1] - vertices[vertices.length - 1][1]) < 1e-6
+        Math.abs(vertices[0]![0] - vertices[vertices.length - 1]![0]) < 1e-6 &&
+        Math.abs(vertices[0]![1] - vertices[vertices.length - 1]![1]) < 1e-6
       )
       if (isClosed && vertices.length >= 3) {
         // Deduplicate closing vertex if it duplicates the first
         const poly = (
-          Math.abs(vertices[0][0] - vertices[vertices.length - 1][0]) < 1e-6 &&
-          Math.abs(vertices[0][1] - vertices[vertices.length - 1][1]) < 1e-6
+          Math.abs(vertices[0]![0] - vertices[vertices.length - 1]![0]) < 1e-6 &&
+          Math.abs(vertices[0]![1] - vertices[vertices.length - 1]![1]) < 1e-6
         ) ? vertices.slice(0, -1) : vertices
         nodes.push({
           object: 'node',
@@ -134,8 +134,8 @@ function dxfToNodes(text: string): {
             type: 'wall',
             parentId: null,
             visible: true,
-            start: vertices[i],
-            end: vertices[i + 1],
+            start: vertices[i]!,
+            end: vertices[i + 1]!,
           })
         }
         stats.polylines++

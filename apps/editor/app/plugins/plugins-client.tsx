@@ -13,6 +13,11 @@ const CATEGORY_LABELS: Record<PluginCategory, string> = {
   export: 'Export & Interop',
   analysis: 'Analysis',
   collaboration: 'Collaboration',
+  modeling: 'Modeling',
+  materials: 'Materials',
+  documentation: 'Documentation',
+  interop: 'Import / Export',
+  rendering: 'Rendering',
 }
 
 const PLAN_ICONS: Record<PluginPlan, typeof Zap> = {

@@ -244,7 +244,7 @@ export function TextureManagerPanel() {
 
   const selectedNodeId = selectedIds[0] ?? null
   const nodes = useScene((s) => s.nodes)
-  const selectedNode = selectedNodeId ? nodes[selectedNodeId] : null
+  const selectedNode = selectedNodeId ? nodes[selectedNodeId as AnyNodeId] : null
   const slots = selectedNode && 'slots' in selectedNode
     ? (selectedNode.slots as Record<string, string> | undefined)
     : undefined

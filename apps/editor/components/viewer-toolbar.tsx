@@ -20,7 +20,6 @@ import {
   type ViewMode,
 } from '@aruct/editor'
 import { useScene } from '@aruct/core'
-// useScene.temporal used for undo/redo availability tracking
 import {
   CLAY_PALETTE,
   type EdgeMode,

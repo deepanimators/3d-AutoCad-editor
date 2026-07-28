@@ -28,7 +28,7 @@ describe('Aruct texture references', () => {
   })
 
   test("resolves 'material' input to app-material for assets-CDN catalog URLs", () => {
-    const cdnOrigin = new URL(process.env.NEXT_PUBLIC_ASSETS_CDN_URL || 'https://aruct.com')
+    const cdnOrigin = new URL(process.env.NEXT_PUBLIC_ASSETS_CDN_URL || 'https://www.aruct.com')
       .origin
     const texture = new THREE.Texture()
     const src = `${cdnOrigin}/material/concrete/prepared_drywall/prepared_drywall_normal_512.ktx2`
