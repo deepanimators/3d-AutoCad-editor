@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import {
   Box,
-  Building2,
   ChevronRight,
   Cloud,
   Download,
@@ -12,6 +11,26 @@ import {
   Sparkles,
   Sun,
 } from 'lucide-react'
+
+function AructMark({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M12 2 L22 7.5 L12 13 L2 7.5 Z" />
+      <line x1="2" y1="13" x2="22" y2="13" />
+      <path d="M2 7.5 L2 16.5 L12 22 L12 13" />
+      <path d="M22 7.5 L22 16.5 L12 22" />
+    </svg>
+  )
+}
 
 const FEATURES = [
   {
@@ -80,7 +99,7 @@ export default function LandingPage() {
       <header className="sticky top-0 z-50 border-b border-border/60 bg-background/90 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center gap-6 px-4 py-3 sm:px-6">
           <Link href="/" className="flex items-center gap-2 font-bold text-foreground">
-            <Building2 className="h-5 w-5 text-primary" />
+            <AructMark className="h-5 w-5 text-primary" />
             <span className="text-lg tracking-tight">Aruct</span>
           </Link>
           <nav className="hidden items-center gap-5 text-sm text-muted-foreground sm:flex">
@@ -287,7 +306,7 @@ export default function LandingPage() {
       <footer className="px-4 py-10 sm:px-6">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 text-sm text-muted-foreground sm:flex-row">
           <div className="flex items-center gap-2 font-semibold text-foreground">
-            <Building2 className="h-4 w-4 text-primary" />
+            <AructMark className="h-4 w-4 text-primary" />
             Aruct
           </div>
           <nav className="flex flex-wrap justify-center gap-x-5 gap-y-2">

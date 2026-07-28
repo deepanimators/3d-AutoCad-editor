@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-const PROTECTED = ['/', '/scenes', '/scene', '/account', '/admin']
+const PROTECTED = ['/editor', '/scenes', '/scene', '/account', '/admin']
 const AUTH_ROUTES = ['/login', '/signup']
 
 // Middleware runs in Edge runtime — firebase-admin (Node.js only) cannot be used here.
@@ -25,7 +25,7 @@ export function middleware(request: NextRequest) {
   }
 
   if (isAuthRoute && hasSession) {
-    return NextResponse.redirect(new URL('/', request.url))
+    return NextResponse.redirect(new URL('/scenes', request.url))
   }
 
   return NextResponse.next()
