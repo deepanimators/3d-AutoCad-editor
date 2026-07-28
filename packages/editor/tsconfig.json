@@ -1,10 +1,13 @@
 {
   "extends": "@aruct/typescript-config/react-library.json",
   "compilerOptions": {
+    "outDir": "dist",
     "rootDir": "src",
-    "noEmit": true,
+    "noEmit": false,
+    "composite": true,
+    "incremental": true,
     "types": ["bun"]
   },
   "include": ["src"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.test.tsx"]
 }
