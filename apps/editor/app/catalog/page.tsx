@@ -7,7 +7,7 @@ import { CatalogClient } from './catalog-client'
 
 export const dynamic = 'force-dynamic'
 
-const S3_BASE = 'https://assets.aruct.com'
+const S3_BASE = process.env.CATALOG_ASSETS_BASE_URL ?? ''
 
 type CatalogModel = {
   id: string

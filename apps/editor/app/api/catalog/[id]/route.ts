@@ -5,7 +5,7 @@ import { eq, or } from 'drizzle-orm'
 
 export const dynamic = 'force-dynamic'
 
-const S3_BASE = 'https://assets.aruct.com'
+const S3_BASE = process.env.CATALOG_ASSETS_BASE_URL ?? ''
 
 export async function GET(
   _request: NextRequest,

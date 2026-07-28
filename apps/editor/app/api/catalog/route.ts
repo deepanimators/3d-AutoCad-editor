@@ -5,7 +5,7 @@ import { like, eq, and, sql, desc, count } from 'drizzle-orm'
 
 export const dynamic = 'force-dynamic'
 
-const S3_BASE = 'https://assets.aruct.com'
+const S3_BASE = process.env.CATALOG_ASSETS_BASE_URL ?? ''
 
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl

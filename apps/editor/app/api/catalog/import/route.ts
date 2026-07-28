@@ -7,7 +7,7 @@ import { eq, and } from 'drizzle-orm'
 
 export const dynamic = 'force-dynamic'
 
-const S3_BASE = 'https://assets.aruct.com'
+const S3_BASE = process.env.CATALOG_ASSETS_BASE_URL ?? ''
 
 function resolveGlbUrl(s3Key: string): string {
   // s3Key can be a full absolute URL (external CDN/proxy) or a relative S3 path
