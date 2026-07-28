@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-const PROTECTED = ['/editor', '/scenes', '/scene', '/account', '/admin']
+const PROTECTED = ['/scenes', '/scene', '/account', '/admin']
 const AUTH_ROUTES = ['/login', '/signup']
 
 // Middleware runs in Edge runtime — firebase-admin (Node.js only) cannot be used here.
