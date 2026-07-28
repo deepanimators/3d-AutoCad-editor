@@ -1,7 +1,7 @@
 'use client'
 
 import { type AssetInput, useScene } from '@aruct/core'
-import { CATALOG_ITEMS, Editor, type ExternalResult, ItemsPanel } from '@aruct/editor'
+import { CATALOG_ITEMS, Editor, type ExternalResult, ItemsPanel, useEditor } from '@aruct/editor'
 import { BarChart2, Hammer, Layers, Package, Plus, Settings, Sun, Users } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -53,7 +53,11 @@ function mapDbModelToAsset(m: CatalogApiModel): AssetInput {
   }
 }
 
-function EditorItemsPanel() {
+interface EditorItemsPanelProps {
+  enabledPlugins: string[]
+}
+
+function EditorItemsPanel({ enabledPlugins }: EditorItemsPanelProps) {
   const [externalResults, setExternalResults] = useState<ExternalResult[] | null | undefined>(
     undefined,
   )
@@ -62,7 +66,6 @@ function EditorItemsPanel() {
   const [externalHasMore, setExternalHasMore] = useState(false)
   const [externalPage, setExternalPage] = useState(0)
   const [dbItems, setDbItems] = useState<AssetInput[]>([])
-  const [enabledPlugins, setEnabledPlugins] = useState<string[]>([])
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const currentQueryRef = useRef('')
 
@@ -77,12 +80,6 @@ function EditorItemsPanel() {
 
   useEffect(() => {
     loadDbItems()
-    fetch('/api/user/plugins')
-      .then((r) => r.ok ? r.json() : null)
-      .then((data: { enabled?: string[] } | null) => {
-        if (data?.enabled) setEnabledPlugins(data.enabled)
-      })
-      .catch(() => {})
   }, [loadDbItems])
 
   const handleExternalSelect = (result: ExternalResult) => {
@@ -173,77 +170,112 @@ function EditorItemsPanel() {
   )
 }
 
-const SIDEBAR_TABS = [
-  {
-    id: 'site',
-    label: 'Scene',
-    component: () => null,
-    mobileDefaultSnap: 0.5,
-    mobileIcon: <Layers className="h-5 w-5" />,
-    icon: <Layers className="h-5 w-5" />,
-  },
-  {
-    id: 'build',
-    label: 'Build',
-    component: BuildTab,
-    mobileDefaultSnap: 0.5,
-    mobileIcon: <Hammer className="h-5 w-5" />,
-    icon: <Hammer className="h-5 w-5" />,
-  },
-  {
-    id: 'items',
-    label: 'Items',
-    component: EditorItemsPanel,
-    mobileDefaultSnap: 0.5,
-    mobileIcon: <Package className="h-5 w-5" />,
-    icon: <Package className="h-5 w-5" />,
-  },
-  {
-    id: 'bom',
-    label: 'BOM',
-    component: BomPanel,
-    mobileDefaultSnap: 0.5,
-    mobileIcon: <BarChart2 className="h-5 w-5" />,
-    icon: <BarChart2 className="h-5 w-5" />,
-  },
-  {
-    id: 'sun-study',
-    label: 'Sun Study',
-    component: SunStudyPanel,
-    mobileDefaultSnap: 0.5,
-    mobileIcon: <Sun className="h-5 w-5" />,
-    icon: <Sun className="h-5 w-5" />,
-  },
-  {
-    id: 'settings',
-    label: 'Settings',
-    component: SettingsPanel,
-    mobileDefaultSnap: 0.5,
-    mobileIcon: <Settings className="h-5 w-5" />,
-    icon: <Settings className="h-5 w-5" />,
-  },
-  {
-    id: 'collab',
-    label: 'Collab',
-    component: CollabPanel,
-    mobileDefaultSnap: 0.5,
-    mobileIcon: <Users className="h-5 w-5" />,
-    icon: <Users className="h-5 w-5" />,
-  },
-  {
-    id: 'plugins',
-    label: 'Plugins',
-    component: UnifiedPluginsPanel,
-    mobileDefaultSnap: 0.5,
-    mobileIcon: <Plus className="h-5 w-5" />,
-    icon: <Plus className="h-5 w-5" />,
-  },
-]
+function TabUrlSync({ validTabIds }: { validTabIds: string[] }) {
+  const router = useRouter()
+  const activePanel = useEditor((s) => s.activeSidebarPanel)
+  const setActivePanel = useEditor((s) => s.setActiveSidebarPanel)
+  const mounted = useRef(false)
+
+  // On mount: apply tab from URL
+  useEffect(() => {
+    if (mounted.current) return
+    mounted.current = true
+    const tab = new URLSearchParams(window.location.search).get('tab')
+    if (tab && validTabIds.includes(tab)) setActivePanel(tab)
+  }, [setActivePanel, validTabIds])
+
+  // Sync active panel to URL
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('tab') === activePanel) return
+    params.set('tab', activePanel)
+    router.replace(`${window.location.pathname}?${params.toString()}`, { scroll: false })
+  }, [activePanel, router])
+
+  return null
+}
 
 const PROJECT_ID = 'local-editor'
 
 export default function Home() {
   const router = useRouter()
+  const [enabledPlugins, setEnabledPlugins] = useState<string[]>([])
+
+  useEffect(() => {
+    fetch('/api/user/plugins', { cache: 'no-store' })
+      .then((r) => r.ok ? r.json() : null)
+      .then((data: { enabled?: string[] } | null) => {
+        if (data?.enabled) setEnabledPlugins(data.enabled)
+      })
+      .catch(() => {})
+  }, [])
+
+  const sidebarTabs = [
+    {
+      id: 'site',
+      label: 'Scene',
+      component: () => null,
+      mobileDefaultSnap: 0.5,
+      mobileIcon: <Layers className="h-5 w-5" />,
+      icon: <Layers className="h-5 w-5" />,
+    },
+    {
+      id: 'build',
+      label: 'Build',
+      component: BuildTab,
+      mobileDefaultSnap: 0.5,
+      mobileIcon: <Hammer className="h-5 w-5" />,
+      icon: <Hammer className="h-5 w-5" />,
+    },
+    {
+      id: 'items',
+      label: 'Items',
+      component: () => <EditorItemsPanel enabledPlugins={enabledPlugins} />,
+      mobileDefaultSnap: 0.5,
+      mobileIcon: <Package className="h-5 w-5" />,
+      icon: <Package className="h-5 w-5" />,
+    },
+    ...(enabledPlugins.includes('aruct:plugin-bom') ? [{
+      id: 'bom',
+      label: 'BOM',
+      component: BomPanel,
+      mobileDefaultSnap: 0.5,
+      mobileIcon: <BarChart2 className="h-5 w-5" />,
+      icon: <BarChart2 className="h-5 w-5" />,
+    }] : []),
+    ...(enabledPlugins.includes('aruct:plugin-sun-study') ? [{
+      id: 'sun-study',
+      label: 'Sun Study',
+      component: SunStudyPanel,
+      mobileDefaultSnap: 0.5,
+      mobileIcon: <Sun className="h-5 w-5" />,
+      icon: <Sun className="h-5 w-5" />,
+    }] : []),
+    ...(enabledPlugins.includes('aruct:plugin-collab') ? [{
+      id: 'collab',
+      label: 'Collab',
+      component: CollabPanel,
+      mobileDefaultSnap: 0.5,
+      mobileIcon: <Users className="h-5 w-5" />,
+      icon: <Users className="h-5 w-5" />,
+    }] : []),
+    {
+      id: 'settings',
+      label: 'Settings',
+      component: SettingsPanel,
+      mobileDefaultSnap: 0.5,
+      mobileIcon: <Settings className="h-5 w-5" />,
+      icon: <Settings className="h-5 w-5" />,
+    },
+    {
+      id: 'plugins',
+      label: 'Plugins',
+      component: UnifiedPluginsPanel,
+      mobileDefaultSnap: 0.5,
+      mobileIcon: <Plus className="h-5 w-5" />,
+      icon: <Plus className="h-5 w-5" />,
+    },
+  ]
 
   const handleSaveAsNewCloud = useCallback(async () => {
     const name =
@@ -281,6 +313,7 @@ export default function Home() {
   return (
     <div className="relative h-screen w-screen">
       <FloorplanConstructionPreflight />
+      <TabUrlSync validTabIds={sidebarTabs.map((t) => t.id)} />
       {PROJECT_ID === 'local-editor' && (
         <div className="pointer-events-none absolute top-3 left-1/2 z-40 -translate-x-1/2">
           <div className="pointer-events-auto flex items-center gap-3 rounded-full border border-border/60 bg-background/90 px-4 py-1.5 text-xs shadow-sm backdrop-blur">
@@ -306,7 +339,7 @@ export default function Home() {
           sceneName: 'Local Workspace',
           onSaveAsNewCloud: handleSaveAsNewCloud,
         }}
-        sidebarTabs={SIDEBAR_TABS}
+        sidebarTabs={sidebarTabs}
         viewerToolbarLeft={<CommunityViewerToolbarLeft />}
         viewerToolbarRight={<CommunityViewerToolbarRight />}
       />

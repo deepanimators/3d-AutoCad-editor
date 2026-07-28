@@ -2,7 +2,7 @@
 
 import { editorHostPanelRegistry } from '@aruct/editor'
 import { useScene } from '@aruct/core'
-import { Check, Clock, Crown, Building2, Zap, Lock } from 'lucide-react'
+import { Clock, Crown, Building2, Zap, Lock } from 'lucide-react'
 import { useEffect, useState, useSyncExternalStore } from 'react'
 import { PLUGIN_CATALOG } from '@/lib/plugins/catalog'
 
@@ -28,7 +28,7 @@ export function UnifiedPluginsPanel() {
   const readOnly = useScene((s) => s.readOnly)
 
   useEffect(() => {
-    fetch('/api/user/plugins')
+    fetch('/api/user/plugins', { cache: 'no-store' })
       .then((r) => r.ok ? r.json() : null)
       .then((data: { enabled?: string[]; plan?: string } | null) => {
         if (data?.enabled) setEnabledIds(data.enabled)
@@ -94,6 +94,8 @@ export function UnifiedPluginsPanel() {
                   </div>
                   <button
                     type="button"
+                    role="switch"
+                    aria-checked={installed}
                     disabled={readOnly}
                     onClick={() => {
                       const next = installed
@@ -101,17 +103,15 @@ export function UnifiedPluginsPanel() {
                         : [...installedPlugins, pluginId]
                       setInstalledPlugins(next, { explicit: true })
                     }}
-                    className={`ml-3 shrink-0 flex items-center gap-1 rounded-lg border px-2.5 py-1 text-xs font-medium transition-colors disabled:opacity-50 ${
-                      installed
-                        ? 'border-border bg-background text-muted-foreground hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30'
-                        : 'border-brand/30 bg-brand/10 text-brand hover:bg-brand/20'
+                    className={`ml-3 relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors disabled:opacity-60 ${
+                      installed ? 'bg-brand' : 'bg-muted-foreground/30'
                     }`}
                   >
-                    {installed ? (
-                      <><Check className="h-3 w-3" /> Installed</>
-                    ) : (
-                      <>Install</>
-                    )}
+                    <span
+                      className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition-transform ${
+                        installed ? 'translate-x-4' : 'translate-x-0'
+                      }`}
+                    />
                   </button>
                 </div>
               )
