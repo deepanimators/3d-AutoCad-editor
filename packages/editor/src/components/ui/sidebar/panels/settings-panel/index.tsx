@@ -6,7 +6,7 @@ import {
 } from '@aruct/core'
 import { useViewer } from '@aruct/viewer'
 import { TreeView, VisualJson } from '@visual-json/react'
-import { Camera, Download, Map as MapIcon, Save, Trash2, Upload } from 'lucide-react'
+import { Camera, Download, FileCode, Map as MapIcon, Save, Trash2, Upload } from 'lucide-react'
 import {
   type KeyboardEvent,
   type SyntheticEvent,
@@ -192,6 +192,7 @@ export interface SettingsPanelProps {
   onSaveCloud?: () => void
   onSaveAsNewCloud?: () => void
   onClearAndStartNewCloud?: () => void
+  onDxfImport?: (file: File) => Promise<{ nodesAdded: number; stats: { lines: number; polylines: number; skipped: number; inserts: number } }>
 }
 
 export function SettingsPanel({
@@ -205,6 +206,7 @@ export function SettingsPanel({
   onSaveCloud,
   onSaveAsNewCloud,
   onClearAndStartNewCloud,
+  onDxfImport,
 }: SettingsPanelProps = {}) {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const nodes = useScene((state) => state.nodes)
@@ -217,11 +219,15 @@ export function SettingsPanel({
   const shadows = useViewer((state) => state.shadows)
   const hdriUrl = useViewer((state) => state.hdriUrl)
   const setPhase = useEditor((state) => state.setPhase)
+  const dxfInputRef = useRef<HTMLInputElement>(null)
   const [isGeneratingThumbnail, setIsGeneratingThumbnail] = useState(false)
   const [customHdriUrl, setCustomHdriUrl] = useState('')
   const [pendingImport, setPendingImport] = useState<PendingImport | null>(null)
   const [editingName, setEditingName] = useState(sceneName ?? '')
   const [isRenaming, setIsRenaming] = useState(false)
+  const [dxfStatus, setDxfStatus] = useState<'idle' | 'loading' | 'done' | 'error'>('idle')
+  const [dxfResult, setDxfResult] = useState<{ nodesAdded: number } | null>(null)
+  const [dxfError, setDxfError] = useState<string | null>(null)
 
   useEffect(() => {
     if (sceneName !== undefined) {
@@ -574,6 +580,69 @@ export function SettingsPanel({
           </Button>
         </div>
       </div>
+
+      {/* DXF / DWG Import Section */}
+      {onDxfImport && (
+        <div className="space-y-2">
+          <label className="font-medium text-muted-foreground text-xs uppercase">Import</label>
+          <div className="font-medium text-muted-foreground text-xs">DXF / DWG</div>
+
+          <button
+            type="button"
+            className="flex w-full flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-border/60 px-4 py-6 text-center transition-colors hover:border-border hover:bg-accent/10"
+            onClick={() => dxfInputRef.current?.click()}
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={(e) => {
+              e.preventDefault()
+              const file = e.dataTransfer.files[0]
+              if (!file) return
+              setDxfStatus('loading')
+              setDxfError(null)
+              setDxfResult(null)
+              onDxfImport(file)
+                .then((r) => { setDxfResult({ nodesAdded: r.nodesAdded }); setDxfStatus('done') })
+                .catch((err: unknown) => { setDxfError(err instanceof Error ? err.message : 'Import failed'); setDxfStatus('error') })
+            }}
+          >
+            <Upload className="h-5 w-5 text-muted-foreground/50" />
+            <span className="text-xs font-medium">Drop a .dxf file here</span>
+            <span className="text-muted-foreground text-xs">or click to browse</span>
+          </button>
+
+          <input
+            ref={dxfInputRef}
+            type="file"
+            accept=".dxf"
+            className="hidden"
+            onChange={(e) => {
+              const file = e.target.files?.[0]
+              if (!file) return
+              e.target.value = ''
+              setDxfStatus('loading')
+              setDxfError(null)
+              setDxfResult(null)
+              onDxfImport(file)
+                .then((r) => { setDxfResult({ nodesAdded: r.nodesAdded }); setDxfStatus('done') })
+                .catch((err: unknown) => { setDxfError(err instanceof Error ? err.message : 'Import failed'); setDxfStatus('error') })
+            }}
+          />
+
+          {dxfStatus === 'loading' && (
+            <p className="text-center text-xs text-muted-foreground">Importing…</p>
+          )}
+          {dxfStatus === 'error' && dxfError && (
+            <p className="text-xs text-destructive">{dxfError}</p>
+          )}
+          {dxfStatus === 'done' && dxfResult && (
+            <p className="text-xs text-muted-foreground">
+              Import complete — {dxfResult.nodesAdded} elements added.
+            </p>
+          )}
+          <p className="text-muted-foreground text-xs">
+            Supports LINE and LWPOLYLINE entities. DWG binary import coming soon.
+          </p>
+        </div>
+      )}
 
       {/* Thumbnail Section */}
       {projectId && (

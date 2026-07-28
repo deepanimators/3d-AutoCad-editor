@@ -1,7 +1,8 @@
 'use client'
 
-import { useScene } from '@aruct/core'
-import React, { Suspense } from 'react'
+import { sceneRegistry, useScene } from '@aruct/core'
+import { FileCode, Upload } from 'lucide-react'
+import React, { Suspense, useRef, useState } from 'react'
 import { IfcExportPanel } from './ifc-export-panel'
 
 // Shoelace formula for 2D polygon area

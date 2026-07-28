@@ -12,7 +12,6 @@ import { CollabPanel } from '@/components/collab-panel'
 import { SettingsPanel } from '@/components/settings-panel'
 import { SunStudyPanel } from '@/components/sun-study-panel'
 import { BuildTab } from '@/components/build-tab'
-import { GlbExportPanel } from '@/components/glb-export-panel'
 import { TextureManagerPanel } from '@/components/texture-manager-panel'
 import { SectionsPanel } from '@/components/sections-panel'
 import { MeshEditorPanel } from '@/components/mesh-editor-panel'
@@ -282,14 +281,6 @@ export default function Home() {
       mobileIcon: <Users className="h-5 w-5" />,
       icon: <Users className="h-5 w-5" />,
     }] : []),
-    ...(enabledPlugins.includes('aruct:plugin-glb-export') ? [{
-      id: 'glb-export',
-      label: 'Export',
-      component: GlbExportPanel,
-      mobileDefaultSnap: 0.5,
-      mobileIcon: <Download className="h-5 w-5" />,
-      icon: <Download className="h-5 w-5" />,
-    }] : []),
     ...(enabledPlugins.includes('aruct:plugin-texture-manager') ? [{
       id: 'textures',
       label: 'Textures',
@@ -329,14 +320,6 @@ export default function Home() {
       mobileDefaultSnap: 0.5,
       mobileIcon: <ClipboardList className="h-5 w-5" />,
       icon: <ClipboardList className="h-5 w-5" />,
-    }] : []),
-    ...(enabledPlugins.includes('aruct:plugin-dwg') ? [{
-      id: 'dwg',
-      label: 'DXF/DWG',
-      component: DxfImportPanel,
-      mobileDefaultSnap: 0.5,
-      mobileIcon: <FileCode className="h-5 w-5" />,
-      icon: <FileCode className="h-5 w-5" />,
     }] : []),
     ...(enabledPlugins.includes('aruct:plugin-render') ? [{
       id: 'render',

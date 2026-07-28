@@ -16,19 +16,17 @@ import {
   type SidebarTab,
   useEditor,
 } from '@aruct/editor'
-import { BarChart2, Building2, Camera, ClipboardList, Clock, CloudSnow, Download, FileCode, Hammer, LayoutGrid, Layers, Mountain, Package, Palette, PenTool, Plus, Scissors, Settings, Sun, Users, Zap } from 'lucide-react'
+import { BarChart2, Building2, Camera, ClipboardList, Clock, CloudSnow, Hammer, LayoutGrid, Layers, Mountain, Package, Palette, PenTool, Plus, Scissors, Settings, Sun, Users, Zap } from 'lucide-react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { AiGenerateTile } from './ai-generate-tile'
 import { BomPanel } from './bom-panel'
 import { BuildTab } from './build-tab'
-import { GlbExportPanel } from './glb-export-panel'
 import { SectionsPanel } from './sections-panel'
 import { MeshEditorPanel } from './mesh-editor-panel'
 import { TerrainPanel } from './terrain-panel'
 import { SchedulesPanel } from './schedules-panel'
-import { DxfImportPanel } from './dxf-import-panel'
 import { RenderPanel } from './render-panel'
 import { CurtainWallPanel } from './curtain-wall-panel'
 import { PointCloudPanel } from './point-cloud-panel'
@@ -207,6 +205,7 @@ function sceneGraphSignature(graph: SceneGraphWithCollections): string {
 export function SceneLoader({ initialScene, meta }: SceneLoaderProps) {
   const router = useRouter()
   const versionRef = useRef(meta.version)
+  const pendingConflictVersionRef = useRef<number | null>(null)
   const lastRemoteGraphJsonRef = useRef<string | null>(null)
   const suppressRemoteSaveUntilRef = useRef(0)
   const [conflict, setConflict] = useState(false)
@@ -309,14 +308,6 @@ export function SceneLoader({ initialScene, meta }: SceneLoaderProps) {
       mobileIcon: <Users className="h-5 w-5" />,
       icon: <Users className="h-5 w-5" />,
     } as SidebarTab & { component: React.ComponentType }] : []),
-    ...(enabledPlugins.includes('aruct:plugin-glb-export') ? [{
-      id: 'glb-export',
-      label: 'Export',
-      component: GlbExportPanel,
-      mobileDefaultSnap: 0.5,
-      mobileIcon: <Download className="h-5 w-5" />,
-      icon: <Download className="h-5 w-5" />,
-    } as SidebarTab & { component: React.ComponentType }] : []),
     ...(enabledPlugins.includes('aruct:plugin-texture-manager') ? [{
       id: 'textures',
       label: 'Textures',
@@ -356,14 +347,6 @@ export function SceneLoader({ initialScene, meta }: SceneLoaderProps) {
       mobileDefaultSnap: 0.5,
       mobileIcon: <ClipboardList className="h-5 w-5" />,
       icon: <ClipboardList className="h-5 w-5" />,
-    } as SidebarTab & { component: React.ComponentType }] : []),
-    ...(enabledPlugins.includes('aruct:plugin-dwg') ? [{
-      id: 'dwg',
-      label: 'DXF/DWG',
-      component: DxfImportPanel,
-      mobileDefaultSnap: 0.5,
-      mobileIcon: <FileCode className="h-5 w-5" />,
-      icon: <FileCode className="h-5 w-5" />,
     } as SidebarTab & { component: React.ComponentType }] : []),
     ...(enabledPlugins.includes('aruct:plugin-render') ? [{
       id: 'render',
@@ -443,6 +426,9 @@ export function SceneLoader({ initialScene, meta }: SceneLoaderProps) {
 
   const handleSave = useCallback(
     async (graph: SceneGraph, options?: { keepalive?: boolean }) => {
+      // Don't keep hammering the server while the conflict dialog is visible.
+      if (pendingConflictVersionRef.current !== null) return
+
       const graphJson = sceneGraphSignature(graph)
       const isRecentRemoteApply = Date.now() < suppressRemoteSaveUntilRef.current
       if (lastRemoteGraphJsonRef.current === graphJson) {
@@ -464,6 +450,10 @@ export function SceneLoader({ initialScene, meta }: SceneLoaderProps) {
         })
 
         if (response.status === 409) {
+          const body = await response.json().catch(() => ({})) as { currentVersion?: number }
+          if (typeof body.currentVersion === 'number') {
+            pendingConflictVersionRef.current = body.currentVersion
+          }
           setConflict(true)
           return
         }
@@ -634,7 +624,13 @@ export function SceneLoader({ initialScene, meta }: SceneLoaderProps) {
             </button>
             <button
               className="rounded-md border border-border bg-background px-3 py-1.5 font-medium text-xs hover:bg-accent/40"
-              onClick={() => setConflict(false)}
+              onClick={() => {
+                if (pendingConflictVersionRef.current !== null) {
+                  versionRef.current = pendingConflictVersionRef.current
+                  pendingConflictVersionRef.current = null
+                }
+                setConflict(false)
+              }}
               type="button"
             >
               Dismiss
@@ -675,6 +671,27 @@ export function SceneLoader({ initialScene, meta }: SceneLoaderProps) {
           },
           onSaveAsNewCloud: handleSaveAsNewCloud,
           onClearAndStartNewCloud: handleClearAndStartNewCloud,
+          onDxfImport: enabledPlugins.includes('aruct:plugin-dwg') ? async (file: File) => {
+            const fd = new FormData()
+            fd.append('file', file)
+            const res = await fetch('/api/import/dxf', { method: 'POST', body: fd })
+            if (!res.ok) {
+              const body = (await res.json().catch(() => ({}))) as { error?: string }
+              throw new Error(body.error ?? `Server error ${res.status}`)
+            }
+            const data = (await res.json()) as {
+              nodes: Array<{ type: string }>
+              stats: { lines: number; polylines: number; skipped: number; inserts: number }
+            }
+            const { createNode } = useScene.getState()
+            let nodesAdded = 0
+            for (const node of data.nodes) {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              createNode(node as any)
+              nodesAdded++
+            }
+            return { nodesAdded, stats: data.stats }
+          } : undefined,
         }}
         sidebarTabs={sidebarTabs}
         viewerToolbarLeft={<CommunityViewerToolbarLeft />}
