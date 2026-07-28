@@ -6,28 +6,35 @@ export const metadata: Metadata = {
   description: 'Privacy Policy for Aruct Editor and the Aruct platform.',
 }
 
+function AructMark({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 2 L22 7.5 L12 13 L2 7.5 Z" />
+      <line x1="2" y1="13" x2="22" y2="13" />
+      <path d="M2 7.5 L2 16.5 L12 22 L12 13" />
+      <path d="M22 7.5 L22 16.5 L12 22" />
+    </svg>
+  )
+}
+
 export default function PrivacyPage() {
   return (
     <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-10 border-border border-b bg-background/95 backdrop-blur">
         <div className="container mx-auto px-6 py-4">
-          <nav className="flex items-center gap-4 text-sm">
-            <Link
-              className="text-muted-foreground transition-colors hover:text-foreground"
-              href="/"
-            >
-              Home
+          <div className="flex items-center gap-6">
+            <Link href="/" className="flex items-center gap-2 font-bold text-foreground">
+              <AructMark className="h-5 w-5 text-primary" />
+              Aruct
             </Link>
-            <span className="text-muted-foreground">/</span>
-            <Link
-              className="text-muted-foreground transition-colors hover:text-foreground"
-              href="/terms"
-            >
-              Terms of Service
-            </Link>
-            <span className="text-muted-foreground">|</span>
-            <span className="font-medium text-foreground">Privacy Policy</span>
-          </nav>
+            <nav className="flex items-center gap-3 text-sm">
+              <Link className="text-muted-foreground transition-colors hover:text-foreground" href="/terms">
+                Terms of Service
+              </Link>
+              <span className="text-muted-foreground">|</span>
+              <span className="font-medium text-foreground">Privacy Policy</span>
+            </nav>
+          </div>
         </div>
       </header>
 

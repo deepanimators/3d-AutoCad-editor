@@ -6,28 +6,35 @@ export const metadata: Metadata = {
   description: 'Terms of Service for Aruct Editor and the Aruct platform.',
 }
 
+function AructMark({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 2 L22 7.5 L12 13 L2 7.5 Z" />
+      <line x1="2" y1="13" x2="22" y2="13" />
+      <path d="M2 7.5 L2 16.5 L12 22 L12 13" />
+      <path d="M22 7.5 L22 16.5 L12 22" />
+    </svg>
+  )
+}
+
 export default function TermsPage() {
   return (
     <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-10 border-border border-b bg-background/95 backdrop-blur">
         <div className="container mx-auto px-6 py-4">
-          <nav className="flex items-center gap-4 text-sm">
-            <Link
-              className="text-muted-foreground transition-colors hover:text-foreground"
-              href="/"
-            >
-              Home
+          <div className="flex items-center gap-6">
+            <Link href="/" className="flex items-center gap-2 font-bold text-foreground">
+              <AructMark className="h-5 w-5 text-primary" />
+              Aruct
             </Link>
-            <span className="text-muted-foreground">/</span>
-            <span className="font-medium text-foreground">Terms of Service</span>
-            <span className="text-muted-foreground">|</span>
-            <Link
-              className="text-muted-foreground transition-colors hover:text-foreground"
-              href="/privacy"
-            >
-              Privacy Policy
-            </Link>
-          </nav>
+            <nav className="flex items-center gap-3 text-sm">
+              <span className="font-medium text-foreground">Terms of Service</span>
+              <span className="text-muted-foreground">|</span>
+              <Link className="text-muted-foreground transition-colors hover:text-foreground" href="/privacy">
+                Privacy Policy
+              </Link>
+            </nav>
+          </div>
         </div>
       </header>
 
@@ -49,14 +56,13 @@ export default function TermsPage() {
           <section className="mb-8 space-y-4">
             <h2 className="font-semibold text-xl">2. The Editor and Platform</h2>
             <p className="text-foreground/90 leading-relaxed">
-              The Aruct Editor is open-source software released under the MIT License. You may use,
-              copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Editor
-              software in accordance with the MIT License terms.
+              The Aruct Editor and Platform are proprietary software and services owned and operated
+              by Aruct Inc. All rights are reserved unless otherwise stated. You may not copy,
+              modify, distribute, or create derivative works without prior written permission.
             </p>
             <p className="text-foreground/90 leading-relaxed">
               The Aruct platform (aruct.app) and its associated services, including user accounts,
-              cloud storage, and project hosting, are proprietary services owned and operated by
-              Aruct Inc. These Terms govern your use of the Platform.
+              cloud storage, and project hosting, are commercial services subject to these Terms.
             </p>
           </section>
 
@@ -106,9 +112,9 @@ export default function TermsPage() {
             <h2 className="font-semibold text-xl">6. Platform Ownership</h2>
             <p className="text-foreground/90 leading-relaxed">
               The Platform, including its design, features, and proprietary code, is owned by Aruct
-              Group Inc. and protected by intellectual property laws. While the Editor source code
-              is open-source under the MIT License, the Platform services, branding, and
-              infrastructure remain our proprietary property.
+              Inc. and protected by intellectual property laws. All Platform services, branding, and
+              infrastructure are our proprietary property and may not be reproduced or distributed
+              without permission.
             </p>
           </section>
 

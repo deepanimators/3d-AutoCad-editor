@@ -1,21 +1,11 @@
 'use client'
 
-import { motion, useScroll, useTransform, useInView, useMotionValue, useSpring } from 'motion/react'
+import { motion, useScroll, useTransform, useInView } from 'motion/react'
 import Link from 'next/link'
-import { useRef, useEffect, useState } from 'react'
-import {
-  ChevronRight,
-  Cloud,
-  Download,
-  Layers,
-  Palette,
-  Puzzle,
-  Sparkles,
-  ArrowRight,
-  Check,
-} from 'lucide-react'
+import { useRef, useState, useEffect } from 'react'
+import { ArrowRight, Check, Layers, Sparkles, Palette, Puzzle, Cloud, Download } from 'lucide-react'
 
-// ─── Brand mark ──────────────────────────────────────────────────────────────
+// ─── Brand mark ───────────────────────────────────────────────────────────────
 
 function AructMark({ className }: { className?: string }) {
   return (
@@ -28,148 +18,103 @@ function AructMark({ className }: { className?: string }) {
   )
 }
 
-// ─── Scroll-aware navbar ──────────────────────────────────────────────────────
+// ─── Blueprint grid ───────────────────────────────────────────────────────────
+
+function GridBg({ className }: { className?: string }) {
+  return (
+    <svg className={className} width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="lp-sm" width="50" height="50" patternUnits="userSpaceOnUse">
+          <path d="M 50 0 L 0 0 0 50" fill="none" stroke="white" strokeWidth="0.4" strokeOpacity="0.07" />
+        </pattern>
+        <pattern id="lp-lg" width="250" height="250" patternUnits="userSpaceOnUse">
+          <rect width="250" height="250" fill="url(#lp-sm)" />
+          <path d="M 250 0 L 0 0 0 250" fill="none" stroke="white" strokeWidth="1" strokeOpacity="0.1" />
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#lp-lg)" />
+    </svg>
+  )
+}
+
+// ─── Navbar ───────────────────────────────────────────────────────────────────
 
 function Navbar() {
-  const [scrolled, setScrolled] = useState(false)
+  const [solid, setSolid] = useState(false)
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40)
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
+    const fn = () => setSolid(window.scrollY > 50)
+    window.addEventListener('scroll', fn, { passive: true })
+    return () => window.removeEventListener('scroll', fn)
   }, [])
 
   return (
-    <motion.header
-      className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
-      style={{
-        background: scrolled ? 'hsl(var(--background) / 0.92)' : 'transparent',
-        borderBottom: scrolled ? '1px solid hsl(var(--border) / 0.6)' : '1px solid transparent',
-        backdropFilter: scrolled ? 'blur(12px)' : 'none',
-      }}
-    >
-      <div className="mx-auto flex max-w-6xl items-center gap-6 px-4 py-4 sm:px-6">
-        <Link href="/" className="flex items-center gap-2 font-bold text-foreground">
-          <AructMark className="h-5 w-5 text-primary" />
-          <span className="text-lg tracking-tight">Aruct</span>
+    <header className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${solid ? 'bg-[#06080f]/90 backdrop-blur-xl border-b border-white/[0.07]' : 'border-b border-transparent'}`}>
+      <div className="mx-auto flex max-w-6xl items-center gap-6 px-6 py-4">
+        <Link href="/" className="flex items-center gap-2 font-bold text-[15px] text-white">
+          <AructMark className="h-[18px] w-[18px] text-blue-500" />
+          Aruct
         </Link>
-        <nav className="hidden items-center gap-6 text-sm text-muted-foreground sm:flex">
-          <Link href="/pricing" className="hover:text-foreground transition-colors">Pricing</Link>
-          <Link href="/scenes" className="hover:text-foreground transition-colors">My Scenes</Link>
-          <Link href="/plugins" className="hover:text-foreground transition-colors">Plugins</Link>
+        <nav className="hidden items-center gap-6 text-[13px] text-white/50 sm:flex">
+          <Link href="/pricing" className="hover:text-white transition-colors">Pricing</Link>
+          <Link href="/plugins" className="hover:text-white transition-colors">Plugins</Link>
+          <Link href="/contact" className="hover:text-white transition-colors">Contact</Link>
         </nav>
-        <div className="ml-auto flex items-center gap-2">
-          <Link href="/login" className="hidden rounded-lg px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors sm:block">
+        <div className="ml-auto flex items-center gap-3">
+          <Link href="/login" className="hidden text-[13px] text-white/50 hover:text-white transition-colors sm:block">
             Sign in
           </Link>
-          <Link href="/signup" className="rounded-lg bg-primary px-4 py-1.5 text-sm font-semibold text-primary-foreground hover:bg-primary/90 transition-colors">
+          <Link href="/signup" className="rounded-lg bg-blue-600 px-4 py-[7px] text-[13px] font-semibold text-white hover:bg-blue-500 transition-colors">
             Get started
           </Link>
         </div>
       </div>
-    </motion.header>
+    </header>
   )
 }
 
-// ─── Blueprint grid (SVG) ─────────────────────────────────────────────────────
-
-function BlueprintGrid({ className }: { className?: string }) {
-  return (
-    <svg className={className} width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <pattern id="small-grid" width="40" height="40" patternUnits="userSpaceOnUse">
-          <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" strokeWidth="0.5" />
-        </pattern>
-        <pattern id="large-grid" width="200" height="200" patternUnits="userSpaceOnUse">
-          <rect width="200" height="200" fill="url(#small-grid)" />
-          <path d="M 200 0 L 0 0 0 200" fill="none" stroke="currentColor" strokeWidth="1.5" />
-        </pattern>
-      </defs>
-      <rect width="100%" height="100%" fill="url(#large-grid)" />
-    </svg>
-  )
-}
-
-// ─── Floating 3D wireframe cube ───────────────────────────────────────────────
-
-function WireframeCube({ progress }: { progress: number }) {
-  const rotate = progress * 30
-  const faces = [
-    // front
-    'M 100 60 L 220 60 L 220 180 L 100 180 Z',
-    // back (offset)
-    'M 140 20 L 260 20 L 260 140 L 140 140 Z',
-    // connecting edges
-    'M 100 60 L 140 20', 'M 220 60 L 260 20',
-    'M 220 180 L 260 140', 'M 100 180 L 140 140',
-  ]
-  return (
-    <svg
-      viewBox="0 0 360 200"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      className="text-primary/30"
-      style={{ transform: `rotateY(${rotate}deg)`, transformStyle: 'preserve-3d' }}
-    >
-      {faces.map((d, i) => <path key={i} d={d} />)}
-    </svg>
-  )
-}
-
-// ─── Hero section ─────────────────────────────────────────────────────────────
+// ─── Hero ─────────────────────────────────────────────────────────────────────
 
 function HeroSection() {
   const ref = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] })
-  const gridY = useTransform(scrollYProgress, [0, 1], ['0%', '30%'])
-  const cubeY = useTransform(scrollYProgress, [0, 1], ['0%', '50%'])
-  const textY = useTransform(scrollYProgress, [0, 1], ['0%', '20%'])
-  const opacity = useTransform(scrollYProgress, [0, 0.7], [1, 0])
-  const cubeProgress = useTransform(scrollYProgress, [0, 1], [0, 1])
-
-  const [cubeVal, setCubeVal] = useState(0)
-  useEffect(() => cubeProgress.on('change', v => setCubeVal(v)), [cubeProgress])
-
-  const words = ['Build in', 'three', 'dimensions.']
+  const gridY = useTransform(scrollYProgress, [0, 1], ['0%', '35%'])
+  const contentY = useTransform(scrollYProgress, [0, 1], ['0%', '20%'])
+  const opacity = useTransform(scrollYProgress, [0, 0.65], [1, 0])
 
   return (
-    <section ref={ref} className="relative flex h-screen min-h-[680px] items-center justify-center overflow-hidden bg-[oklch(0.10_0.02_264)]">
-      {/* Animated blueprint grid */}
-      <motion.div className="absolute inset-0 text-primary/10" style={{ y: gridY }}>
-        <BlueprintGrid className="h-full w-full" />
+    <section ref={ref} className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#06080f]">
+      {/* Parallax grid */}
+      <motion.div className="absolute inset-0" style={{ y: gridY }}>
+        <GridBg className="h-full w-full" />
       </motion.div>
 
-      {/* Radial glow */}
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,oklch(0.55_0.22_264_/_0.25),transparent)]" />
-      <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[oklch(0.10_0.02_264)] to-transparent" />
+      {/* Glow */}
+      <div className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 h-[600px] w-[900px] rounded-full bg-blue-600/[0.12] blur-[130px]" />
+      <div className="pointer-events-none absolute top-1/3 -right-40 h-[400px] w-[400px] rounded-full bg-indigo-700/[0.08] blur-[100px]" />
+      <div className="pointer-events-none absolute bottom-0 inset-x-0 h-48 bg-gradient-to-t from-[#06080f] to-transparent" />
 
-      {/* Floating wireframe cube */}
+      {/* Content */}
       <motion.div
-        className="absolute right-[8%] top-1/2 hidden w-[380px] -translate-y-1/2 xl:block"
-        style={{ y: cubeY, opacity }}
+        className="relative z-10 mx-auto max-w-4xl px-6 text-center"
+        style={{ y: contentY, opacity }}
       >
-        <WireframeCube progress={cubeVal} />
-      </motion.div>
-
-      {/* Hero text */}
-      <motion.div className="relative z-10 mx-auto max-w-4xl px-4 text-center sm:px-6" style={{ y: textY, opacity }}>
-        <motion.p
-          className="mb-6 text-xs font-semibold uppercase tracking-[0.25em] text-primary/60"
-          initial={{ opacity: 0, y: 20 }}
+        <motion.div
+          className="mb-8 inline-flex items-center gap-2 rounded-full border border-blue-500/25 bg-blue-500/[0.09] px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-blue-300/80"
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
         >
           The precision tool for spatial design
-        </motion.p>
+        </motion.div>
 
-        <h1 className="mb-6 overflow-hidden text-5xl font-extrabold leading-none tracking-tight text-white sm:text-6xl lg:text-7xl xl:text-8xl">
-          {words.map((word, wi) => (
+        <h1 className="mb-7 font-black leading-[0.93] tracking-[-0.04em]" style={{ fontSize: 'clamp(48px,9vw,96px)' }}>
+          {(['Build in ', 'three', ' dimensions.'] as const).map((word, i) => (
             <motion.span
-              key={wi}
-              className={`inline-block ${wi === 1 ? 'text-primary' : ''} ${wi < words.length - 1 ? 'mr-[0.2em]' : ''}`}
+              key={i}
+              className={i === 1 ? 'text-blue-500' : 'text-white'}
               initial={{ opacity: 0, y: 60 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.3 + wi * 0.12, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.8, delay: 0.28 + i * 0.13, ease: [0.22, 1, 0.36, 1] }}
             >
               {word}
             </motion.span>
@@ -177,7 +122,8 @@ function HeroSection() {
         </h1>
 
         <motion.p
-          className="mx-auto mb-10 max-w-xl text-base text-white/50 sm:text-lg"
+          className="mx-auto mb-10 max-w-md text-white/50"
+          style={{ fontSize: 17, lineHeight: 1.65 }}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.7 }}
@@ -192,17 +138,11 @@ function HeroSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.85 }}
         >
-          <Link
-            href="/signup"
-            className="group flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-7 py-3.5 text-sm font-semibold text-primary-foreground hover:bg-primary/90 transition-all sm:w-auto"
-          >
+          <Link href="/signup" className="group flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-7 py-3.5 text-[14px] font-semibold text-white hover:bg-blue-500 transition-colors sm:w-auto">
             Create free account
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
           </Link>
-          <Link
-            href="/editor"
-            className="flex w-full items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-semibold text-white/80 hover:bg-white/10 hover:text-white transition-all backdrop-blur sm:w-auto"
-          >
+          <Link href="/editor" className="flex w-full items-center justify-center gap-2 rounded-xl border border-white/[0.12] bg-white/[0.04] px-7 py-3.5 text-[14px] font-semibold text-white/65 hover:bg-white/[0.08] hover:text-white transition-all backdrop-blur-sm sm:w-auto">
             Try without signing in
           </Link>
         </motion.div>
@@ -216,9 +156,9 @@ function HeroSection() {
         transition={{ delay: 1.4 }}
       >
         <motion.div
-          className="flex h-10 w-6 items-start justify-center rounded-full border border-white/20 p-1.5"
-          animate={{ y: [0, 4, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+          animate={{ y: [0, 5, 0] }}
+          transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
+          className="flex h-10 w-6 items-start justify-center rounded-full border border-white/20 pt-1.5"
         >
           <div className="h-2 w-1 rounded-full bg-white/40" />
         </motion.div>
@@ -227,106 +167,116 @@ function HeroSection() {
   )
 }
 
-// ─── Stats bar ────────────────────────────────────────────────────────────────
+// ─── Stats ────────────────────────────────────────────────────────────────────
 
 const STATS = [
-  { value: '3D + 2D', label: 'dual viewports' },
-  { value: '12+', label: 'specialist plugins' },
-  { value: '4 formats', label: 'export options' },
-  { value: 'AI', label: 'assisted generation' },
+  { value: '3D + 2D', label: 'Dual viewports' },
+  { value: '12+', label: 'Specialist plugins' },
+  { value: '4', label: 'Export formats' },
+  { value: 'AI', label: 'Assisted generation' },
 ]
 
-function StatsBar() {
+function StatsSection() {
   const ref = useRef<HTMLDivElement>(null)
-  const inView = useInView(ref, { once: true, margin: '-80px' })
+  const inView = useInView(ref, { once: true, margin: '-60px' })
 
   return (
-    <div ref={ref} className="border-y border-border/60 bg-card">
-      <div className="mx-auto grid max-w-6xl grid-cols-2 divide-x divide-border/60 md:grid-cols-4">
+    <section className="bg-[#06080f] border-y border-white/[0.07]">
+      <div ref={ref} className="mx-auto grid max-w-6xl grid-cols-2 divide-x divide-white/[0.07] md:grid-cols-4">
         {STATS.map((s, i) => (
           <motion.div
             key={s.label}
-            className="flex flex-col items-center gap-0.5 px-4 py-8"
-            initial={{ opacity: 0, y: 20 }}
+            className="flex flex-col items-center gap-1 px-6 py-10"
+            initial={{ opacity: 0, y: 24 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5, delay: i * 0.1 }}
+            transition={{ duration: 0.5, delay: i * 0.08 }}
           >
-            <span className="text-2xl font-extrabold tracking-tight text-primary sm:text-3xl">{s.value}</span>
-            <span className="text-xs text-muted-foreground uppercase tracking-wider">{s.label}</span>
+            <span className="text-[28px] font-black tracking-tight text-white sm:text-[36px]">{s.value}</span>
+            <span className="text-[11px] font-medium uppercase tracking-[0.14em] text-white/35">{s.label}</span>
           </motion.div>
         ))}
       </div>
-    </div>
+    </section>
   )
 }
 
-// ─── Feature reveal card ──────────────────────────────────────────────────────
+// ─── Features bento ───────────────────────────────────────────────────────────
 
 const FEATURES = [
   {
     icon: Layers,
     title: '3D + 2D Views',
     description: 'Switch between a full perspective viewport and a top-down floorplan. Every change syncs instantly across both views.',
-    accent: 'from-blue-500/20 to-indigo-500/20',
-    iconColor: 'text-blue-400',
+    accent: 'from-blue-600/15 to-indigo-600/10',
+    iconBg: 'bg-blue-500/10 text-blue-400',
+    wide: true,
   },
   {
     icon: Sparkles,
     title: 'AI-Assisted Design',
-    description: 'Describe a room, floor plan, or building in plain language and let Aruct generate the geometry for you.',
-    accent: 'from-purple-500/20 to-pink-500/20',
-    iconColor: 'text-purple-400',
+    description: 'Describe a room or floor plan in plain language. Aruct generates the geometry for you.',
+    accent: 'from-purple-600/15 to-pink-600/10',
+    iconBg: 'bg-purple-500/10 text-purple-400',
+    wide: false,
   },
   {
     icon: Palette,
     title: 'PBR Material Library',
-    description: 'Apply photorealistic physically-based materials from a curated library. Import custom textures or source from Poly Haven.',
-    accent: 'from-amber-500/20 to-orange-500/20',
-    iconColor: 'text-amber-400',
+    description: 'Photorealistic physically-based materials from a curated library. Import custom textures or source from Poly Haven.',
+    accent: 'from-amber-600/15 to-orange-600/10',
+    iconBg: 'bg-amber-500/10 text-amber-400',
+    wide: false,
   },
   {
     icon: Puzzle,
     title: 'Plugin Ecosystem',
     description: 'BOM reports, sun studies, section cuts, mesh editing, terrain, energy analysis — enable only what you need.',
-    accent: 'from-emerald-500/20 to-teal-500/20',
-    iconColor: 'text-emerald-400',
+    accent: 'from-emerald-600/15 to-teal-600/10',
+    iconBg: 'bg-emerald-500/10 text-emerald-400',
+    wide: true,
   },
   {
     icon: Cloud,
     title: 'Cloud Scenes',
-    description: 'Save scenes to your account and open them from any device. Invite teammates to view or collaborate in real-time.',
-    accent: 'from-sky-500/20 to-cyan-500/20',
-    iconColor: 'text-sky-400',
+    description: 'Save scenes to your account and open them from any device. Invite teammates to collaborate in real-time.',
+    accent: 'from-sky-600/15 to-cyan-600/10',
+    iconBg: 'bg-sky-500/10 text-sky-400',
+    wide: false,
   },
   {
     icon: Download,
     title: 'Open Format Export',
     description: 'Export to GLB, STL, OBJ, or DXF. Import DWG drawings to trace and model over. Full interop with your toolchain.',
-    accent: 'from-rose-500/20 to-red-500/20',
-    iconColor: 'text-rose-400',
+    accent: 'from-rose-600/15 to-red-600/10',
+    iconBg: 'bg-rose-500/10 text-rose-400',
+    wide: false,
   },
 ]
 
-function FeatureCard({ feature, index }: { feature: typeof FEATURES[0]; index: number }) {
-  const ref = useRef<HTMLDivElement>(null)
-  const inView = useInView(ref, { once: true, margin: '-60px' })
-
+function FeatureCard({
+  feature,
+  index,
+  inView,
+  colSpan,
+}: {
+  feature: (typeof FEATURES)[0]
+  index: number
+  inView: boolean
+  colSpan: string
+}) {
   return (
     <motion.div
-      ref={ref}
-      className="group relative overflow-hidden rounded-2xl border border-border/60 bg-card p-6 transition-colors hover:border-primary/40"
-      initial={{ opacity: 0, y: 40 }}
+      className={`group relative overflow-hidden rounded-2xl border border-white/[0.07] bg-[#0a0d1c] p-7 transition-colors hover:border-white/[0.14] ${colSpan}`}
+      initial={{ opacity: 0, y: 32 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, delay: (index % 3) * 0.1, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.55, delay: index * 0.07, ease: [0.22, 1, 0.36, 1] }}
     >
-      {/* Hover gradient bg */}
       <div className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${feature.accent} opacity-0 transition-opacity duration-500 group-hover:opacity-100`} />
-
-      <div className={`relative mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-card/80 shadow-sm border border-border/60 ${feature.iconColor}`}>
+      <div className={`relative mb-5 inline-flex h-10 w-10 items-center justify-center rounded-xl ${feature.iconBg}`}>
         <feature.icon className="h-5 w-5" />
       </div>
-      <h3 className="relative mb-2 text-sm font-semibold text-foreground">{feature.title}</h3>
-      <p className="relative text-sm text-muted-foreground leading-relaxed">{feature.description}</p>
+      <h3 className="relative mb-2 text-[15px] font-semibold text-white">{feature.title}</h3>
+      <p className="relative text-[13px] leading-relaxed text-white/45">{feature.description}</p>
     </motion.div>
   )
 }
@@ -336,115 +286,93 @@ function FeaturesSection() {
   const inView = useInView(ref, { once: true, margin: '-80px' })
 
   return (
-    <section className="px-4 py-20 sm:px-6 sm:py-28">
+    <section className="bg-[#06080f] px-6 py-24 sm:py-32">
       <div className="mx-auto max-w-6xl">
         <motion.div
           ref={ref}
-          className="mb-14 text-center"
+          className="mb-16 text-center"
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
         >
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-primary/60">Platform</p>
-          <h2 className="mb-4 text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
+          <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-blue-400/70">Platform</p>
+          <h2 className="mb-4 font-black tracking-tight text-white" style={{ fontSize: 'clamp(28px,4vw,44px)' }}>
             Everything you need to design
           </h2>
-          <p className="mx-auto max-w-lg text-muted-foreground">
+          <p className="mx-auto max-w-md text-[15px] leading-relaxed text-white/45">
             From concept sketch to construction documentation — Aruct covers the full workflow.
           </p>
         </motion.div>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {FEATURES.map((f, i) => <FeatureCard key={f.title} feature={f} index={i} />)}
+
+        {/* Bento grid: 3 columns, alternating wide/narrow */}
+        <div className="grid gap-3 sm:grid-cols-3">
+          <FeatureCard feature={FEATURES[0]} index={0} inView={inView} colSpan="sm:col-span-2" />
+          <FeatureCard feature={FEATURES[1]} index={1} inView={inView} colSpan="" />
+          <FeatureCard feature={FEATURES[2]} index={2} inView={inView} colSpan="" />
+          <FeatureCard feature={FEATURES[3]} index={3} inView={inView} colSpan="sm:col-span-2" />
+          <FeatureCard feature={FEATURES[4]} index={4} inView={inView} colSpan="" />
+          <FeatureCard feature={FEATURES[5]} index={5} inView={inView} colSpan="sm:col-span-2" />
         </div>
       </div>
     </section>
   )
 }
 
-// ─── Plugin ecosystem strip ───────────────────────────────────────────────────
+// ─── Plugin marquee ───────────────────────────────────────────────────────────
 
 const PLUGINS = [
-  { label: 'BOM Reports', color: 'bg-blue-500/10 text-blue-400 border-blue-500/20' },
-  { label: 'Sun Study', color: 'bg-amber-500/10 text-amber-400 border-amber-500/20' },
-  { label: 'Section Cuts', color: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' },
-  { label: 'Mesh Editor', color: 'bg-purple-500/10 text-purple-400 border-purple-500/20' },
-  { label: 'Terrain', color: 'bg-green-500/10 text-green-400 border-green-500/20' },
-  { label: 'Energy Analysis', color: 'bg-orange-500/10 text-orange-400 border-orange-500/20' },
-  { label: 'Curtain Walls', color: 'bg-sky-500/10 text-sky-400 border-sky-500/20' },
-  { label: 'Point Cloud', color: 'bg-pink-500/10 text-pink-400 border-pink-500/20' },
-  { label: 'Schedules', color: 'bg-violet-500/10 text-violet-400 border-violet-500/20' },
-  { label: 'Collaboration', color: 'bg-teal-500/10 text-teal-400 border-teal-500/20' },
-  { label: 'Version History', color: 'bg-rose-500/10 text-rose-400 border-rose-500/20' },
-  { label: 'Zone Rollup', color: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' },
+  'BOM Reports', 'Sun Study', 'Section Cuts', 'Mesh Editor', 'Terrain',
+  'Energy Analysis', 'Curtain Walls', 'Point Cloud', 'Schedules', 'Collaboration',
+  'Version History', 'Zone Rollup', 'DXF Export', 'Tripo AI', 'Poly Haven',
 ]
 
-function PluginsSection() {
-  const ref = useRef<HTMLDivElement>(null)
-  const inView = useInView(ref, { once: true, margin: '-80px' })
+function PluginMarquee() {
+  // Duplicate for seamless infinite loop
+  const items = [...PLUGINS, ...PLUGINS]
 
   return (
-    <section className="relative overflow-hidden border-y border-border/60 bg-[oklch(0.10_0.02_264)] px-4 py-20 sm:px-6 sm:py-28">
-      {/* Subtle grid */}
-      <div className="pointer-events-none absolute inset-0 text-primary/5">
-        <BlueprintGrid className="h-full w-full" />
+    <section className="overflow-hidden border-y border-white/[0.07] bg-[#06080f] py-20">
+      <div className="mx-auto mb-12 max-w-6xl px-6 text-center">
+        <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-blue-400/70">Ecosystem</p>
+        <h2 className="mb-3 font-black tracking-tight text-white" style={{ fontSize: 'clamp(24px,3.5vw,38px)' }}>
+          Extend only what you need
+        </h2>
+        <p className="mx-auto max-w-sm text-[15px] text-white/45">
+          A focused core with specialist plugins available from the marketplace.
+        </p>
       </div>
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_50%_at_50%_50%,oklch(0.55_0.22_264_/_0.12),transparent)]" />
 
-      <div ref={ref} className="relative mx-auto max-w-6xl">
-        <div className="grid items-center gap-12 lg:grid-cols-2">
-          <div>
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              animate={inView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.6 }}
+      <div className="relative">
+        {/* Fade edges */}
+        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-28 bg-gradient-to-r from-[#06080f] to-transparent" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-28 bg-gradient-to-l from-[#06080f] to-transparent" />
+
+        <motion.div
+          className="flex w-max gap-3"
+          animate={{ x: ['0%', '-50%'] }}
+          transition={{ duration: 28, ease: 'linear', repeat: Infinity }}
+        >
+          {items.map((p, i) => (
+            <span
+              key={i}
+              className="whitespace-nowrap rounded-full border border-white/[0.1] bg-white/[0.04] px-4 py-2 text-[13px] font-medium text-white/55"
             >
-              <div className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-purple-500/30 bg-purple-500/10 px-3 py-1 text-xs font-medium text-purple-300">
-                <Puzzle className="h-3.5 w-3.5" />
-                Plugin ecosystem
-              </div>
-              <h2 className="mb-5 text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-                Extend only<br />what you need
-              </h2>
-              <p className="mb-8 text-white/50 leading-relaxed">
-                Aruct ships with a focused core. Enable plugins from the marketplace to add specialist
-                tooling — each plugin is isolated and toggleable without disrupting your workflow.
-              </p>
-              <Link
-                href="/plugins"
-                className="group inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline"
-              >
-                Browse all plugins
-                <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Link>
-            </motion.div>
-          </div>
-
-          <div className="flex flex-wrap gap-2.5">
-            {PLUGINS.map((p, i) => (
-              <motion.span
-                key={p.label}
-                className={`rounded-full border px-3.5 py-1.5 text-xs font-medium ${p.color}`}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={inView ? { opacity: 1, scale: 1 } : {}}
-                transition={{ duration: 0.4, delay: 0.2 + i * 0.05 }}
-              >
-                {p.label}
-              </motion.span>
-            ))}
-          </div>
-        </div>
+              {p}
+            </span>
+          ))}
+        </motion.div>
       </div>
     </section>
   )
 }
 
-// ─── Workflow steps ───────────────────────────────────────────────────────────
+// ─── Workflow ─────────────────────────────────────────────────────────────────
 
 const STEPS = [
-  { n: '01', title: 'Start with a sketch', body: 'Open the editor, use the floorplan view to lay out rooms and spaces in 2D.' },
-  { n: '02', title: 'Refine in 3D', body: 'Switch to the 3D viewport to adjust heights, add openings, apply materials, and see it come to life.' },
-  { n: '03', title: 'Enhance with plugins', body: 'Run a BOM report, a sun study, or a section cut. Each plugin adds depth without bloating the core.' },
-  { n: '04', title: 'Export or share', body: 'Save to your cloud account, invite teammates, or export to GLB / DXF for downstream tools.' },
+  { n: '01', title: 'Start with a sketch', body: 'Open the editor. Use the floorplan view to lay out rooms and spaces in 2D.' },
+  { n: '02', title: 'Refine in 3D', body: 'Switch to the 3D viewport to adjust heights, add openings, apply materials.' },
+  { n: '03', title: 'Enhance with plugins', body: 'Run a BOM report, a sun study, or a section cut with one-click plugins.' },
+  { n: '04', title: 'Export or share', body: 'Save to your cloud account, invite teammates, or export to GLB / DXF.' },
 ]
 
 function WorkflowSection() {
@@ -452,38 +380,39 @@ function WorkflowSection() {
   const inView = useInView(ref, { once: true, margin: '-80px' })
 
   return (
-    <section className="px-4 py-20 sm:px-6 sm:py-28">
+    <section className="bg-[#06080f] px-6 py-24 sm:py-32">
       <div className="mx-auto max-w-6xl">
         <motion.div
-          className="mb-14 text-center"
+          className="mb-16 text-center"
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
         >
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-primary/60">Workflow</p>
-          <h2 className="mb-4 text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
-            Designed for how<br className="hidden sm:block" /> architects actually work
+          <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-blue-400/70">How it works</p>
+          <h2 className="font-black tracking-tight text-white" style={{ fontSize: 'clamp(28px,4vw,44px)' }}>
+            Designed for how architects work
           </h2>
         </motion.div>
 
-        <div ref={ref} className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {/* Grid with gap-px gives thin divider lines */}
+        <div
+          ref={ref}
+          className="grid overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.06] sm:grid-cols-2 lg:grid-cols-4"
+          style={{ gap: 1 }}
+        >
           {STEPS.map((s, i) => (
             <motion.div
               key={s.n}
-              className="relative"
-              initial={{ opacity: 0, y: 30 }}
+              className="bg-[#06080f] p-8"
+              initial={{ opacity: 0, y: 24 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: i * 0.1 }}
             >
-              {/* connector line */}
-              {i < STEPS.length - 1 && (
-                <div className="absolute top-4 left-[calc(100%_-_12px)] hidden h-px w-6 bg-border/60 lg:block" />
-              )}
-              <div className="mb-4 flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-xs font-bold text-primary">
+              <div className="mb-5 font-black leading-none tracking-[-0.05em] text-white/[0.07]" style={{ fontSize: 72 }}>
                 {s.n}
               </div>
-              <h3 className="mb-2 text-sm font-semibold text-foreground">{s.title}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">{s.body}</p>
+              <h3 className="mb-2 text-[15px] font-semibold text-white">{s.title}</h3>
+              <p className="text-[13px] leading-relaxed text-white/45">{s.body}</p>
             </motion.div>
           ))}
         </div>
@@ -492,44 +421,52 @@ function WorkflowSection() {
   )
 }
 
-// ─── Pricing CTA ──────────────────────────────────────────────────────────────
+// ─── CTA ──────────────────────────────────────────────────────────────────────
 
-const PLAN_BULLETS = ['Local editor — always free', 'Cloud saves with Pro', 'Team collaboration with Studio']
+const BULLETS = [
+  'Local editor — always free',
+  'Cloud saves with Pro',
+  'Team collaboration with Studio',
+]
 
-function PricingCTA() {
+function CTASection() {
   const ref = useRef<HTMLDivElement>(null)
-  const inView = useInView(ref, { once: true, margin: '-80px' })
+  const inView = useInView(ref, { once: true, margin: '-60px' })
 
   return (
-    <section className="relative overflow-hidden border-t border-border/60 px-4 py-20 sm:px-6 sm:py-28">
-      {/* Gradient glow */}
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_60%_at_50%_100%,oklch(0.55_0.22_264_/_0.10),transparent)]" />
+    <section className="relative overflow-hidden bg-[#06080f] px-6 py-24 sm:py-32">
+      <div className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 h-[500px] w-[700px] rounded-full bg-blue-700/[0.09] blur-[120px]" />
 
-      <div ref={ref} className="relative mx-auto max-w-2xl text-center">
+      <div
+        ref={ref}
+        className="relative mx-auto max-w-2xl rounded-3xl border border-white/[0.08] bg-[#0a0d1c] px-10 py-14 text-center sm:px-16"
+      >
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
         >
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-primary/60">Pricing</p>
-          <h2 className="mb-4 text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
+          <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-blue-400/70">Get started</p>
+          <h2 className="mb-4 font-black tracking-tight text-white" style={{ fontSize: 'clamp(28px,4vw,44px)' }}>
             Free to start.<br />Scales with your team.
           </h2>
-          <p className="mb-8 text-muted-foreground">
-            Start designing with no account required. Unlock cloud saves, real-time collaboration,
-            and advanced plugins with a Pro or Studio plan.
+          <p className="mb-8 text-[15px] leading-relaxed text-white/45">
+            Start designing with no account required. Unlock cloud saves,
+            real-time collaboration, and advanced plugins with a Pro or Studio plan.
           </p>
 
-          <ul className="mb-10 inline-flex flex-col items-start gap-2.5 text-left">
-            {PLAN_BULLETS.map((b, i) => (
+          <ul className="mb-10 inline-flex flex-col items-start gap-3 text-left">
+            {BULLETS.map((b, i) => (
               <motion.li
                 key={b}
-                className="flex items-center gap-2.5 text-sm text-muted-foreground"
+                className="flex items-center gap-3 text-[14px] text-white/60"
                 initial={{ opacity: 0, x: -20 }}
                 animate={inView ? { opacity: 1, x: 0 } : {}}
                 transition={{ duration: 0.4, delay: 0.3 + i * 0.1 }}
               >
-                <Check className="h-4 w-4 shrink-0 text-primary" />
+                <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-blue-500/20">
+                  <Check className="h-3 w-3 text-blue-400" />
+                </div>
                 {b}
               </motion.li>
             ))}
@@ -538,13 +475,13 @@ function PricingCTA() {
           <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link
               href="/pricing"
-              className="flex w-full items-center justify-center gap-2 rounded-xl border border-border bg-background px-7 py-3.5 text-sm font-semibold text-foreground hover:bg-accent transition-colors sm:w-auto"
+              className="flex w-full items-center justify-center rounded-xl border border-white/[0.1] bg-white/[0.04] px-7 py-3.5 text-[14px] font-semibold text-white/65 hover:bg-white/[0.08] hover:text-white transition-all sm:w-auto"
             >
               View pricing
             </Link>
             <Link
               href="/signup"
-              className="group flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-7 py-3.5 text-sm font-semibold text-primary-foreground hover:bg-primary/90 transition-colors sm:w-auto"
+              className="group flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-7 py-3.5 text-[14px] font-semibold text-white hover:bg-blue-500 transition-colors sm:w-auto"
             >
               Get started free
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -560,21 +497,22 @@ function PricingCTA() {
 
 function Footer() {
   return (
-    <footer className="border-t border-border/60 px-4 py-10 sm:px-6">
-      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 text-sm text-muted-foreground sm:flex-row">
-        <div className="flex items-center gap-2 font-semibold text-foreground">
-          <AructMark className="h-4 w-4 text-primary" />
+    <footer className="border-t border-white/[0.07] bg-[#06080f] px-6 py-10">
+      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-5 sm:flex-row">
+        <div className="flex items-center gap-2 text-[14px] font-semibold text-white">
+          <AructMark className="h-[18px] w-[18px] text-blue-500" />
           Aruct
         </div>
-        <nav className="flex flex-wrap justify-center gap-x-5 gap-y-2">
-          <Link href="/editor" className="hover:text-foreground transition-colors">Editor</Link>
-          <Link href="/scenes" className="hover:text-foreground transition-colors">Scenes</Link>
-          <Link href="/pricing" className="hover:text-foreground transition-colors">Pricing</Link>
-          <Link href="/plugins" className="hover:text-foreground transition-colors">Plugins</Link>
-          <Link href="/privacy" className="hover:text-foreground transition-colors">Privacy</Link>
-          <Link href="/terms" className="hover:text-foreground transition-colors">Terms</Link>
+        <nav className="flex flex-wrap justify-center gap-x-5 gap-y-2 text-[13px] text-white/35">
+          <Link href="/editor" className="hover:text-white/75 transition-colors">Editor</Link>
+          <Link href="/scenes" className="hover:text-white/75 transition-colors">Scenes</Link>
+          <Link href="/pricing" className="hover:text-white/75 transition-colors">Pricing</Link>
+          <Link href="/plugins" className="hover:text-white/75 transition-colors">Plugins</Link>
+          <Link href="/contact" className="hover:text-white/75 transition-colors">Contact</Link>
+          <Link href="/privacy" className="hover:text-white/75 transition-colors">Privacy</Link>
+          <Link href="/terms" className="hover:text-white/75 transition-colors">Terms</Link>
         </nav>
-        <p className="text-xs">© {new Date().getFullYear()} Aruct. All rights reserved.</p>
+        <p className="text-[12px] text-white/25">© {new Date().getFullYear()} Aruct. All rights reserved.</p>
       </div>
     </footer>
   )
@@ -584,14 +522,14 @@ function Footer() {
 
 export function LandingClient() {
   return (
-    <div className="min-h-screen bg-background text-foreground antialiased">
+    <div className="bg-[#06080f] text-white antialiased">
       <Navbar />
       <HeroSection />
-      <StatsBar />
+      <StatsSection />
       <FeaturesSection />
-      <PluginsSection />
+      <PluginMarquee />
       <WorkflowSection />
-      <PricingCTA />
+      <CTASection />
       <Footer />
     </div>
   )
