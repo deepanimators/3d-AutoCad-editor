@@ -82,6 +82,9 @@
     "url": "https://github.com/aruct/editor.git",
     "directory": "packages/mcp"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "MIT",
   "homepage": "https://github.com/aruct/editor/tree/main/packages/mcp#readme",
   "bugs": "https://github.com/aruct/editor/issues"
