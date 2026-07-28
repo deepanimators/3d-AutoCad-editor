@@ -46,6 +46,10 @@ import { WallNode } from './nodes/wall'
 import { WindowNode } from './nodes/window'
 import { ZoneNode } from './nodes/zone'
 import { SectionNode } from './nodes/section'
+import { MeshNode } from './nodes/mesh'
+import { TerrainNode } from './nodes/terrain'
+import { CurtainWallNode } from './nodes/curtain-wall'
+import { PointCloudNode } from './nodes/point-cloud'
 
 export const AnyNode = z.discriminatedUnion('type', [
   SiteNode,
@@ -96,6 +100,10 @@ export const AnyNode = z.discriminatedUnion('type', [
   PipeFittingNode,
   PipeTrapNode,
   SectionNode,
+  MeshNode,
+  TerrainNode,
+  CurtainWallNode,
+  PointCloudNode,
 ])
 
 export type AnyNode = z.infer<typeof AnyNode>

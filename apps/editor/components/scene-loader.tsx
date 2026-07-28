@@ -16,7 +16,7 @@ import {
   type SidebarTab,
   useEditor,
 } from '@aruct/editor'
-import { BarChart2, Download, Hammer, Layers, Package, Palette, Plus, Scissors, Settings, Sun, Users } from 'lucide-react'
+import { BarChart2, Building2, Camera, ClipboardList, Clock, CloudSnow, Download, FileCode, Hammer, LayoutGrid, Layers, Mountain, Package, Palette, PenTool, Plus, Scissors, Settings, Sun, Users, Zap } from 'lucide-react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -25,6 +25,16 @@ import { BomPanel } from './bom-panel'
 import { BuildTab } from './build-tab'
 import { GlbExportPanel } from './glb-export-panel'
 import { SectionsPanel } from './sections-panel'
+import { MeshEditorPanel } from './mesh-editor-panel'
+import { TerrainPanel } from './terrain-panel'
+import { SchedulesPanel } from './schedules-panel'
+import { DxfImportPanel } from './dxf-import-panel'
+import { RenderPanel } from './render-panel'
+import { CurtainWallPanel } from './curtain-wall-panel'
+import { PointCloudPanel } from './point-cloud-panel'
+import { EnergyPanel } from './energy-panel'
+import { VersionHistoryPanel } from './version-history-panel'
+import { ZoneRollupPanel } from './zone-rollup-panel'
 import { TextureManagerPanel } from './texture-manager-panel'
 import { CollabPanel } from './collab-panel'
 import { RailAccountNav } from './rail-account-nav'
@@ -323,10 +333,90 @@ export function SceneLoader({ initialScene, meta }: SceneLoaderProps) {
       mobileIcon: <Scissors className="h-5 w-5" />,
       icon: <Scissors className="h-5 w-5" />,
     } as SidebarTab & { component: React.ComponentType }] : []),
+    ...(enabledPlugins.includes('aruct:plugin-mesh-editor') ? [{
+      id: 'mesh-editor',
+      label: 'Mesh',
+      component: MeshEditorPanel,
+      mobileDefaultSnap: 0.5,
+      mobileIcon: <PenTool className="h-5 w-5" />,
+      icon: <PenTool className="h-5 w-5" />,
+    } as SidebarTab & { component: React.ComponentType }] : []),
+    ...(enabledPlugins.includes('aruct:plugin-terrain') ? [{
+      id: 'terrain',
+      label: 'Terrain',
+      component: TerrainPanel,
+      mobileDefaultSnap: 0.5,
+      mobileIcon: <Mountain className="h-5 w-5" />,
+      icon: <Mountain className="h-5 w-5" />,
+    } as SidebarTab & { component: React.ComponentType }] : []),
+    ...(enabledPlugins.includes('aruct:plugin-schedules') ? [{
+      id: 'schedules',
+      label: 'Schedules',
+      component: SchedulesPanel,
+      mobileDefaultSnap: 0.5,
+      mobileIcon: <ClipboardList className="h-5 w-5" />,
+      icon: <ClipboardList className="h-5 w-5" />,
+    } as SidebarTab & { component: React.ComponentType }] : []),
+    ...(enabledPlugins.includes('aruct:plugin-dwg') ? [{
+      id: 'dwg',
+      label: 'DXF/DWG',
+      component: DxfImportPanel,
+      mobileDefaultSnap: 0.5,
+      mobileIcon: <FileCode className="h-5 w-5" />,
+      icon: <FileCode className="h-5 w-5" />,
+    } as SidebarTab & { component: React.ComponentType }] : []),
+    ...(enabledPlugins.includes('aruct:plugin-render') ? [{
+      id: 'render',
+      label: 'Render',
+      component: RenderPanel,
+      mobileDefaultSnap: 0.5,
+      mobileIcon: <Camera className="h-5 w-5" />,
+      icon: <Camera className="h-5 w-5" />,
+    } as SidebarTab & { component: React.ComponentType }] : []),
+    ...(enabledPlugins.includes('aruct:plugin-curtain-wall') ? [{
+      id: 'curtain-wall',
+      label: 'Curtain Wall',
+      component: CurtainWallPanel,
+      mobileDefaultSnap: 0.5,
+      mobileIcon: <Building2 className="h-5 w-5" />,
+      icon: <Building2 className="h-5 w-5" />,
+    } as SidebarTab & { component: React.ComponentType }] : []),
+    ...(enabledPlugins.includes('aruct:plugin-point-cloud') ? [{
+      id: 'point-cloud',
+      label: 'Point Cloud',
+      component: PointCloudPanel,
+      mobileDefaultSnap: 0.5,
+      mobileIcon: <CloudSnow className="h-5 w-5" />,
+      icon: <CloudSnow className="h-5 w-5" />,
+    } as SidebarTab & { component: React.ComponentType }] : []),
+    ...(enabledPlugins.includes('aruct:plugin-energy') ? [{
+      id: 'energy',
+      label: 'Energy',
+      component: EnergyPanel,
+      mobileDefaultSnap: 0.5,
+      mobileIcon: <Zap className="h-5 w-5" />,
+      icon: <Zap className="h-5 w-5" />,
+    } as SidebarTab & { component: React.ComponentType }] : []),
+    ...(enabledPlugins.includes('aruct:plugin-version-history') ? [{
+      id: 'version-history',
+      label: 'History',
+      component: () => <VersionHistoryPanel sceneId={meta.id} />,
+      mobileDefaultSnap: 0.5,
+      mobileIcon: <Clock className="h-5 w-5" />,
+      icon: <Clock className="h-5 w-5" />,
+    } as SidebarTab & { component: React.ComponentType }] : []),
+    ...(enabledPlugins.includes('aruct:plugin-zone-rollup') ? [{
+      id: 'zone-rollup',
+      label: 'Zones',
+      component: ZoneRollupPanel,
+      mobileDefaultSnap: 0.5,
+      mobileIcon: <LayoutGrid className="h-5 w-5" />,
+      icon: <LayoutGrid className="h-5 w-5" />,
+    } as SidebarTab & { component: React.ComponentType }] : []),
     {
       id: 'settings',
       label: 'Settings',
-      component: SettingsPanel,
+      component: () => <SettingsPanel sceneId={meta.id} />,
       mobileDefaultSnap: 0.5,
       mobileIcon: <Settings className="h-5 w-5" />,
       icon: (

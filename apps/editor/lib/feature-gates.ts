@@ -77,3 +77,7 @@ export function canUploadCustomItems(user: AppUser): boolean {
 export function canAccessTeamCatalog(user: AppUser): boolean {
   return isAdmin(user) || (planAtLeast(user, 'team') && isPlanActive(user))
 }
+
+export function canImportDwg(user: AppUser): boolean {
+  return isAdmin(user) || (planAtLeast(user, 'pro') && isPlanActive(user))
+}

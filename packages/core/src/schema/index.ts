@@ -299,6 +299,10 @@ export {
 } from './nodes/window'
 export { ZoneNode } from './nodes/zone'
 export { SectionNode } from './nodes/section'
+export { MeshNode } from './nodes/mesh'
+export { TerrainNode } from './nodes/terrain'
+export { CurtainWallNode, CurtainWallPanelType } from './nodes/curtain-wall'
+export { PointCloudNode } from './nodes/point-cloud'
 export { generateSceneMaterialId, SceneMaterial, type SceneMaterialId } from './scene-material'
 export type { AnyNodeId, AnyNodeType } from './types'
 // Union types

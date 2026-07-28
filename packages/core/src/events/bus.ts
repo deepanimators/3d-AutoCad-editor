@@ -50,6 +50,10 @@ import type {
   WindowNode,
   ZoneNode,
   SectionNode,
+  MeshNode,
+  TerrainNode,
+  CurtainWallNode,
+  PointCloudNode,
 } from '../schema'
 import type { AnyNode } from '../schema/types'
 
@@ -139,6 +143,10 @@ export type LinesetEvent = NodeEvent<LinesetNode>
 export type LiquidLineEvent = NodeEvent<LiquidLineNode>
 export type MeasurementEvent = NodeEvent<MeasurementNode>
 export type SectionEvent = NodeEvent<SectionNode>
+export type MeshEvent = NodeEvent<MeshNode>
+export type TerrainEvent = NodeEvent<TerrainNode>
+export type CurtainWallEvent = NodeEvent<CurtainWallNode>
+export type PointCloudEvent = NodeEvent<PointCloudNode>
 
 // Event suffixes - exported for use in hooks
 export const eventSuffixes = [
@@ -336,6 +344,10 @@ type EditorEvents = GridEvents &
   NodeEvents<'liquid-line', LiquidLineEvent> &
   NodeEvents<'measurement', MeasurementEvent> &
   NodeEvents<'section', SectionEvent> &
+  NodeEvents<'mesh', MeshEvent> &
+  NodeEvents<'terrain', TerrainEvent> &
+  NodeEvents<'curtain-wall', CurtainWallEvent> &
+  NodeEvents<'point-cloud', PointCloudEvent> &
   CameraControlEvents &
   ToolEvents &
   GuideEvents &

@@ -45,6 +45,10 @@ import { turbineVentDefinition } from './turbine-vent'
 import { wallDefinition } from './wall'
 import { windowDefinition } from './window'
 import { zoneDefinition } from './zone'
+import { meshDefinition } from './mesh'
+import { terrainDefinition } from './terrain'
+import { curtainWallDefinition } from './curtain-wall'
+import { pointCloudDefinition } from './point-cloud'
 
 /**
  * Built-in plugin bundling every node kind shipped with the Aruct editor.
@@ -119,6 +123,11 @@ export const builtinPlugin: Plugin = {
     pipeSegmentDefinition as unknown as AnyNodeDefinition,
     pipeFittingDefinition as unknown as AnyNodeDefinition,
     pipeTrapDefinition as unknown as AnyNodeDefinition,
+    meshDefinition as unknown as AnyNodeDefinition,
+    // Terrain — Phase 1: grid-based height map.
+    terrainDefinition as unknown as AnyNodeDefinition,
+    curtainWallDefinition as unknown as AnyNodeDefinition,
+    pointCloudDefinition as unknown as AnyNodeDefinition,
   ],
 }
 
@@ -205,3 +214,7 @@ export { turbineVentDefinition } from './turbine-vent'
 export { wallDefinition } from './wall'
 export { windowDefinition } from './window'
 export { zoneDefinition } from './zone'
+export { meshDefinition } from './mesh'
+export { terrainDefinition } from './terrain'
+export { curtainWallDefinition } from './curtain-wall'
+export { pointCloudDefinition } from './point-cloud'

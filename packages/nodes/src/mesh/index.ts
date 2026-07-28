@@ -1,0 +1,1 @@
+export { meshDefinition } from './definition'

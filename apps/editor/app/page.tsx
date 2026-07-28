@@ -2,7 +2,7 @@
 
 import { type AssetInput, useScene } from '@aruct/core'
 import { CATALOG_ITEMS, Editor, type ExternalResult, ItemsPanel, useEditor } from '@aruct/editor'
-import { BarChart2, Download, Hammer, Layers, Package, Palette, Plus, Scissors, Settings, Sun, Users } from 'lucide-react'
+import { BarChart2, Building2, Camera, ClipboardList, Clock, CloudSnow, Download, FileCode, Hammer, LayoutGrid, Layers, Mountain, Package, Palette, PenTool, Plus, Scissors, Settings, Sun, Users, Zap } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -15,6 +15,16 @@ import { BuildTab } from '@/components/build-tab'
 import { GlbExportPanel } from '@/components/glb-export-panel'
 import { TextureManagerPanel } from '@/components/texture-manager-panel'
 import { SectionsPanel } from '@/components/sections-panel'
+import { MeshEditorPanel } from '@/components/mesh-editor-panel'
+import { TerrainPanel } from '@/components/terrain-panel'
+import { SchedulesPanel } from '@/components/schedules-panel'
+import { DxfImportPanel } from '@/components/dxf-import-panel'
+import { RenderPanel } from '@/components/render-panel'
+import { CurtainWallPanel } from '@/components/curtain-wall-panel'
+import { PointCloudPanel } from '@/components/point-cloud-panel'
+import { EnergyPanel } from '@/components/energy-panel'
+import { VersionHistoryPanel } from '@/components/version-history-panel'
+import { ZoneRollupPanel } from '@/components/zone-rollup-panel'
 import { UnifiedPluginsPanel } from '@/components/unified-plugins-panel'
 import { EditorTopBar } from '@/components/editor-top-bar'
 import { FloorplanConstructionPreflight } from '@/components/floorplan-construction-preflight'
@@ -295,6 +305,86 @@ export default function Home() {
       mobileDefaultSnap: 0.5,
       mobileIcon: <Scissors className="h-5 w-5" />,
       icon: <Scissors className="h-5 w-5" />,
+    }] : []),
+    ...(enabledPlugins.includes('aruct:plugin-mesh-editor') ? [{
+      id: 'mesh-editor',
+      label: 'Mesh',
+      component: MeshEditorPanel,
+      mobileDefaultSnap: 0.5,
+      mobileIcon: <PenTool className="h-5 w-5" />,
+      icon: <PenTool className="h-5 w-5" />,
+    }] : []),
+    ...(enabledPlugins.includes('aruct:plugin-terrain') ? [{
+      id: 'terrain',
+      label: 'Terrain',
+      component: TerrainPanel,
+      mobileDefaultSnap: 0.5,
+      mobileIcon: <Mountain className="h-5 w-5" />,
+      icon: <Mountain className="h-5 w-5" />,
+    }] : []),
+    ...(enabledPlugins.includes('aruct:plugin-schedules') ? [{
+      id: 'schedules',
+      label: 'Schedules',
+      component: SchedulesPanel,
+      mobileDefaultSnap: 0.5,
+      mobileIcon: <ClipboardList className="h-5 w-5" />,
+      icon: <ClipboardList className="h-5 w-5" />,
+    }] : []),
+    ...(enabledPlugins.includes('aruct:plugin-dwg') ? [{
+      id: 'dwg',
+      label: 'DXF/DWG',
+      component: DxfImportPanel,
+      mobileDefaultSnap: 0.5,
+      mobileIcon: <FileCode className="h-5 w-5" />,
+      icon: <FileCode className="h-5 w-5" />,
+    }] : []),
+    ...(enabledPlugins.includes('aruct:plugin-render') ? [{
+      id: 'render',
+      label: 'Render',
+      component: RenderPanel,
+      mobileDefaultSnap: 0.5,
+      mobileIcon: <Camera className="h-5 w-5" />,
+      icon: <Camera className="h-5 w-5" />,
+    }] : []),
+    ...(enabledPlugins.includes('aruct:plugin-curtain-wall') ? [{
+      id: 'curtain-wall',
+      label: 'Curtain Wall',
+      component: CurtainWallPanel,
+      mobileDefaultSnap: 0.5,
+      mobileIcon: <Building2 className="h-5 w-5" />,
+      icon: <Building2 className="h-5 w-5" />,
+    }] : []),
+    ...(enabledPlugins.includes('aruct:plugin-point-cloud') ? [{
+      id: 'point-cloud',
+      label: 'Point Cloud',
+      component: PointCloudPanel,
+      mobileDefaultSnap: 0.5,
+      mobileIcon: <CloudSnow className="h-5 w-5" />,
+      icon: <CloudSnow className="h-5 w-5" />,
+    }] : []),
+    ...(enabledPlugins.includes('aruct:plugin-energy') ? [{
+      id: 'energy',
+      label: 'Energy',
+      component: EnergyPanel,
+      mobileDefaultSnap: 0.5,
+      mobileIcon: <Zap className="h-5 w-5" />,
+      icon: <Zap className="h-5 w-5" />,
+    }] : []),
+    ...(enabledPlugins.includes('aruct:plugin-version-history') ? [{
+      id: 'version-history',
+      label: 'History',
+      component: VersionHistoryPanel,
+      mobileDefaultSnap: 0.5,
+      mobileIcon: <Clock className="h-5 w-5" />,
+      icon: <Clock className="h-5 w-5" />,
+    }] : []),
+    ...(enabledPlugins.includes('aruct:plugin-zone-rollup') ? [{
+      id: 'zone-rollup',
+      label: 'Zones',
+      component: ZoneRollupPanel,
+      mobileDefaultSnap: 0.5,
+      mobileIcon: <LayoutGrid className="h-5 w-5" />,
+      icon: <LayoutGrid className="h-5 w-5" />,
     }] : []),
     {
       id: 'settings',
