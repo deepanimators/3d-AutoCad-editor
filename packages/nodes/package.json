@@ -1,6 +1,6 @@
 {
   "name": "@aruct/nodes",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Built-in node bundles for the Aruct 3D editor — one folder per kind, exported as `builtinPlugin`",
   "type": "module",
   "main": "./dist/index.js",

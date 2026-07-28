@@ -1,6 +1,6 @@
 {
   "name": "@aruct/mcp",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "Model Context Protocol server for Aruct 3D editor",
   "type": "module",
   "main": "./dist/index.js",
