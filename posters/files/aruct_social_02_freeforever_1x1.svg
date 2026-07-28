@@ -1,0 +1,28 @@
+<svg viewBox="0 0 1080 1080" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <radialGradient id="g2" cx="50%" cy="35%" r="55%">
+      <stop offset="0%" stop-color="#1e3a8a" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#1e3a8a" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1080" height="1080" fill="#0f172a"/>
+  <rect width="1080" height="1080" fill="url(#g2)"/>
+
+  <g transform="translate(60,50) scale(0.9)" stroke="#ffffff" stroke-width="1.75" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 2 L22 7.5 L12 13 L2 7.5 Z"/>
+    <line x1="2" y1="13" x2="22" y2="13"/>
+    <path d="M2 7.5 L2 16.5 L12 22 L12 13"/>
+    <path d="M22 7.5 L22 16.5 L12 22"/>
+  </g>
+  <text x="92" y="68" font-size="16" font-weight="600" fill="#ffffff" letter-spacing="-0.3">Aruct</text>
+
+  <text x="52" y="250" font-size="130" font-weight="800" fill="none" stroke="#3b82f6" stroke-width="2" opacity="0.4">02</text>
+
+  <!-- hero visual: massive $0 -->
+  <text x="540" y="640" font-size="340" font-weight="800" fill="#3b82f6" text-anchor="middle" letter-spacing="-6">$0</text>
+
+  <text x="60" y="850" font-size="46" font-weight="700" fill="#ffffff" letter-spacing="-1">Free forever.</text>
+  <text x="60" y="900" font-size="21" fill="#94a3b8">5 scenes. Full 3D editor. No credit card.</text>
+
+  <text x="1020" y="1030" font-size="18" fill="#64748b" text-anchor="end">aruct.com</text>
+</svg>

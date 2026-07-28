@@ -1,0 +1,64 @@
+<svg viewBox="0 0 1080 1080" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <radialGradient id="g6" cx="50%" cy="35%" r="55%">
+      <stop offset="0%" stop-color="#1e3a8a" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#1e3a8a" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="edgeGlow6b" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2.6" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="1080" height="1080" fill="#0f172a"/>
+  <rect width="1080" height="1080" fill="url(#g6)"/>
+
+  <g transform="translate(60,50) scale(0.9)" stroke="#ffffff" stroke-width="1.75" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 2 L22 7.5 L12 13 L2 7.5 Z"/>
+    <line x1="2" y1="13" x2="22" y2="13"/>
+    <path d="M2 7.5 L2 16.5 L12 22 L12 13"/>
+    <path d="M22 7.5 L22 16.5 L12 22"/>
+  </g>
+  <text x="92" y="68" font-size="16" font-weight="600" fill="#ffffff" letter-spacing="-0.3">Aruct</text>
+
+  <text x="52" y="250" font-size="130" font-weight="800" fill="none" stroke="#3b82f6" stroke-width="2" opacity="0.4">06</text>
+
+  <!-- shared building -->
+  <g filter="url(#edgeGlow6b)" stroke="#60a5fa" stroke-width="2.4" fill="none" stroke-linecap="round">
+    <line x1="540" y1="700" x2="650" y2="764"/>
+    <line x1="650" y1="764" x2="595" y2="796"/>
+    <line x1="595" y1="796" x2="485" y2="732"/>
+    <line x1="485" y1="732" x2="540" y2="700"/>
+    <line x1="540" y1="700" x2="540" y2="470"/>
+    <line x1="650" y1="764" x2="650" y2="534"/>
+    <line x1="595" y1="796" x2="595" y2="566"/>
+    <line x1="485" y1="732" x2="485" y2="502"/>
+    <line x1="540" y1="470" x2="650" y2="534"/>
+    <line x1="650" y1="534" x2="595" y2="566"/>
+    <line x1="595" y1="566" x2="485" y2="502"/>
+    <line x1="485" y1="502" x2="540" y2="470"/>
+  </g>
+
+  <!-- collaborator cursors -->
+  <g>
+    <path d="M662 500 Q690 520 700 560" stroke="#f59e0b" stroke-width="1.4" fill="none" opacity="0.4"/>
+    <path d="M664 510 L664 524 L668 521 L671 528 L674 526.5 L671 520 L676 520 Z" fill="#f59e0b" stroke="#0f172a" stroke-width="0.6"/>
+
+    <path d="M478 750 Q450 720 466 680" stroke="#ef4444" stroke-width="1.4" fill="none" opacity="0.4"/>
+    <path d="M468 738 L468 752 L472 749 L475 756 L478 754.5 L475 748 L480 748 Z" fill="#ef4444" stroke="#0f172a" stroke-width="0.6"/>
+
+    <path d="M556 640 Q580 620 570 580" stroke="#3b82f6" stroke-width="1.4" fill="none" opacity="0.4"/>
+    <path d="M550 626 L550 640 L554 637 L557 644 L560 642.5 L557 636 L562 636 Z" fill="#3b82f6" stroke="#0f172a" stroke-width="0.6"/>
+  </g>
+
+  <!-- presence row -->
+  <text x="540" y="410" font-size="13" fill="#64748b" text-anchor="middle">3 online</text>
+  <circle cx="510" cy="440" r="12" fill="#0f172a" stroke="#f59e0b" stroke-width="1.8"/>
+  <circle cx="536" cy="440" r="12" fill="#0f172a" stroke="#ef4444" stroke-width="1.8"/>
+  <circle cx="562" cy="440" r="12" fill="#0f172a" stroke="#3b82f6" stroke-width="1.8"/>
+
+  <text x="60" y="900" font-size="44" font-weight="700" fill="#ffffff" letter-spacing="-1">Three architects.</text>
+  <text x="60" y="948" font-size="44" font-weight="700" fill="#ffffff" letter-spacing="-1">One scene.</text>
+  <text x="60" y="982" font-size="19" fill="#94a3b8">Real-time collaboration with live cursors. Team plan.</text>
+
+  <text x="1020" y="1030" font-size="18" fill="#64748b" text-anchor="end">aruct.com</text>
+</svg>

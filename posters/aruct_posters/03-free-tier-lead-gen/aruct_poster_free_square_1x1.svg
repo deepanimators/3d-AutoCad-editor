@@ -1,0 +1,88 @@
+<svg viewBox="0 0 1200 1200" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <linearGradient id="glowSq3" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1e3a8a" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="#1e3a8a" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="softGlow3" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="1200" fill="#0f172a"/>
+  <rect width="1200" height="360" fill="url(#glowSq3)"/>
+
+  <!-- logo -->
+  <g transform="translate(60,50) scale(1.0)" stroke="#ffffff" stroke-width="1.75" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 2 L22 7.5 L12 13 L2 7.5 Z"/>
+    <line x1="2" y1="13" x2="22" y2="13"/>
+    <path d="M2 7.5 L2 16.5 L12 22 L12 13"/>
+    <path d="M22 7.5 L22 16.5 L12 22"/>
+  </g>
+  <text x="96" y="70" font-size="18" font-weight="600" fill="#ffffff" letter-spacing="-0.3">Aruct</text>
+
+  <!-- headline -->
+  <text x="80" y="212" font-size="92" font-weight="700" fill="#ffffff" letter-spacing="-1.5">Free. <tspan fill="#3b82f6">Forever.</tspan></text>
+  <text x="82" y="256" font-size="28" font-weight="600" fill="#cbd5e1">No credit card. No expiry.</text>
+  <text x="82" y="296" font-size="19" fill="#94a3b8">Start designing today — the full 3D architectural editor,</text>
+  <text x="82" y="322" font-size="19" fill="#94a3b8">right in your browser.</text>
+
+  <!-- floating brand mark accent -->
+  <g transform="translate(1050,300) scale(1.3)" stroke="#3b82f6" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.45" filter="url(#softGlow3)">
+    <path d="M12 2 L22 7.5 L12 13 L2 7.5 Z"/>
+    <line x1="2" y1="13" x2="22" y2="13"/>
+    <path d="M2 7.5 L2 16.5 L12 22 L12 13"/>
+    <path d="M22 7.5 L22 16.5 L12 22"/>
+  </g>
+
+  <!-- browser mockup -->
+  <g>
+    <rect x="120" y="360" width="960" height="400" rx="12" fill="#0c1526" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+    <path d="M120 372 a12 12 0 0 1 12 -12 h936 a12 12 0 0 1 12 12 v22 h-960 z" fill="#111c33"/>
+    <line x1="120" y1="394" x2="1080" y2="394" stroke="rgba(255,255,255,0.08)"/>
+    <circle cx="146" cy="381" r="5" fill="#ef4444"/>
+    <circle cx="164" cy="381" r="5" fill="#f59e0b"/>
+    <circle cx="182" cy="381" r="5" fill="#22c55e"/>
+    <text x="600" y="386" font-size="12" fill="#64748b" text-anchor="middle">aruct.com/editor</text>
+
+    <!-- simple floorplan -->
+    <g stroke="#60a5fa" stroke-width="3" fill="none" stroke-linecap="square">
+      <line x1="260" y1="440" x2="700" y2="440"/>
+      <line x1="700" y1="440" x2="940" y2="440"/>
+      <line x1="940" y1="440" x2="940" y2="700"/>
+      <line x1="940" y1="700" x2="260" y2="700"/>
+      <line x1="260" y1="700" x2="260" y2="440"/>
+      <!-- vertical partition with door gap -->
+      <line x1="520" y1="440" x2="520" y2="560"/>
+      <line x1="520" y1="600" x2="520" y2="700"/>
+      <!-- horizontal partition on right side with door gap -->
+      <line x1="700" y1="570" x2="800" y2="570"/>
+      <line x1="840" y1="570" x2="940" y2="570"/>
+    </g>
+    <!-- door swing arcs -->
+    <path d="M520 560 A40 40 0 0 1 560 600" stroke="#93c5fd" stroke-width="1.2" fill="none" opacity="0.6"/>
+    <path d="M800 570 A40 40 0 0 1 840 570" stroke="#93c5fd" stroke-width="1.2" fill="none" opacity="0.6" transform="rotate(0)"/>
+    <!-- window ticks on top wall -->
+    <g stroke="#60a5fa" stroke-width="2.5">
+      <line x1="330" y1="432" x2="330" y2="448"/>
+      <line x1="380" y1="432" x2="380" y2="448"/>
+      <line x1="800" y1="432" x2="800" y2="448"/>
+      <line x1="850" y1="432" x2="850" y2="448"/>
+    </g>
+  </g>
+
+  <!-- feature checklist -->
+  <g font-size="17" fill="#e2e8f0">
+    <text x="140" y="812"><tspan fill="#22c55e" font-weight="700">✓</tspan>  Up to 5 scenes</text>
+    <text x="140" y="848"><tspan fill="#22c55e" font-weight="700">✓</tspan>  Basic 3D editor — walls, doors, windows, stairs</text>
+    <text x="140" y="884"><tspan fill="#22c55e" font-weight="700">✓</tspan>  JSON export</text>
+    <text x="140" y="920"><tspan fill="#22c55e" font-weight="700">✓</tspan>  Model catalog (Poly Haven + Poly Pizza)</text>
+    <text x="140" y="956"><tspan fill="#22c55e" font-weight="700">✓</tspan>  Community support</text>
+  </g>
+
+  <!-- CTA -->
+  <rect x="140" y="1010" width="340" height="54" rx="8" fill="#3b82f6"/>
+  <text x="310" y="1044" font-size="18" font-weight="700" fill="#ffffff" text-anchor="middle">Get started free</text>
+  <text x="140" y="1096" font-size="15" fill="#64748b">aruct.com · No install required. Runs in your browser.</text>
+</svg>

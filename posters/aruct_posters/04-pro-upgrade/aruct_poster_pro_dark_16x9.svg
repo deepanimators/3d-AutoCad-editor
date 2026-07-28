@@ -1,0 +1,110 @@
+<svg viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <linearGradient id="glow4" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1e3a8a" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#1e3a8a" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="edgeGlow4" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2.6" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="shadowBlur4" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="14"/>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="900" fill="#0f172a"/>
+  <rect width="1600" height="340" fill="url(#glow4)"/>
+
+  <!-- logo -->
+  <g transform="translate(80,60) scale(1.1)" stroke="#ffffff" stroke-width="1.75" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 2 L22 7.5 L12 13 L2 7.5 Z"/>
+    <line x1="2" y1="13" x2="22" y2="13"/>
+    <path d="M2 7.5 L2 16.5 L12 22 L12 13"/>
+    <path d="M22 7.5 L22 16.5 L12 22"/>
+  </g>
+  <text x="120" y="81" font-size="20" font-weight="600" fill="#ffffff" letter-spacing="-0.3">Aruct</text>
+
+  <!-- eyebrow -->
+  <text x="80" y="130" font-size="16" font-weight="700" fill="#94a3b8" letter-spacing="3">READY TO GO FURTHER?</text>
+
+  <!-- giant price -->
+  <text x="76" y="292" font-size="152" font-weight="700" fill="#3b82f6" letter-spacing="-3">$29<tspan font-size="40" font-weight="500" fill="#94a3b8">/month</tspan></text>
+
+  <!-- trial emphasis -->
+  <text x="80" y="342" font-size="20" font-weight="600" fill="#22c55e">14-day free trial · No credit card required</text>
+
+  <line x1="80" y1="372" x2="700" y2="372" stroke="rgba(255,255,255,0.08)"/>
+
+  <!-- features -->
+  <g font-size="17" fill="#e2e8f0">
+    <text x="80" y="410"><tspan fill="#3b82f6" font-weight="700">✓</tspan>  Unlimited scenes <tspan fill="#64748b">(Free caps at 5)</tspan></text>
+    <text x="80" y="450"><tspan fill="#3b82f6" font-weight="700">✓</tspan>  GLB export — use models in any 3D pipeline</text>
+    <text x="80" y="490"><tspan fill="#3b82f6" font-weight="700">✓</tspan>  MCP server — Claude &amp; Cursor write scenes for you</text>
+    <text x="80" y="530"><tspan fill="#3b82f6" font-weight="700">✓</tspan>  Sun &amp; Shadow Study — solar analysis by GPS + time</text>
+    <text x="80" y="570"><tspan fill="#3b82f6" font-weight="700">✓</tspan>  Bill of Materials — auto-count, export CSV/PDF</text>
+    <text x="80" y="610"><tspan fill="#3b82f6" font-weight="700">✓</tspan>  AI Model Generator — text-to-3D via Tripo3D</text>
+  </g>
+
+  <!-- CTA -->
+  <rect x="80" y="654" width="420" height="56" rx="8" fill="#3b82f6"/>
+  <text x="290" y="689" font-size="18" font-weight="700" fill="#ffffff" text-anchor="middle">Start your free trial</text>
+  <text x="80" y="738" font-size="15" fill="#64748b">aruct.com/pricing</text>
+
+  <!-- FREE panel -->
+  <text x="800" y="352" font-size="15" font-weight="700" fill="#64748b" letter-spacing="2">FREE</text>
+  <g stroke="#475569" stroke-width="1.4" fill="none" stroke-linecap="round">
+    <line x1="930" y1="650" x2="990" y2="684"/>
+    <line x1="990" y1="684" x2="960" y2="701"/>
+    <line x1="960" y1="701" x2="900" y2="667"/>
+    <line x1="900" y1="667" x2="930" y2="650"/>
+    <line x1="930" y1="650" x2="930" y2="520"/>
+    <line x1="990" y1="684" x2="990" y2="554"/>
+    <line x1="960" y1="701" x2="960" y2="571"/>
+    <line x1="900" y1="667" x2="900" y2="537"/>
+    <line x1="930" y1="520" x2="990" y2="554"/>
+    <line x1="990" y1="554" x2="960" y2="571"/>
+    <line x1="960" y1="571" x2="900" y2="537"/>
+    <line x1="900" y1="537" x2="930" y2="520"/>
+  </g>
+
+  <!-- arrow -->
+  <text x="1110" y="616" font-size="60" fill="#475569" text-anchor="middle">→</text>
+
+  <!-- PRO panel -->
+  <text x="1164" y="270" font-size="18" font-weight="700" fill="#93c5fd" letter-spacing="2">PRO</text>
+
+  <!-- sun -->
+  <g stroke="#93c5fd" stroke-width="1.3" fill="none" opacity="0.75">
+    <circle cx="1460" cy="278" r="13"/>
+    <line x1="1460" y1="256" x2="1460" y2="246"/>
+    <line x1="1460" y1="300" x2="1460" y2="310"/>
+    <line x1="1438" y1="278" x2="1428" y2="278"/>
+    <line x1="1482" y1="278" x2="1492" y2="278"/>
+    <line x1="1444" y1="262" x2="1437" y2="255"/>
+    <line x1="1476" y1="294" x2="1483" y2="301"/>
+    <line x1="1476" y1="262" x2="1483" y2="255"/>
+    <line x1="1444" y1="294" x2="1437" y2="301"/>
+  </g>
+  <line x1="1450" y1="290" x2="1412" y2="470" stroke="#93c5fd" stroke-width="1" stroke-dasharray="2,4" opacity="0.4"/>
+  <line x1="1448" y1="292" x2="1320" y2="470" stroke="#93c5fd" stroke-width="1" stroke-dasharray="2,4" opacity="0.4"/>
+
+  <!-- shadow -->
+  <ellipse cx="1303" cy="754" rx="110" ry="34" fill="#000000" opacity="0.4" filter="url(#shadowBlur4)"/>
+
+  <!-- pro cube -->
+  <g filter="url(#edgeGlow4)" stroke="#60a5fa" stroke-width="2.2" fill="none" stroke-linecap="round">
+    <line x1="1320" y1="660" x2="1412" y2="712"/>
+    <line x1="1412" y1="712" x2="1366" y2="738"/>
+    <line x1="1366" y1="738" x2="1274" y2="686"/>
+    <line x1="1274" y1="686" x2="1320" y2="660"/>
+    <line x1="1320" y1="660" x2="1320" y2="470"/>
+    <line x1="1412" y1="712" x2="1412" y2="522"/>
+    <line x1="1366" y1="738" x2="1366" y2="548"/>
+    <line x1="1274" y1="686" x2="1274" y2="496"/>
+    <line x1="1320" y1="470" x2="1412" y2="522"/>
+    <line x1="1412" y1="522" x2="1366" y2="548"/>
+    <line x1="1366" y1="548" x2="1274" y2="496"/>
+    <line x1="1274" y1="496" x2="1320" y2="470"/>
+  </g>
+</svg>
