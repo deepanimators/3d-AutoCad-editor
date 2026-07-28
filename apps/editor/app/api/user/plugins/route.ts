@@ -19,7 +19,9 @@ export async function GET() {
     .map((p) => p.id)
   const enabled = rawPrefs === '[]' ? defaultFree : getEnabledPlugins(rawPrefs)
 
-  return NextResponse.json({ enabled, plan: session.plan })
+  return NextResponse.json({ enabled, plan: session.plan }, {
+    headers: { 'Cache-Control': 'no-store' },
+  })
 }
 
 const schema = z.object({

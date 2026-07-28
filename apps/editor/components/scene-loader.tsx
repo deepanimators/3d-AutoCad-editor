@@ -78,15 +78,12 @@ function mapDbModelToAsset(m: CatalogApiModel): AssetInput {
   }
 }
 
-interface EditorItemsPanelProps {
-  enabledPlugins: string[]
-}
-
-function EditorItemsPanel({ enabledPlugins }: EditorItemsPanelProps) {
+function EditorItemsPanel() {
   const [externalResults, setExternalResults] = useState<ExternalResult[] | null | undefined>(
     undefined,
   )
   const [dbItems, setDbItems] = useState<AssetInput[]>([])
+  const [enabledPlugins, setEnabledPlugins] = useState<string[]>([])
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const loadDbItems = useCallback(() => {
@@ -100,6 +97,12 @@ function EditorItemsPanel({ enabledPlugins }: EditorItemsPanelProps) {
 
   useEffect(() => {
     loadDbItems()
+    fetch('/api/user/plugins', { cache: 'no-store' })
+      .then((r) => r.ok ? r.json() : null)
+      .then((data: { enabled?: string[] } | null) => {
+        if (data?.enabled) setEnabledPlugins(data.enabled)
+      })
+      .catch(() => {})
   }, [loadDbItems])
 
   const handleSearchChange = (q: string) => {
@@ -211,6 +214,13 @@ export function SceneLoader({ initialScene, meta }: SceneLoaderProps) {
         if (data?.enabled) setEnabledPlugins(data.enabled)
       })
       .catch(() => {})
+
+    const onChanged = (e: Event) => {
+      const detail = (e as CustomEvent<{ enabled: string[] }>).detail
+      if (detail?.enabled) setEnabledPlugins(detail.enabled)
+    }
+    window.addEventListener('aruct:plugins-changed', onChanged)
+    return () => window.removeEventListener('aruct:plugins-changed', onChanged)
   }, [])
 
   const sidebarTabs: (SidebarTab & { component: React.ComponentType })[] = [
@@ -249,7 +259,7 @@ export function SceneLoader({ initialScene, meta }: SceneLoaderProps) {
     {
       id: 'items',
       label: 'Items',
-      component: () => <EditorItemsPanel enabledPlugins={enabledPlugins} />,
+      component: EditorItemsPanel,
       mobileDefaultSnap: 0.5,
       mobileIcon: <Package className="h-5 w-5" />,
       icon: (

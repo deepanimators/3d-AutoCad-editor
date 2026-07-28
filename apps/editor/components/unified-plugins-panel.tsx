@@ -46,7 +46,10 @@ export function UnifiedPluginsPanel() {
         body: JSON.stringify({ pluginId, enabled: next }),
       })
       const data = (await res.json()) as { enabled?: string[] }
-      if (data.enabled) setEnabledIds(data.enabled)
+      if (data.enabled) {
+        setEnabledIds(data.enabled)
+        window.dispatchEvent(new CustomEvent('aruct:plugins-changed', { detail: { enabled: data.enabled } }))
+      }
     } catch { /* ignore */ } finally {
       setLoading(null)
     }
