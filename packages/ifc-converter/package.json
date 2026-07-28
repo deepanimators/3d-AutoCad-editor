@@ -22,7 +22,7 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@aruct/core": "*",
+    "@aruct/core": "^0.9.2",
     "nanoid": "^5.1.6",
     "web-ifc": "^0.0.77"
   },
@@ -35,6 +35,9 @@
     "type": "git",
     "url": "https://github.com/aruct/editor.git",
     "directory": "packages/ifc-converter"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "license": "MIT",
   "homepage": "https://github.com/aruct/editor/tree/main/packages/ifc-converter#readme",

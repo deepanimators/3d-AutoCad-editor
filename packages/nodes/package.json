@@ -55,6 +55,9 @@
     "url": "https://github.com/aruct/editor.git",
     "directory": "packages/nodes"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "MIT",
   "homepage": "https://github.com/aruct/editor/tree/main/packages/nodes#readme",
   "bugs": "https://github.com/aruct/editor/issues"
