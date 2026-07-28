@@ -29,6 +29,13 @@ export const meshDefinition: NodeDefinition<typeof MeshNode> = {
     module: () => import('./renderer'),
   },
 
+  tool: () => import('./tool'),
+
+  toolHints: [
+    { key: 'Left click', label: 'Place mesh' },
+    { key: 'Esc', label: 'Cancel' },
+  ],
+
   presentation: {
     label: 'Mesh',
     description: 'A 3D mesh primitive (box, sphere, cylinder) or custom geometry.',

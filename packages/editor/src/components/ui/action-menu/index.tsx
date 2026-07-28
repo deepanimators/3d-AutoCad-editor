@@ -9,6 +9,7 @@ import { cn } from './../../../lib/utils'
 import useEditor from './../../../store/use-editor'
 import { CameraActions } from './camera-actions'
 import { ControlModes } from './control-modes'
+import { MeshToolbar } from './mesh-toolbar'
 import { SecondaryToggles } from './view-toggles'
 
 // Mobile bottom offset matches the viewer's overlap behind the sheet's
@@ -65,6 +66,7 @@ export function ActionMenu({ className }: { className?: string }) {
         ) : (
           <div className="flex items-center justify-center gap-1 px-2 py-1.5">
             <ControlModes />
+            <MeshToolbar />
             <div className="mx-1 h-5 w-px bg-border" />
             <SecondaryToggles />
             <div className="mx-1 h-5 w-px bg-border" />

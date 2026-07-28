@@ -1,8 +1,9 @@
 'use client'
 
 import { type MeshNode, useScene } from '@aruct/core'
-import { Box, ChevronDown, Circle, Cylinder, Plus, Trash2 } from 'lucide-react'
-import { useState } from 'react'
+import { useEditor } from '@aruct/editor'
+import { Box, Circle, Cylinder, MousePointerClick, Trash2 } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 type PrimitiveType = 'box' | 'sphere' | 'cylinder'
 
@@ -14,70 +15,77 @@ const PRIMITIVE_OPTIONS: { type: PrimitiveType; label: string; icon: React.React
 
 export function MeshEditorPanel() {
   const nodes = useScene((s) => s.nodes)
-  const createNode = useScene((s) => s.createNode)
   const deleteNode = useScene((s) => s.deleteNode)
-  const [dropdownOpen, setDropdownOpen] = useState(false)
 
-  const meshNodes = Object.values(nodes).filter(
-    (n): n is MeshNode => n.type === 'mesh',
-  )
+  const mode = useEditor((s) => s.mode)
+  const tool = useEditor((s) => s.tool)
+  const primitive = useEditor((s) => s.selectedMeshPrimitive)
+  const setPrimitive = useEditor((s) => s.setSelectedMeshPrimitive)
+  const setMode = useEditor((s) => s.setMode)
+  const setTool = useEditor((s) => s.setTool)
 
-  const handleAddMesh = (primitiveType: PrimitiveType) => {
-    setDropdownOpen(false)
-    const node: MeshNode = {
-      object: 'node',
-      id: `mesh_${crypto.randomUUID()}` as MeshNode['id'],
-      type: 'mesh',
-      parentId: null,
-      visible: true,
-      metadata: {},
-      position: [0, 0, 0],
-      rotation: [0, 0, 0],
-      positions: [],
-      normals: [],
-      uvs: [],
-      indices: [],
-      primitiveType,
-    }
-    createNode(node)
+  const isPlacing = mode === 'build' && tool === 'mesh'
+
+  const meshNodes = Object.values(nodes).filter((n): n is MeshNode => n.type === 'mesh')
+
+  const handleActivate = (type: PrimitiveType) => {
+    setPrimitive(type)
+    setMode('build')
+    setTool('mesh')
   }
 
   return (
     <div className="flex h-full flex-col overflow-y-auto">
       <div className="flex items-center justify-between border-b border-border/60 px-4 py-3">
-        <h2 className="text-sm font-semibold text-sidebar-foreground">Mesh Editor</h2>
-        <div className="relative">
-          <button
-            type="button"
-            onClick={() => setDropdownOpen((v) => !v)}
-            className="flex items-center gap-1.5 rounded-lg border border-border/60 bg-accent/20 px-2.5 py-1 text-xs font-medium text-sidebar-foreground hover:bg-accent/40 transition-colors"
-          >
-            <Plus className="h-3.5 w-3.5" />
-            Add Mesh
-            <ChevronDown className="h-3 w-3" />
-          </button>
-          {dropdownOpen && (
-            <div className="absolute right-0 top-full z-50 mt-1 min-w-[120px] rounded-lg border border-border/60 bg-background shadow-md">
-              {PRIMITIVE_OPTIONS.map((opt) => (
-                <button
-                  key={opt.type}
-                  type="button"
-                  onClick={() => handleAddMesh(opt.type)}
-                  className="flex w-full items-center gap-2 px-3 py-2 text-xs text-sidebar-foreground hover:bg-accent/40 transition-colors first:rounded-t-lg last:rounded-b-lg"
-                >
-                  {opt.icon}
-                  {opt.label}
-                </button>
-              ))}
-            </div>
-          )}
+        <div className="flex items-center gap-2">
+          <Box className="h-4 w-4 text-sidebar-foreground/60" />
+          <h2 className="text-sm font-semibold text-sidebar-foreground">Mesh Editor</h2>
         </div>
       </div>
 
+      {/* Primitive picker */}
+      <div className="border-b border-border/60 px-4 py-3">
+        <p className="mb-2 text-xs font-medium text-sidebar-foreground/60">Add Primitive</p>
+        <div className="flex gap-2">
+          {PRIMITIVE_OPTIONS.map((opt) => {
+            const isActive = primitive === opt.type
+            return (
+              <button
+                key={opt.type}
+                type="button"
+                onClick={() => handleActivate(opt.type)}
+                className={cn(
+                  'flex flex-1 flex-col items-center gap-1.5 rounded-xl border px-2 py-2.5 text-xs font-medium transition-colors',
+                  isActive && isPlacing
+                    ? 'border-amber-500/60 bg-amber-500/15 text-amber-400'
+                    : 'border-border/60 bg-accent/10 text-sidebar-foreground hover:bg-accent/30 hover:border-border',
+                )}
+              >
+                {opt.icon}
+                {opt.label}
+              </button>
+            )
+          })}
+        </div>
+
+        {/* Placement status */}
+        {isPlacing ? (
+          <div className="mt-2.5 flex items-center gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2">
+            <MousePointerClick className="h-3.5 w-3.5 shrink-0 text-amber-400" />
+            <span className="text-xs text-amber-400">Click in the 3D viewport to place</span>
+          </div>
+        ) : (
+          <p className="mt-2 text-xs text-sidebar-foreground/40">
+            Select a primitive above, then click in the viewport to place it.
+          </p>
+        )}
+      </div>
+
+      {/* Mesh list */}
       {meshNodes.length === 0 ? (
         <div className="flex flex-1 items-center justify-center p-8 text-center">
-          <p className="text-sm text-sidebar-foreground/50">
-            No mesh nodes yet. Add a primitive to get started.
+          <p className="text-sm text-sidebar-foreground/40">
+            No meshes yet. Pick a primitive above to get started.
           </p>
         </div>
       ) : (
@@ -85,12 +93,11 @@ export function MeshEditorPanel() {
           {meshNodes.map((mesh) => {
             const vertexCount = mesh.positions.length / 3
             const faceCount = mesh.indices.length > 0 ? mesh.indices.length / 3 : 0
-            const label = mesh.name ?? mesh.primitiveType.charAt(0).toUpperCase() + mesh.primitiveType.slice(1)
+            const label =
+              mesh.name ??
+              mesh.primitiveType.charAt(0).toUpperCase() + mesh.primitiveType.slice(1)
             return (
-              <div
-                key={mesh.id}
-                className="rounded-xl border border-border/60 px-3 py-2.5"
-              >
+              <div key={mesh.id} className="rounded-xl border border-border/60 px-3 py-2.5">
                 <div className="flex items-center gap-2">
                   <span className="min-w-0 flex-1 truncate text-sm font-medium text-sidebar-foreground">
                     {label}
@@ -116,19 +123,14 @@ export function MeshEditorPanel() {
       )}
 
       <div className="mt-auto border-t border-border/60 p-4">
-        <p className="mb-2 text-xs font-semibold text-sidebar-foreground/70">
-          Editing tools (Pro — v2)
+        <p className="mb-1.5 text-xs font-semibold text-sidebar-foreground/50">
+          Mesh editing tools — coming in v2
         </p>
-        <ul className="space-y-1 text-xs text-sidebar-foreground/40">
+        <ul className="space-y-0.5 text-xs text-sidebar-foreground/30">
           <li>Vertex / edge / face select</li>
-          <li>Extrude</li>
-          <li>Bevel</li>
-          <li>Loop cut</li>
+          <li>Extrude, Bevel, Loop cut</li>
           <li>UV unwrap</li>
         </ul>
-        <p className="mt-3 text-xs text-sidebar-foreground/40">
-          v1 — geometry primitives only. Full editing in v2.
-        </p>
       </div>
     </div>
   )

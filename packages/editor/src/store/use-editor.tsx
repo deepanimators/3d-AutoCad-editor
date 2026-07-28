@@ -285,6 +285,8 @@ type EditorState = {
   setCatalogCategory: (category: CatalogCategory | null) => void
   selectedItem: AssetInput | null
   setSelectedItem: (item: AssetInput) => void
+  selectedMeshPrimitive: 'box' | 'sphere' | 'cylinder'
+  setSelectedMeshPrimitive: (primitive: 'box' | 'sphere' | 'cylinder') => void
   /**
    * True while a move was engaged by a press-drag gizmo (the on-canvas move
    * cross) rather than a click-to-place flow. The placement coordinator reads
@@ -939,6 +941,8 @@ const useEditor = create<EditorState>()(
       setCatalogCategory: (category) => set({ catalogCategory: category }),
       selectedItem: null,
       setSelectedItem: (item) => set({ selectedItem: item }),
+      selectedMeshPrimitive: 'box',
+      setSelectedMeshPrimitive: (primitive) => set({ selectedMeshPrimitive: primitive }),
       placementDragMode: false,
       setPlacementDragMode: (dragMode) => set({ placementDragMode: dragMode }),
       roofHostDragArmedId: null,
