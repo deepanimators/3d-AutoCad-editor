@@ -262,7 +262,7 @@ export const PLUGIN_CATALOG: PluginEntry[] = [
     longDescription:
       'Import AutoCAD DXF files directly into your scene — lines become walls, closed polylines become slabs. Export any scene back to DXF R12 format for use in CAD tools. DWG binary import (requiring server-side conversion) is planned for a future release.',
     category: 'interop',
-    requiredPlan: 'team',
+    requiredPlan: 'pro',
     status: 'stable',
     icon: '📐',
     features: [

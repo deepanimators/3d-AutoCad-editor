@@ -81,3 +81,19 @@ export function canAccessTeamCatalog(user: AppUser): boolean {
 export function canImportDwg(user: AppUser): boolean {
   return isAdmin(user) || (planAtLeast(user, 'pro') && isPlanActive(user))
 }
+
+export function canExportDxf(user: AppUser): boolean {
+  return isAdmin(user) || (planAtLeast(user, 'pro') && isPlanActive(user))
+}
+
+export function canExportSchedules(user: AppUser): boolean {
+  return isAdmin(user) || (planAtLeast(user, 'pro') && isPlanActive(user))
+}
+
+export function canExportMeasurements(user: AppUser): boolean {
+  return isAdmin(user) || true // free tier
+}
+
+export function canRenderCapture(user: AppUser): boolean {
+  return isAdmin(user) || (planAtLeast(user, 'pro') && isPlanActive(user))
+}

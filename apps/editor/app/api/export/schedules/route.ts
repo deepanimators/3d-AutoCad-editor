@@ -2,7 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server'
 import { eq } from 'drizzle-orm'
 import { type AnyNode } from '@aruct/core'
 import { getSession } from '@/lib/auth-server'
-import { canExportGLB } from '@/lib/feature-gates'
+import { canExportSchedules } from '@/lib/feature-gates'
 import { db } from '@/lib/db/client'
 import { scenes } from '@/lib/db/schema'
 
@@ -144,7 +144,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
   }
 
-  if (!canExportGLB(session)) {
+  if (!canExportSchedules(session)) {
     return NextResponse.json(
       { error: 'forbidden', message: 'Schedule export requires a Pro plan.' },
       { status: 403 },

@@ -3,7 +3,7 @@ import { eq } from 'drizzle-orm'
 import { db } from '@/lib/db/client'
 import { scenes } from '@/lib/db/schema'
 import { getSession } from '@/lib/auth-server'
-import { canImportDwg } from '@/lib/feature-gates'
+import { canExportDxf } from '@/lib/feature-gates'
 
 export const dynamic = 'force-dynamic'
 
@@ -119,7 +119,7 @@ export async function POST(request: NextRequest) {
     })
   }
 
-  if (!canImportDwg(session)) {
+  if (!canExportDxf(session)) {
     return new Response(
       JSON.stringify({ error: 'forbidden', message: 'DXF export requires a Pro plan.' }),
       { status: 403, headers: { 'Content-Type': 'application/json' } },

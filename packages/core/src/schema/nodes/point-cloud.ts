@@ -4,6 +4,8 @@ import { BaseNode, nodeType, objectId } from '../base'
 export const PointCloudNode = BaseNode.extend({
   id: objectId('point-cloud'),
   type: nodeType('point-cloud'),
+  position: z.tuple([z.number(), z.number(), z.number()]).default([0, 0, 0]),
+  rotation: z.tuple([z.number(), z.number(), z.number()]).default([0, 0, 0]),
   fileUrl: z.string().optional(),
   fileName: z.string().default(''),
   pointCount: z.number().default(0),

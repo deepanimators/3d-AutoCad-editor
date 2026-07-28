@@ -4,10 +4,12 @@ import { BaseNode, nodeType, objectId } from '../base'
 export const MeshNode = BaseNode.extend({
   id: objectId('mesh'),
   type: nodeType('mesh'),
-  positions: z.array(z.number()).default([]),  // Float32, stride 3
-  normals: z.array(z.number()).default([]),     // Float32, stride 3
-  uvs: z.array(z.number()).default([]),         // Float32, stride 2
-  indices: z.array(z.number()).default([]),     // Uint32
+  position: z.tuple([z.number(), z.number(), z.number()]).default([0, 0, 0]),
+  rotation: z.tuple([z.number(), z.number(), z.number()]).default([0, 0, 0]),
+  positions: z.array(z.number()).default([]),
+  normals: z.array(z.number()).default([]),
+  uvs: z.array(z.number()).default([]),
+  indices: z.array(z.number()).default([]),
   primitiveType: z.enum(['box', 'sphere', 'cylinder', 'custom']).default('box'),
 })
 

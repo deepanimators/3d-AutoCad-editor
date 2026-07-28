@@ -7,14 +7,13 @@ import {
 import {
   BufferAttribute,
   BufferGeometry,
-  DoubleSide,
   FrontSide,
   Group,
   LineSegments,
   Mesh,
-  MeshLambertMaterial,
   PlaneGeometry,
 } from 'three'
+import { LineBasicNodeMaterial } from 'three/webgpu'
 
 /**
  * Builds a PlaneGeometry displaced by the node's height map.
@@ -59,9 +58,10 @@ export function buildTerrainGeometry(
 
   if (showContours && hasHeights && contourInterval > 0) {
     const contourGeo = buildContourGeometry(positions, gridCols, gridRows, contourInterval)
-    const contourMat = new MeshLambertMaterial({
+    const contourMat = new LineBasicNodeMaterial({
       color: '#6b7280',
-      side: DoubleSide,
+      transparent: true,
+      opacity: 0.7,
     })
     const lines = new LineSegments(contourGeo, contourMat)
     // Lift slightly to prevent z-fighting with the terrain surface.

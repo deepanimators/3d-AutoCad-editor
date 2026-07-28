@@ -43,7 +43,7 @@ export function MeshNodeRenderer({ node }: { node: MeshNode }) {
   useEffect(() => () => geometry.dispose(), [geometry])
 
   return (
-    <group ref={ref} visible={node.visible !== false}>
+    <group ref={ref} visible={node.visible !== false} position={node.position} rotation={node.rotation}>
       <mesh geometry={geometry}>
         <meshStandardMaterial color="#c0c0c0" roughness={0.7} metalness={0} />
       </mesh>
