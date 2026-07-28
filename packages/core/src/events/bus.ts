@@ -49,6 +49,7 @@ import type {
   WallNode,
   WindowNode,
   ZoneNode,
+  SectionNode,
 } from '../schema'
 import type { AnyNode } from '../schema/types'
 
@@ -137,6 +138,7 @@ export type PipeTrapEvent = NodeEvent<PipeTrapNode>
 export type LinesetEvent = NodeEvent<LinesetNode>
 export type LiquidLineEvent = NodeEvent<LiquidLineNode>
 export type MeasurementEvent = NodeEvent<MeasurementNode>
+export type SectionEvent = NodeEvent<SectionNode>
 
 // Event suffixes - exported for use in hooks
 export const eventSuffixes = [
@@ -333,6 +335,7 @@ type EditorEvents = GridEvents &
   NodeEvents<'lineset', LinesetEvent> &
   NodeEvents<'liquid-line', LiquidLineEvent> &
   NodeEvents<'measurement', MeasurementEvent> &
+  NodeEvents<'section', SectionEvent> &
   CameraControlEvents &
   ToolEvents &
   GuideEvents &
