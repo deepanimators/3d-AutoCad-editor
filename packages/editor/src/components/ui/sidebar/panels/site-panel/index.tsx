@@ -85,6 +85,26 @@ function calculatePolygonArea(polygon: Array<[number, number]>): number {
   return Math.abs(area) / 2
 }
 
+function calculateBoundingBox(points: Array<[number, number]>): {
+  minX: number
+  maxX: number
+  minZ: number
+  maxZ: number
+} {
+  if (points.length === 0) return { minX: 0, maxX: 0, minZ: 0, maxZ: 0 }
+  let minX = points[0]![0],
+    maxX = points[0]![0]
+  let minZ = points[0]![1],
+    maxZ = points[0]![1]
+  for (const [x, z] of points) {
+    if (x < minX) minX = x
+    if (x > maxX) maxX = x
+    if (z < minZ) minZ = z
+    if (z > maxZ) maxZ = z
+  }
+  return { minX, maxX, minZ, maxZ }
+}
+
 function useSiteNode(): SiteNode | null {
   const siteId = useScene((state) => {
     for (const id of state.rootNodeIds) {
@@ -104,6 +124,10 @@ const PropertyLineSection = memo(function PropertyLineSection() {
   const setMode = useEditor((state) => state.setMode)
   const viewerUnit = useViewer((state) => state.unit)
 
+  // Draft values for W/D inputs — null means "show computed value"
+  const [widthDraft, setWidthDraft] = useState<string | null>(null)
+  const [depthDraft, setDepthDraft] = useState<string | null>(null)
+
   if (!siteNode) return null
 
   const points = siteNode.polygon?.points ?? []
@@ -119,8 +143,35 @@ const PropertyLineSection = memo(function PropertyLineSection() {
   const displayArea = squareMetersToAreaUnit(area, viewerUnit)
   const displayPerimeter = toDisplayLinear(perimeter)
 
+  // Bounding-box width and depth
+  const { minX, maxX, minZ, maxZ } = calculateBoundingBox(points)
+  const widthMeters = maxX - minX
+  const depthMeters = maxZ - minZ
+  const displayWidth = toDisplayLinear(widthMeters)
+  const displayDepth = toDisplayLinear(depthMeters)
+  const wValue = widthDraft ?? String(Number(displayWidth.toFixed(2)))
+  const dValue = depthDraft ?? String(Number(displayDepth.toFixed(2)))
+
   const handleToggleEdit = () => {
     setMode(isEditing ? 'select' : 'edit')
+  }
+
+  const handleWidthCommit = (newDisplayWidth: number) => {
+    const newWidthMeters = toStoredLinear(newDisplayWidth)
+    if (newWidthMeters <= 0 || widthMeters <= 0) return
+    const centerX = (minX + maxX) / 2
+    const scale = newWidthMeters / widthMeters
+    const newPoints = points.map(([x, z]) => [centerX + (x - centerX) * scale, z] as [number, number])
+    updateNode(siteNode.id, { polygon: { type: 'polygon' as const, points: newPoints } })
+  }
+
+  const handleDepthCommit = (newDisplayDepth: number) => {
+    const newDepthMeters = toStoredLinear(newDisplayDepth)
+    if (newDepthMeters <= 0 || depthMeters <= 0) return
+    const centerZ = (minZ + maxZ) / 2
+    const scale = newDepthMeters / depthMeters
+    const newPoints = points.map(([x, z]) => [x, centerZ + (z - centerZ) * scale] as [number, number])
+    updateNode(siteNode.id, { polygon: { type: 'polygon' as const, points: newPoints } })
   }
 
   const handlePointChange = (index: number, axis: 0 | 1, value: number) => {
@@ -182,18 +233,58 @@ const PropertyLineSection = memo(function PropertyLineSection() {
       </div>
 
       {/* Measurements */}
-      <div className="relative flex gap-3 pr-3 pb-2 pl-10">
-        <div className="text-muted-foreground text-xs">
-          Area:{' '}
-          <span className="text-foreground">
-            {displayArea.toFixed(1)} {getAreaUnitLabel(viewerUnit)}
-          </span>
+      <div className="relative flex flex-col gap-1.5 pr-3 pb-2 pl-10">
+        <div className="flex gap-3">
+          <div className="text-muted-foreground text-xs">
+            Area:{' '}
+            <span className="text-foreground">
+              {displayArea.toFixed(1)} {getAreaUnitLabel(viewerUnit)}
+            </span>
+          </div>
+          <div className="text-muted-foreground text-xs">
+            Perimeter:{' '}
+            <span className="text-foreground">
+              {displayPerimeter.toFixed(1)} {linearLabel}
+            </span>
+          </div>
         </div>
-        <div className="text-muted-foreground text-xs">
-          Perimeter:{' '}
-          <span className="text-foreground">
-            {displayPerimeter.toFixed(1)} {linearLabel}
-          </span>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1 text-xs">
+            <span className="w-3 shrink-0 text-muted-foreground">W</span>
+            <input
+              className="w-16 rounded border border-border/50 bg-accent/50 px-1.5 py-0.5 text-foreground text-xs focus:border-primary focus:outline-none"
+              min={0.01}
+              onBlur={() => {
+                const v = Number.parseFloat(wValue)
+                if (!Number.isNaN(v) && v > 0) handleWidthCommit(v)
+                setWidthDraft(null)
+              }}
+              onChange={(e) => setWidthDraft(e.target.value)}
+              onFocus={() => setWidthDraft(String(Number(displayWidth.toFixed(2))))}
+              step={0.5}
+              type="number"
+              value={wValue}
+            />
+            <span className="text-muted-foreground">{linearLabel}</span>
+          </div>
+          <div className="flex items-center gap-1 text-xs">
+            <span className="w-3 shrink-0 text-muted-foreground">D</span>
+            <input
+              className="w-16 rounded border border-border/50 bg-accent/50 px-1.5 py-0.5 text-foreground text-xs focus:border-primary focus:outline-none"
+              min={0.01}
+              onBlur={() => {
+                const v = Number.parseFloat(dValue)
+                if (!Number.isNaN(v) && v > 0) handleDepthCommit(v)
+                setDepthDraft(null)
+              }}
+              onChange={(e) => setDepthDraft(e.target.value)}
+              onFocus={() => setDepthDraft(String(Number(displayDepth.toFixed(2))))}
+              step={0.5}
+              type="number"
+              value={dValue}
+            />
+            <span className="text-muted-foreground">{linearLabel}</span>
+          </div>
         </div>
       </div>
 
