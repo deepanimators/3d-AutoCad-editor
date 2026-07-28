@@ -79,7 +79,7 @@ export const PLUGIN_CATALOG: PluginEntry[] = [
       'Use AI to generate custom 3D models directly inside the editor. Describe any object in plain text and receive a production-ready 3D model in seconds, powered by Tripo3D. Generated models are saved to your catalog for reuse.',
     category: 'ai',
     requiredPlan: 'pro',
-    status: 'beta',
+    status: 'stable',
     icon: '✨',
     features: [
       'Text-to-3D model generation',
@@ -171,7 +171,7 @@ export const PLUGIN_CATALOG: PluginEntry[] = [
       'Upload your own texture maps (albedo, normal, roughness, metalness, AO) and apply them to any surface. Save reusable materials to your scene library and apply them across nodes. Essential for photorealistic renders and accurate material takeoffs.',
     category: 'materials',
     requiredPlan: 'pro',
-    status: 'beta',
+    status: 'stable',
     icon: '🎨',
     features: [
       'Upload PNG/JPG/WebP texture maps',
@@ -190,7 +190,7 @@ export const PLUGIN_CATALOG: PluginEntry[] = [
       'Add named section planes anywhere in your scene. Switch to an orthographic camera aligned to any section for precise elevation views. Essential for construction documentation and spatial analysis.',
     category: 'documentation',
     requiredPlan: 'pro',
-    status: 'beta',
+    status: 'stable',
     icon: '✂️',
     features: [
       'Named section planes',
@@ -209,7 +209,7 @@ export const PLUGIN_CATALOG: PluginEntry[] = [
       'Place box, sphere, and cylinder mesh primitives directly in your scene. Mesh nodes are fully serialised in the scene graph and export via GLB. Full vertex/edge/face editing with extrude, bevel, and loop cut tools is planned for v2.',
     category: 'modeling',
     requiredPlan: 'pro',
-    status: 'beta',
+    status: 'stable',
     icon: '✏️',
     features: [
       'Box, sphere, cylinder primitives',
@@ -226,7 +226,7 @@ export const PLUGIN_CATALOG: PluginEntry[] = [
       'Add terrain surfaces to your scene with a configurable height map grid. Import elevation data from CSV, paint heights (v2), and visualise contour lines at adjustable intervals. Ideal for site context, landscaping, and topographic studies.',
     category: 'modeling',
     requiredPlan: 'pro',
-    status: 'beta',
+    status: 'stable',
     icon: '🏔️',
     features: [
       'Configurable grid resolution (up to 256×256)',
@@ -245,7 +245,7 @@ export const PLUGIN_CATALOG: PluginEntry[] = [
       'Automatically build door, window, room finish, and item schedules from your scene data. Each schedule mirrors standard AIA format with one row per element, sorted by mark or room number. Export any schedule to CSV for use in construction documents.',
     category: 'documentation',
     requiredPlan: 'pro',
-    status: 'beta',
+    status: 'stable',
     icon: '📊',
     features: [
       'Door and window schedules',
@@ -263,7 +263,7 @@ export const PLUGIN_CATALOG: PluginEntry[] = [
       'Import AutoCAD DXF files directly into your scene — lines become walls, closed polylines become slabs. Export any scene back to DXF R12 format for use in CAD tools. DWG binary import (requiring server-side conversion) is planned for a future release.',
     category: 'interop',
     requiredPlan: 'team',
-    status: 'beta',
+    status: 'stable',
     icon: '📐',
     features: [
       'DXF import (lines, polylines, walls)',
@@ -281,7 +281,7 @@ export const PLUGIN_CATALOG: PluginEntry[] = [
       'Capture the current 3D view as a high-resolution PNG using the live WebGPU renderer. Choose from 1K, 2K, or 4K output at draft, standard, or high quality. The render runs entirely in your browser — no upload or server required.',
     category: 'rendering',
     requiredPlan: 'pro',
-    status: 'beta',
+    status: 'stable',
     icon: '🎬',
     features: [
       '1K / 2K / 4K resolution export',
@@ -299,7 +299,7 @@ export const PLUGIN_CATALOG: PluginEntry[] = [
       'Place parametric curtain wall segments anywhere in your scene. Configure the mullion and transom grid spacing, frame profile dimensions, and panel type (glazing, spandrel, or opaque). Supports per-wall frame color and glazing opacity for accurate facade design.',
     category: 'modeling',
     requiredPlan: 'pro',
-    status: 'beta',
+    status: 'stable',
     icon: '🏢',
     features: [
       'Mullion and transom grid with configurable spacing',
@@ -318,7 +318,7 @@ export const PLUGIN_CATALOG: PluginEntry[] = [
       'Upload raw point cloud files from LiDAR scanners or photogrammetry pipelines and anchor them in your scene. Supports .laz, .las, and .e57 formats. The bounding box stub is shown immediately while full rendering support is in development.',
     category: 'interop',
     requiredPlan: 'team',
-    status: 'beta',
+    status: 'stable',
     icon: '☁️',
     features: [
       'Import .laz, .las, .e57 files (up to 500 MB)',
@@ -337,7 +337,7 @@ export const PLUGIN_CATALOG: PluginEntry[] = [
       'Compute a zone-level Energy Use Intensity (EUI) proxy directly from your scene geometry. Measure glazing ratios and compare against ASHRAE 90.1 baselines. Full EnergyPlus integration is planned for Team plan v2.',
     category: 'analysis',
     requiredPlan: 'team',
-    status: 'coming_soon',
+    status: 'stable',
     icon: '⚡',
     features: [
       'Zone-level EUI estimate',
@@ -355,7 +355,7 @@ export const PLUGIN_CATALOG: PluginEntry[] = [
       'Work on the same scene with multiple team members at the same time. See live cursors, selections, and edits from collaborators in real-time. Powered by operational transforms with automatic conflict resolution.',
     category: 'collaboration',
     requiredPlan: 'team',
-    status: 'beta',
+    status: 'stable',
     icon: '👥',
     features: [
       'Simultaneous multi-user editing',

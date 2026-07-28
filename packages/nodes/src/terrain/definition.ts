@@ -41,7 +41,7 @@ export const terrainDefinition: NodeDefinition<typeof TerrainNode> = {
   presentation: {
     label: 'Terrain',
     description: 'A grid-based terrain surface with elevation control.',
-    icon: { kind: 'url', src: '/icons/terrain.webp' },
+    icon: { kind: 'url', src: '/icons/site.webp' },
     paletteSection: 'structure',
     paletteOrder: 35,
   },

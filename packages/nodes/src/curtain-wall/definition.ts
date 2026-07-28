@@ -41,7 +41,7 @@ export const curtainWallDefinition: NodeDefinition<typeof CurtainWallNode> = {
   presentation: {
     label: 'Curtain Wall',
     description: 'A glazed curtain wall system with configurable mullion and transom grid.',
-    icon: { kind: 'url', src: '/icons/curtain-wall.webp' },
+    icon: { kind: 'url', src: '/icons/wall.webp' },
     paletteSection: 'structure',
     paletteOrder: 25,
   },
