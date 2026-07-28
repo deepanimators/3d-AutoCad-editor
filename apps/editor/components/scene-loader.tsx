@@ -16,7 +16,7 @@ import {
   type SidebarTab,
   useEditor,
 } from '@aruct/editor'
-import { BarChart2, Building2, Camera, ClipboardList, Clock, CloudSnow, Hammer, LayoutGrid, Layers, Mountain, Package, Palette, PenTool, Plus, Scissors, Settings, Sun, Users, Zap } from 'lucide-react'
+import { BarChart2, Building2, Camera, ClipboardList, Clock, CloudSnow, Hammer, LayoutGrid, Layers, Mountain, Package, Palette, PenTool, Plus, Scissors, Sun, Users, Zap } from 'lucide-react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -36,9 +36,9 @@ import { ZoneRollupPanel } from './zone-rollup-panel'
 import { TextureManagerPanel } from './texture-manager-panel'
 import { CollabPanel } from './collab-panel'
 import { RailAccountNav } from './rail-account-nav'
-import { SettingsPanel } from './settings-panel'
 import { SunStudyPanel } from './sun-study-panel'
 import { UnifiedPluginsPanel } from './unified-plugins-panel'
+import { EditorTopBar } from './editor-top-bar'
 import { CommunityViewerToolbarLeft, CommunityViewerToolbarRight } from './viewer-toolbar'
 
 export interface SceneMeta {
@@ -93,9 +93,14 @@ function EditorItemsPanel() {
   const [externalResults, setExternalResults] = useState<ExternalResult[] | null | undefined>(
     undefined,
   )
+  const [externalUnconfigured, setExternalUnconfigured] = useState<string[]>([])
+  const [externalDisabled, setExternalDisabled] = useState<string[]>([])
+  const [externalHasMore, setExternalHasMore] = useState(false)
+  const [externalPage, setExternalPage] = useState(0)
   const [dbItems, setDbItems] = useState<AssetInput[]>([])
   const [enabledPlugins, setEnabledPlugins] = useState<string[]>([])
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const currentQueryRef = useRef('')
 
   const loadDbItems = useCallback(() => {
     fetch('/api/catalog?limit=48')
@@ -116,23 +121,72 @@ function EditorItemsPanel() {
       .catch(() => {})
   }, [loadDbItems])
 
+  const handleExternalSelect = (result: ExternalResult) => {
+    void fetch('/api/catalog/import', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        source: result.source,
+        sourceId: result.sourceId,
+        name: result.name,
+        description: result.description ?? undefined,
+        glbUrl: result.glbUrl,
+        thumbnailUrl: result.thumbnailUrl ?? undefined,
+        license: result.license,
+        attribution: result.attribution ?? undefined,
+        tags: result.tags ?? [],
+        category: result.category ?? undefined,
+      }),
+    }).then((r) => { if (r.ok) loadDbItems() }).catch(() => {})
+  }
+
+  const fetchExternal = async (q: string, page: number, append: boolean) => {
+    try {
+      const res = await fetch(`/api/catalog/external?q=${encodeURIComponent(q)}&limit=12&page=${page}`)
+      if (!res.ok) throw new Error('fetch failed')
+      const data = (await res.json()) as {
+        results: ExternalResult[]
+        unconfigured?: string[]
+        disabled?: string[]
+        hasMore?: boolean
+      }
+      setExternalResults((prev) =>
+        append && Array.isArray(prev) ? [...prev, ...(data.results ?? [])] : (data.results ?? [])
+      )
+      setExternalUnconfigured(data.unconfigured ?? [])
+      setExternalDisabled(data.disabled ?? [])
+      setExternalHasMore(data.hasMore ?? false)
+    } catch {
+      if (!append) {
+        setExternalResults([])
+        setExternalUnconfigured([])
+        setExternalDisabled([])
+      }
+      setExternalHasMore(false)
+    }
+  }
+
   const handleSearchChange = (q: string) => {
     if (debounceRef.current) clearTimeout(debounceRef.current)
+    currentQueryRef.current = q
+    setExternalPage(0)
     if (!q.trim()) {
       setExternalResults(undefined)
+      setExternalUnconfigured([])
+      setExternalDisabled([])
+      setExternalHasMore(false)
       return
     }
     setExternalResults(null)
-    debounceRef.current = setTimeout(async () => {
-      try {
-        const res = await fetch(`/api/catalog/external?q=${encodeURIComponent(q)}&limit=12`)
-        if (!res.ok) throw new Error('fetch failed')
-        const data = (await res.json()) as { results: ExternalResult[] }
-        setExternalResults(data.results ?? [])
-      } catch {
-        setExternalResults([])
-      }
+    debounceRef.current = setTimeout(() => {
+      void fetchExternal(q, 0, false)
     }, 400)
+  }
+
+  const handleLoadMore = () => {
+    const nextPage = externalPage + 1
+    setExternalPage(nextPage)
+    void fetchExternal(currentQueryRef.current, nextPage, true)
   }
 
   const allItems = dbItems.length > 0 ? [...CATALOG_ITEMS, ...dbItems] : undefined
@@ -140,9 +194,14 @@ function EditorItemsPanel() {
 
   return (
     <ItemsPanel
+      externalDisabled={externalDisabled}
       externalResults={externalResults}
+      externalUnconfigured={externalUnconfigured}
+      hasMore={externalHasMore}
       items={allItems}
       leadingTile={aiGenEnabled ? <AiGenerateTile onGenerated={loadDbItems} /> : undefined}
+      onExternalSelect={handleExternalSelect}
+      onLoadMore={handleLoadMore}
       onSearchChange={handleSearchChange}
       showSourceFilter={dbItems.length > 0}
       showTagFilters={false}
@@ -397,22 +456,6 @@ export function SceneLoader({ initialScene, meta }: SceneLoaderProps) {
       icon: <LayoutGrid className="h-5 w-5" />,
     } as SidebarTab & { component: React.ComponentType }] : []),
     {
-      id: 'settings',
-      label: 'Settings',
-      component: () => <SettingsPanel sceneId={meta.id} />,
-      mobileDefaultSnap: 0.5,
-      mobileIcon: <Settings className="h-5 w-5" />,
-      icon: (
-        <Image
-          alt=""
-          className="h-8 w-8 object-contain"
-          height={32}
-          src="/icons/settings.webp"
-          width={32}
-        />
-      ),
-    },
-    {
       id: 'plugins',
       label: 'Plugins',
       component: UnifiedPluginsPanel,
@@ -645,6 +688,7 @@ export function SceneLoader({ initialScene, meta }: SceneLoaderProps) {
       )}
       <Editor
         layoutVersion="v2"
+        navbarSlot={<EditorTopBar />}
         onLoad={handleLoad}
         onSave={handleSave}
         onSaveStatusChange={setSaveStatus}

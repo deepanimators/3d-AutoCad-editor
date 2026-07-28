@@ -400,9 +400,11 @@ export function SettingsPanel({
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <label className="font-medium text-muted-foreground text-xs uppercase">Scene Details</label>
-          <span className={`rounded-full border px-2.5 py-0.5 font-medium text-[10px] ${statusBadgeColor}`}>
-            {statusLabel}
-          </span>
+          {onSaveCloud != null && (
+            <span className={`rounded-full border px-2.5 py-0.5 font-medium text-[10px] ${statusBadgeColor}`}>
+              {statusLabel}
+            </span>
+          )}
         </div>
         <div className="space-y-1">
           <label className="text-muted-foreground text-xs">Scene Name</label>

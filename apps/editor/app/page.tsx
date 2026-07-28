@@ -9,7 +9,6 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { AiGenerateTile } from '@/components/ai-generate-tile'
 import { BomPanel } from '@/components/bom-panel'
 import { CollabPanel } from '@/components/collab-panel'
-import { SettingsPanel } from '@/components/settings-panel'
 import { SunStudyPanel } from '@/components/sun-study-panel'
 import { BuildTab } from '@/components/build-tab'
 import { TextureManagerPanel } from '@/components/texture-manager-panel'
@@ -371,7 +370,7 @@ export default function Home() {
     {
       id: 'settings',
       label: 'Settings',
-      component: SettingsPanel,
+      component: () => null, // Editor renders its own SettingsPanel via settingsPanelProps
       mobileDefaultSnap: 0.5,
       mobileIcon: <Settings className="h-5 w-5" />,
       icon: <Settings className="h-5 w-5" />,
