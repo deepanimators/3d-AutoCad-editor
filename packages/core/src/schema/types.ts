@@ -45,6 +45,7 @@ import { TurbineVentNode } from './nodes/turbine-vent'
 import { WallNode } from './nodes/wall'
 import { WindowNode } from './nodes/window'
 import { ZoneNode } from './nodes/zone'
+import { SectionNode } from './nodes/section'
 
 export const AnyNode = z.discriminatedUnion('type', [
   SiteNode,
@@ -94,6 +95,7 @@ export const AnyNode = z.discriminatedUnion('type', [
   PipeSegmentNode,
   PipeFittingNode,
   PipeTrapNode,
+  SectionNode,
 ])
 
 export type AnyNode = z.infer<typeof AnyNode>

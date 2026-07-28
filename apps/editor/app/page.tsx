@@ -2,7 +2,7 @@
 
 import { type AssetInput, useScene } from '@aruct/core'
 import { CATALOG_ITEMS, Editor, type ExternalResult, ItemsPanel, useEditor } from '@aruct/editor'
-import { BarChart2, Hammer, Layers, Package, Plus, Settings, Sun, Users } from 'lucide-react'
+import { BarChart2, Download, Hammer, Layers, Package, Palette, Plus, Scissors, Settings, Sun, Users } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -12,6 +12,9 @@ import { CollabPanel } from '@/components/collab-panel'
 import { SettingsPanel } from '@/components/settings-panel'
 import { SunStudyPanel } from '@/components/sun-study-panel'
 import { BuildTab } from '@/components/build-tab'
+import { GlbExportPanel } from '@/components/glb-export-panel'
+import { TextureManagerPanel } from '@/components/texture-manager-panel'
+import { SectionsPanel } from '@/components/sections-panel'
 import { UnifiedPluginsPanel } from '@/components/unified-plugins-panel'
 import { EditorTopBar } from '@/components/editor-top-bar'
 import { FloorplanConstructionPreflight } from '@/components/floorplan-construction-preflight'
@@ -268,6 +271,30 @@ export default function Home() {
       mobileDefaultSnap: 0.5,
       mobileIcon: <Users className="h-5 w-5" />,
       icon: <Users className="h-5 w-5" />,
+    }] : []),
+    ...(enabledPlugins.includes('aruct:plugin-glb-export') ? [{
+      id: 'glb-export',
+      label: 'Export',
+      component: GlbExportPanel,
+      mobileDefaultSnap: 0.5,
+      mobileIcon: <Download className="h-5 w-5" />,
+      icon: <Download className="h-5 w-5" />,
+    }] : []),
+    ...(enabledPlugins.includes('aruct:plugin-texture-manager') ? [{
+      id: 'textures',
+      label: 'Textures',
+      component: TextureManagerPanel,
+      mobileDefaultSnap: 0.5,
+      mobileIcon: <Palette className="h-5 w-5" />,
+      icon: <Palette className="h-5 w-5" />,
+    }] : []),
+    ...(enabledPlugins.includes('aruct:plugin-sections') ? [{
+      id: 'sections',
+      label: 'Sections',
+      component: SectionsPanel,
+      mobileDefaultSnap: 0.5,
+      mobileIcon: <Scissors className="h-5 w-5" />,
+      icon: <Scissors className="h-5 w-5" />,
     }] : []),
     {
       id: 'settings',

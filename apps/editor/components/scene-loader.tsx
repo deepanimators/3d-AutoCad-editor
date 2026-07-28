@@ -16,13 +16,16 @@ import {
   type SidebarTab,
   useEditor,
 } from '@aruct/editor'
-import { BarChart2, Hammer, Layers, Package, Plus, Settings, Sun, Users } from 'lucide-react'
+import { BarChart2, Download, Hammer, Layers, Package, Palette, Plus, Scissors, Settings, Sun, Users } from 'lucide-react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { AiGenerateTile } from './ai-generate-tile'
 import { BomPanel } from './bom-panel'
 import { BuildTab } from './build-tab'
+import { GlbExportPanel } from './glb-export-panel'
+import { SectionsPanel } from './sections-panel'
+import { TextureManagerPanel } from './texture-manager-panel'
 import { CollabPanel } from './collab-panel'
 import { RailAccountNav } from './rail-account-nav'
 import { SettingsPanel } from './settings-panel'
@@ -295,6 +298,30 @@ export function SceneLoader({ initialScene, meta }: SceneLoaderProps) {
       mobileDefaultSnap: 0.5,
       mobileIcon: <Users className="h-5 w-5" />,
       icon: <Users className="h-5 w-5" />,
+    } as SidebarTab & { component: React.ComponentType }] : []),
+    ...(enabledPlugins.includes('aruct:plugin-glb-export') ? [{
+      id: 'glb-export',
+      label: 'Export',
+      component: GlbExportPanel,
+      mobileDefaultSnap: 0.5,
+      mobileIcon: <Download className="h-5 w-5" />,
+      icon: <Download className="h-5 w-5" />,
+    } as SidebarTab & { component: React.ComponentType }] : []),
+    ...(enabledPlugins.includes('aruct:plugin-texture-manager') ? [{
+      id: 'textures',
+      label: 'Textures',
+      component: TextureManagerPanel,
+      mobileDefaultSnap: 0.5,
+      mobileIcon: <Palette className="h-5 w-5" />,
+      icon: <Palette className="h-5 w-5" />,
+    } as SidebarTab & { component: React.ComponentType }] : []),
+    ...(enabledPlugins.includes('aruct:plugin-sections') ? [{
+      id: 'sections',
+      label: 'Sections',
+      component: SectionsPanel,
+      mobileDefaultSnap: 0.5,
+      mobileIcon: <Scissors className="h-5 w-5" />,
+      icon: <Scissors className="h-5 w-5" />,
     } as SidebarTab & { component: React.ComponentType }] : []),
     {
       id: 'settings',

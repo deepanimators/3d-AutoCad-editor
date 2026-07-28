@@ -1,6 +1,6 @@
 export type PluginPlan = 'free' | 'pro' | 'team'
 export type PluginStatus = 'stable' | 'beta' | 'coming_soon'
-export type PluginCategory = 'core' | 'catalog' | 'ai' | 'export' | 'analysis' | 'collaboration'
+export type PluginCategory = 'core' | 'catalog' | 'ai' | 'export' | 'analysis' | 'collaboration' | 'modeling' | 'materials' | 'documentation' | 'interop' | 'rendering'
 
 export type PluginEntry = {
   id: string
@@ -141,6 +141,63 @@ export const PLUGIN_CATALOG: PluginEntry[] = [
       'Preserves element types and materials',
       'Compatible with Revit, ArchiCAD, BIMx',
       'BIM metadata mapping',
+    ],
+    builtIn: false,
+  },
+  {
+    id: 'aruct:plugin-glb-export',
+    name: 'GLB / glTF Export',
+    description: 'Export your scene as a GLB file for Blender, AR/VR, and game engines.',
+    longDescription:
+      'Download your Aruct scene as a GLB (glTF 2.0 binary) file. Open it directly in Blender, import into game engines (Unity, Unreal, Godot), publish to web 3D viewers, or use in AR/VR pipelines. Export runs entirely in the browser — no upload required.',
+    category: 'export',
+    requiredPlan: 'pro',
+    status: 'stable',
+    icon: '📤',
+    features: [
+      'One-click GLB download',
+      'Full scene geometry and hierarchy',
+      'PBR materials and vertex colors',
+      'Compatible with Blender, Unity, Unreal, Godot',
+      'Runs entirely in the browser',
+    ],
+    builtIn: false,
+  },
+  {
+    id: 'aruct:plugin-texture-manager',
+    name: 'Texture & Material Manager',
+    description: 'Upload textures, edit PBR materials, and build a reusable material library.',
+    longDescription:
+      'Upload your own texture maps (albedo, normal, roughness, metalness, AO) and apply them to any surface. Save reusable materials to your scene library and apply them across nodes. Essential for photorealistic renders and accurate material takeoffs.',
+    category: 'materials',
+    requiredPlan: 'pro',
+    status: 'beta',
+    icon: '🎨',
+    features: [
+      'Upload PNG/JPG/WebP texture maps',
+      'Albedo map with UV repeat/offset',
+      'Reusable scene material library',
+      'Apply materials to any surface slot',
+      'Stored in cloud storage (R2/S3)',
+    ],
+    builtIn: false,
+  },
+  {
+    id: 'aruct:plugin-sections',
+    name: 'Sections & Elevations',
+    description: 'Create section planes and view orthographic cuts through your building.',
+    longDescription:
+      'Add named section planes anywhere in your scene. Switch to an orthographic camera aligned to any section for precise elevation views. Essential for construction documentation and spatial analysis.',
+    category: 'documentation',
+    requiredPlan: 'pro',
+    status: 'beta',
+    icon: '✂️',
+    features: [
+      'Named section planes',
+      'Front/Back/Left/Right orientation presets',
+      'One-click orthographic section view',
+      'Adjustable cut height',
+      'Multiple sections per scene',
     ],
     builtIn: false,
   },

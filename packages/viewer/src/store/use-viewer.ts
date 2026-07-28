@@ -40,6 +40,9 @@ type ViewerState = {
   cameraMode: 'perspective' | 'orthographic'
   setCameraMode: (mode: 'perspective' | 'orthographic') => void
 
+  sectionViewPlaneId: string | null
+  setSectionViewPlaneId: (id: string | null) => void
+
   sceneTheme: string
   setSceneTheme: (id: string) => void
 
@@ -357,6 +360,9 @@ const useViewer = create<ViewerState>()(
 
       cameraMode: 'perspective',
       setCameraMode: (mode) => set({ cameraMode: mode }),
+
+      sectionViewPlaneId: null,
+      setSectionViewPlaneId: (id) => set({ sectionViewPlaneId: id }),
 
       sceneTheme: 'studio',
       setSceneTheme: (id) => set({ sceneTheme: id }),

@@ -298,6 +298,7 @@ export {
   WindowType,
 } from './nodes/window'
 export { ZoneNode } from './nodes/zone'
+export { SectionNode } from './nodes/section'
 export { generateSceneMaterialId, SceneMaterial, type SceneMaterialId } from './scene-material'
 export type { AnyNodeId, AnyNodeType } from './types'
 // Union types
