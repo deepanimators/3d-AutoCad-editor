@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useCallback, useRef } from 'react'
-import { Search, Download, Loader2 } from 'lucide-react'
+import { Search, Download, Loader2, Check } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 type CatalogModel = {
@@ -158,10 +158,12 @@ function ModelCard({ model, isLoggedIn }: { model: CatalogModel; isLoggedIn: boo
 function ExternalModelCard({
   model,
   isImporting,
+  isImported,
   onImport,
 }: {
   model: ExternalModel
   isImporting: boolean
+  isImported: boolean
   onImport: (model: ExternalModel) => void
 }) {
   return (
@@ -185,16 +187,18 @@ function ExternalModelCard({
         <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity duration-150 group-hover:opacity-100">
           <button
             type="button"
-            onClick={() => onImport(model)}
-            disabled={isImporting}
+            onClick={() => !isImported && onImport(model)}
+            disabled={isImporting || isImported}
             className="flex items-center gap-1.5 rounded-lg bg-background px-3 py-2 text-xs font-medium text-foreground shadow-md hover:bg-muted transition-colors disabled:opacity-70"
           >
             {isImporting ? (
               <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            ) : isImported ? (
+              <Check className="h-3.5 w-3.5 text-green-500" />
             ) : (
               <Download className="h-3.5 w-3.5" />
             )}
-            {isImporting ? 'Importing…' : 'Import'}
+            {isImporting ? 'Importing…' : isImported ? 'Imported' : 'Import'}
           </button>
         </div>
       </div>
@@ -266,6 +270,7 @@ export function CatalogClient({
   const [discoverLoading, setDiscoverLoading] = useState(false)
   const [discoverError, setDiscoverError] = useState<string | null>(null)
   const [importing, setImporting] = useState<Set<string>>(new Set())
+  const [imported, setImported] = useState<Set<string>>(new Set())
 
   const discoverDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -340,7 +345,9 @@ export function CatalogClient({
         }),
       })
       if (res.ok) {
-        setTab('catalog')
+        setImported(prev => new Set(prev).add(model.sourceId))
+        // Refresh catalog in background so it's ready when user navigates there
+        void fetchModels({ q, category, source, isNew: isNewOnly, page: 1, append: false })
       }
     } finally {
       setImporting(prev => { const s = new Set(prev); s.delete(model.sourceId); return s })
@@ -645,6 +652,7 @@ export function CatalogClient({
                   key={`${model.source}:${model.sourceId}`}
                   model={model}
                   isImporting={importing.has(model.sourceId)}
+                  isImported={imported.has(model.sourceId)}
                   onImport={importModel}
                 />
               ))}
