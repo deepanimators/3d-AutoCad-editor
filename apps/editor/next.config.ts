@@ -7,7 +7,27 @@ const nextConfig: NextConfig = {
     'drizzle-orm',
     'drizzle-orm/neon-http',
     '@aruct/mcp',
+    // Subpath exports must also be listed explicitly for workspace packages
+    // whose local path bypasses the top-level serverExternalPackages match.
+    '@aruct/mcp/storage',
+    '@aruct/mcp/operations',
   ],
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      // `bun:sqlite` is a Bun-only built-in; the sqlite-driver falls back to
+      // node:sqlite at runtime so we mark the Bun import as external so webpack
+      // doesn't try to bundle it.
+      const origExternals = config.externals
+      config.externals = [
+        ...(Array.isArray(origExternals) ? origExternals : origExternals ? [origExternals] : []),
+        ({ request }: { request?: string }, callback: (err?: Error | null, result?: string) => void) => {
+          if (request?.startsWith('bun:')) return callback(null, `commonjs ${request}`)
+          callback()
+        },
+      ]
+    }
+    return config
+  },
   logging: {
     browserToTerminal: true,
   },
