@@ -9,7 +9,7 @@ import './globals.css'
 
 export const metadata: Metadata = {
   title: { default: 'Aruct Editor', template: '%s — Aruct Editor' },
-  description: 'Build in three dimensions. Professional 3D architectural editor for architects, designers, and space planners.',
+  description: 'Design with depth. Build with precision. Professional 3D architectural editor for architects, designers, and space planners.',
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? 'https://aruct.com'),
   icons: {
     icon: '/favicon.svg',
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     siteName: 'Aruct Editor',
-    title: 'Aruct Editor — Build in three dimensions.',
+    title: 'Aruct Editor — Design with depth. Build with precision.',
     description: 'Professional 3D architectural editor for architects, designers, and space planners.',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Aruct Editor' }],
   },

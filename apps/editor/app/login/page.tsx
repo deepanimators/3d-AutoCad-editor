@@ -130,7 +130,7 @@ function LoginForm() {
             Aruct Editor
           </h1>
           <p className="mt-3 text-white/70 text-base">
-            Build in three dimensions.
+            Design with depth. Build with precision.
           </p>
         </div>
         <div className="absolute bottom-8 left-0 right-0 text-center">
