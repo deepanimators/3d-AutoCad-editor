@@ -36,7 +36,7 @@ export default function ContactPage() {
     const email = data.get('email') as string
     const message = data.get('message') as string
     const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\nSubject: ${subject}\n\n${message}`)
-    window.location.href = `mailto:support@aruct.app?subject=${encodeURIComponent(subject)}&body=${body}`
+    window.location.href = `mailto:${process.env.NEXT_PUBLIC_CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${body}`
     setSent(true)
   }
 
@@ -177,10 +177,10 @@ export default function ContactPage() {
                 Prefer to write your own email? Reach us at:
               </p>
               <a
-                href="mailto:support@aruct.app"
+                href="mailto:support@aruct.com"
                 className="text-[14px] font-medium text-blue-400 hover:text-blue-300 transition-colors"
               >
-                support@aruct.app
+                support@aruct.com
               </a>
             </div>
 

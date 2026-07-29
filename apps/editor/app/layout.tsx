@@ -10,7 +10,7 @@ import './globals.css'
 export const metadata: Metadata = {
   title: { default: 'Aruct Editor', template: '%s — Aruct Editor' },
   description: 'Build in three dimensions. Professional 3D architectural editor for architects, designers, and space planners.',
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? 'https://aruct.app'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? 'https://aruct.com'),
   icons: {
     icon: '/favicon.svg',
     shortcut: '/favicon.svg',

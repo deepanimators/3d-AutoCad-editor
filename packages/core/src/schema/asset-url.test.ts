@@ -76,31 +76,31 @@ describe('AssetUrl', () => {
 
     test('single origin allowlist accepts matching https URL', () => {
       if (!g.process?.env) return // browser-only runtime
-      g.process.env[ALLOWED_ORIGINS_ENV] = 'https://cdn.aruct.app'
-      expect(isValid('https://cdn.aruct.app/a.glb')).toBe(true)
-      expect(isValid('https://cdn.aruct.app/deep/path?q=1')).toBe(true)
+      g.process.env[ALLOWED_ORIGINS_ENV] = 'https://cdn.aruct.com'
+      expect(isValid('https://cdn.aruct.com/a.glb')).toBe(true)
+      expect(isValid('https://cdn.aruct.com/deep/path?q=1')).toBe(true)
     })
 
     test('single origin allowlist rejects non-matching https URL', () => {
       if (!g.process?.env) return
-      g.process.env[ALLOWED_ORIGINS_ENV] = 'https://cdn.aruct.app'
+      g.process.env[ALLOWED_ORIGINS_ENV] = 'https://cdn.aruct.com'
       expect(isValid('https://cdn.other.com/a.glb')).toBe(false)
       expect(isValid('https://attacker.example.com/x')).toBe(false)
     })
 
     test('multi-origin allowlist accepts any listed origin', () => {
       if (!g.process?.env) return
-      g.process.env[ALLOWED_ORIGINS_ENV] = 'https://cdn.aruct.app, https://assets.aruct.app'
-      expect(isValid('https://cdn.aruct.app/a.glb')).toBe(true)
-      expect(isValid('https://assets.aruct.app/tex.webp')).toBe(true)
+      g.process.env[ALLOWED_ORIGINS_ENV] = 'https://cdn.aruct.com, https://assets.aruct.com'
+      expect(isValid('https://cdn.aruct.com/a.glb')).toBe(true)
+      expect(isValid('https://assets.aruct.com/tex.webp')).toBe(true)
       expect(isValid('https://third.example.com/x')).toBe(false)
     })
 
     test('allowlist ignores trailing / in URL path (origin match only)', () => {
       if (!g.process?.env) return
-      g.process.env[ALLOWED_ORIGINS_ENV] = 'https://cdn.aruct.app'
-      expect(isValid('https://cdn.aruct.app/')).toBe(true)
-      expect(isValid('https://cdn.aruct.app')).toBe(true)
+      g.process.env[ALLOWED_ORIGINS_ENV] = 'https://cdn.aruct.com'
+      expect(isValid('https://cdn.aruct.com/')).toBe(true)
+      expect(isValid('https://cdn.aruct.com')).toBe(true)
     })
 
     test('empty allowlist behaves like unset', () => {
@@ -111,7 +111,7 @@ describe('AssetUrl', () => {
 
     test('allowlist does not restrict non-https schemes', () => {
       if (!g.process?.env) return
-      g.process.env[ALLOWED_ORIGINS_ENV] = 'https://cdn.aruct.app'
+      g.process.env[ALLOWED_ORIGINS_ENV] = 'https://cdn.aruct.com'
       // these should still pass because they match earlier scheme-based branches
       expect(isValid('asset://x')).toBe(true)
       expect(isValid('blob:https://example.com/abc')).toBe(true)
@@ -122,16 +122,16 @@ describe('AssetUrl', () => {
 
     test('allowlist rejects subdomain spoofing', () => {
       if (!g.process?.env) return
-      g.process.env[ALLOWED_ORIGINS_ENV] = 'https://cdn.aruct.app'
-      expect(isValid('https://cdn.aruct.app.evil.com/x')).toBe(false)
-      expect(isValid('https://evil.com/cdn.aruct.app')).toBe(false)
+      g.process.env[ALLOWED_ORIGINS_ENV] = 'https://cdn.aruct.com'
+      expect(isValid('https://cdn.aruct.com.evil.com/x')).toBe(false)
+      expect(isValid('https://evil.com/cdn.aruct.com')).toBe(false)
     })
 
     test('allowlist respects ports', () => {
       if (!g.process?.env) return
-      g.process.env[ALLOWED_ORIGINS_ENV] = 'https://cdn.aruct.app:8443'
-      expect(isValid('https://cdn.aruct.app:8443/x')).toBe(true)
-      expect(isValid('https://cdn.aruct.app/x')).toBe(false)
+      g.process.env[ALLOWED_ORIGINS_ENV] = 'https://cdn.aruct.com:8443'
+      expect(isValid('https://cdn.aruct.com:8443/x')).toBe(true)
+      expect(isValid('https://cdn.aruct.com/x')).toBe(false)
     })
   })
 })
