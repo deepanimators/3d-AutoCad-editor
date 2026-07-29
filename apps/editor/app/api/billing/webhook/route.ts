@@ -3,6 +3,7 @@ import { db } from '@/lib/db/client'
 import { users } from '@/lib/db/schema'
 import { eq } from 'drizzle-orm'
 import type Stripe from 'stripe'
+import { getAdminAuth } from '@/lib/firebase/admin'
 
 export const dynamic = 'force-dynamic'
 
@@ -56,6 +57,13 @@ async function syncSubscription(sub: Stripe.Subscription) {
     planExpiresAt: periodEnd ? new Date(periodEnd * 1000).toISOString() : null,
     updatedAt: new Date().toISOString(),
   }).where(eq(users.id, userId))
+
+  try {
+    const [row] = await db.select({ role: users.role }).from(users).where(eq(users.id, userId))
+    if (row) await getAdminAuth().setCustomUserClaims(userId, { plan, role: row.role })
+  } catch (err) {
+    console.error('[stripe webhook] setCustomUserClaims failed', err)
+  }
 }
 
 async function downgradeUser(sub: Stripe.Subscription) {
@@ -69,6 +77,13 @@ async function downgradeUser(sub: Stripe.Subscription) {
     planExpiresAt: null,
     updatedAt: new Date().toISOString(),
   }).where(eq(users.id, userId))
+
+  try {
+    const [row] = await db.select({ role: users.role }).from(users).where(eq(users.id, userId))
+    if (row) await getAdminAuth().setCustomUserClaims(userId, { plan: 'free', role: row.role })
+  } catch (err) {
+    console.error('[stripe webhook] setCustomUserClaims failed', err)
+  }
 }
 
 async function markPaymentFailed(invoice: Stripe.Invoice) {

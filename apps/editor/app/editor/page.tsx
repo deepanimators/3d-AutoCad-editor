@@ -25,6 +25,7 @@ import { ZoneRollupPanel } from '@/components/zone-rollup-panel'
 import { UnifiedPluginsPanel } from '@/components/unified-plugins-panel'
 import { EditorTopBar } from '@/components/editor-top-bar'
 import { FloorplanConstructionPreflight } from '@/components/floorplan-construction-preflight'
+import { GlbExportGate } from '@/components/glb-export-gate'
 import { RailAccountNav } from '@/components/rail-account-nav'
 import {
   CommunityViewerToolbarLeft,
@@ -421,6 +422,7 @@ export default function Home() {
   return (
     <div className="relative h-screen w-screen">
       <FloorplanConstructionPreflight />
+      <GlbExportGate />
       <TabUrlSync validTabIds={sidebarTabs.map((t) => t.id)} />
       {PROJECT_ID === 'local-editor' && (
         <div className="pointer-events-none absolute top-3 left-1/2 z-40 -translate-x-1/2">

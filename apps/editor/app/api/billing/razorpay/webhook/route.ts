@@ -3,6 +3,7 @@ import { eq } from 'drizzle-orm'
 import { db } from '@/lib/db/client'
 import { users } from '@/lib/db/schema'
 import { verifyRazorpayWebhookSignature, resolvePlanFromRazorpayPlanId } from '@/lib/razorpay'
+import { getAdminAuth } from '@/lib/firebase/admin'
 
 export const dynamic = 'force-dynamic'
 
@@ -43,6 +44,12 @@ export async function POST(request: NextRequest) {
         planExpiresAt: currentEnd ? new Date(currentEnd * 1000).toISOString() : null,
         updatedAt: new Date().toISOString(),
       }).where(eq(users.id, userId))
+      try {
+        const [row] = await db.select({ role: users.role }).from(users).where(eq(users.id, userId))
+        if (row) await getAdminAuth().setCustomUserClaims(userId, { plan, role: row.role })
+      } catch (err) {
+        console.error('[razorpay webhook] setCustomUserClaims failed', err)
+      }
       break
     }
     case 'subscription.cancelled':
@@ -55,6 +62,12 @@ export async function POST(request: NextRequest) {
         planExpiresAt: null,
         updatedAt: new Date().toISOString(),
       }).where(eq(users.id, userId))
+      try {
+        const [row] = await db.select({ role: users.role }).from(users).where(eq(users.id, userId))
+        if (row) await getAdminAuth().setCustomUserClaims(userId, { plan: 'free', role: row.role })
+      } catch (err) {
+        console.error('[razorpay webhook] setCustomUserClaims failed', err)
+      }
       break
     }
     case 'subscription.paused':

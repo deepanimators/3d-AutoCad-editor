@@ -4,6 +4,7 @@ import { getSession } from '@/lib/auth-server'
 import { db } from '@/lib/db/client'
 import { users } from '@/lib/db/schema'
 import { z } from 'zod'
+import { getAdminAuth } from '@/lib/firebase/admin'
 
 const schema = z.object({
   role: z.enum(['user', 'admin']).optional(),
@@ -36,5 +37,12 @@ export async function PATCH(
     .returning({ id: users.id, role: users.role, plan: users.plan, subscriptionStatus: users.subscriptionStatus })
 
   if (!updated) return NextResponse.json({ error: 'User not found' }, { status: 404 })
+
+  try {
+    await getAdminAuth().setCustomUserClaims(updated.id, { plan: updated.plan, role: updated.role })
+  } catch (err) {
+    console.error('[admin users] setCustomUserClaims failed', err)
+  }
+
   return NextResponse.json(updated)
 }

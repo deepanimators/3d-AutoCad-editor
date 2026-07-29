@@ -1,6 +1,6 @@
 'use client'
 
-import { Pencil, Trash2, Check, X, Share2, UserPlus, Loader2, Building2 } from 'lucide-react'
+import { Pencil, Trash2, Check, X, Share2, Link2, UserPlus, Loader2, Building2 } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
@@ -151,6 +151,7 @@ export function SceneCard({ id, name, nodeCount, updatedAt, thumbnailUrl, canSha
   const [sharing, setSharing] = useState(false)
   const [currentSceneOrgId, setCurrentSceneOrgId] = useState(sceneOrgId ?? null)
   const [workspaceToggling, setWorkspaceToggling] = useState(false)
+  const [copyLinkState, setCopyLinkState] = useState<'idle' | 'copied' | 'pro_required'>('idle')
   const inputRef = useRef<HTMLInputElement>(null)
 
   const startEdit = (e: React.MouseEvent) => {
@@ -225,6 +226,23 @@ export function SceneCard({ id, name, nodeCount, updatedAt, thumbnailUrl, canSha
     setWorkspaceToggling(false)
   }
 
+  const handleCopyLink = async (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    const res = await fetch(`/api/scenes/${id}/share-link`, { method: 'POST' })
+    if (res.status === 403) {
+      setCopyLinkState('pro_required')
+      setTimeout(() => setCopyLinkState('idle'), 2000)
+      return
+    }
+    if (res.ok) {
+      const { url } = await res.json() as { url: string }
+      await navigator.clipboard.writeText(url)
+      setCopyLinkState('copied')
+      setTimeout(() => setCopyLinkState('idle'), 2000)
+    }
+  }
+
   return (
     <li className="group relative rounded-xl border border-border/60 bg-background transition-all duration-150 hover:border-border hover:shadow-md">
       {sharing && <ShareDialog id={id} onClose={() => setSharing(false)} />}
@@ -283,6 +301,23 @@ export function SceneCard({ id, name, nodeCount, updatedAt, thumbnailUrl, canSha
                 >
                   <Share2 className="h-3.5 w-3.5" />
                 </button>
+              )}
+              {canShare && (
+                <div className="relative shrink-0">
+                  <button
+                    className={`rounded p-0.5 opacity-0 transition-opacity group-hover:opacity-100 ${copyLinkState === 'copied' ? 'text-success' : copyLinkState === 'pro_required' ? 'text-destructive' : 'text-muted-foreground hover:bg-accent hover:text-foreground'}`}
+                    onClick={(e) => void handleCopyLink(e)}
+                    title="Copy share link"
+                    type="button"
+                  >
+                    <Link2 className="h-3.5 w-3.5" />
+                  </button>
+                  {copyLinkState !== 'idle' && (
+                    <span className="pointer-events-none absolute bottom-full left-1/2 mb-1 -translate-x-1/2 whitespace-nowrap rounded bg-foreground px-1.5 py-0.5 text-background text-xs">
+                      {copyLinkState === 'copied' ? 'Link copied!' : 'Pro plan required'}
+                    </span>
+                  )}
+                </div>
               )}
               {userOrgId && (
                 <button
