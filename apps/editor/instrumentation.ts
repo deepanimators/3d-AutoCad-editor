@@ -13,6 +13,7 @@ export async function register() {
     await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "vision_calls_this_month" integer DEFAULT 0 NOT NULL`
     await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS "vision_calls_reset_at" timestamptz`
     await sql`ALTER TABLE scenes ADD COLUMN IF NOT EXISTS "org_id" text`
+    await sql`ALTER TABLE plan_config ADD COLUMN IF NOT EXISTS "locale_prices_json" text DEFAULT '{}' NOT NULL`
   } catch {
     // Non-fatal — app still boots, migrations can be applied manually
   }
