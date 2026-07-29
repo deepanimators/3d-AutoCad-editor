@@ -25,7 +25,7 @@ const SUBJECTS = [
 ]
 
 export default function ContactPage() {
-  const [subject, setSubject] = useState(SUBJECTS[0])
+  const [subject, setSubject] = useState<string>(SUBJECTS[0]!)
   const [sent, setSent] = useState(false)
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
