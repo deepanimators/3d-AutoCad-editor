@@ -31,6 +31,7 @@ async function ensureMigrations() {
       "created_at" timestamptz NOT NULL DEFAULT now()
     )`
     await sql`CREATE INDEX IF NOT EXISTS "scene_events_scene_id_idx" ON "scene_events" ("scene_id", "event_id")`
+    await sql`ALTER TABLE plan_config ADD COLUMN IF NOT EXISTS "locale_prices_json" text DEFAULT '{}' NOT NULL`
     // Migrate existing users with empty plugin prefs to have free plugins enabled by default
     await sql`UPDATE users SET plugin_prefs = '["aruct:plugin-polyhaven","aruct:plugin-polypizza"]' WHERE plugin_prefs = '[]'`
   } catch (err) {

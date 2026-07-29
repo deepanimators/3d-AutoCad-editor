@@ -1,13 +1,19 @@
+import { headers } from 'next/headers'
 import { getSession } from '@/lib/auth-server'
 import { db } from '@/lib/db/client'
 import { users, coupons, planConfig } from '@/lib/db/schema'
 import { eq, and, or, isNull, gt } from 'drizzle-orm'
 import { AppShell } from '@/components/app-shell'
+import { getCurrencyForCountry } from '@/lib/geo-currency'
 import { PricingClient } from './pricing-client'
 
 export const dynamic = 'force-dynamic'
 
 export default async function PricingPage() {
+  const headersList = await headers()
+  const countryCode = headersList.get('x-vercel-ip-country') ?? null
+  const currency = getCurrencyForCountry(countryCode)
+
   const session = await getSession()
   let hasStripeSubscription = false
   let hasRazorpaySubscription = false
@@ -60,6 +66,8 @@ export default async function PricingPage() {
         paymentGateway={paymentGateway}
         activePromos={parsedPromos}
         planConfigs={dbPlanConfig}
+        currency={currency}
+        countryCode={countryCode}
       />
     </AppShell>
   )

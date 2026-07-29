@@ -3,6 +3,8 @@
 import { Crown, Zap, Building2, Check, CreditCard, X, Tag } from 'lucide-react'
 import { useState } from 'react'
 import type { PlanConfigRow } from '@/lib/db/schema'
+import type { CurrencyConfig, CurrencyCode } from '@/lib/geo-currency'
+import { CURRENCY_CONFIGS, formatPrice } from '@/lib/geo-currency'
 
 declare global {
   interface Window {
@@ -21,6 +23,23 @@ const PLAN_MONTHLY_KEYS: Record<string, string | null> = {
   pro: 'pro-monthly',
   team: 'team-monthly',
 }
+
+const CURRENCY_FLAGS: Partial<Record<CurrencyCode, string>> = {
+  USD: '🇺🇸',
+  INR: '🇮🇳',
+  EUR: '🇪🇺',
+  GBP: '🇬🇧',
+  AUD: '🇦🇺',
+  CAD: '🇨🇦',
+  SGD: '🇸🇬',
+  AED: '🇦🇪',
+  JPY: '🇯🇵',
+  BRL: '🇧🇷',
+}
+
+const SELECTOR_CURRENCIES: CurrencyCode[] = [
+  'USD', 'EUR', 'GBP', 'AUD', 'CAD', 'INR', 'SGD', 'AED', 'JPY', 'BRL',
+]
 
 type ActivePromo = {
   id: string
@@ -41,10 +60,8 @@ type Props = {
   paymentGateway: 'stripe' | 'razorpay' | null
   activePromos: ActivePromo[]
   planConfigs: PlanConfigRow[]
-}
-
-function formatCents(cents: number): string {
-  return `$${(cents / 100).toFixed(cents % 100 === 0 ? 0 : 2)}`
+  currency: CurrencyConfig
+  countryCode: string | null
 }
 
 function daysUntil(iso: string): number {
@@ -62,6 +79,16 @@ function loadRazorpayScript(): Promise<void> {
   })
 }
 
+// Approximate conversion for promo prices (always USD cents → target currency)
+function approxPromoPrice(usdCents: number, currency: CurrencyConfig): string {
+  if (currency.code === 'USD') {
+    return formatPrice(usdCents, currency)
+  }
+  const approxSmallestUnits = Math.round((usdCents / 100) * currency.approxUsdRate * currency.divisor)
+  const prefix = currency.code === 'INR' ? '' : '≈'
+  return prefix + formatPrice(approxSmallestUnits, currency)
+}
+
 export function PricingClient({
   currentPlan,
   isSignedIn,
@@ -70,24 +97,40 @@ export function PricingClient({
   paymentGateway,
   activePromos,
   planConfigs,
+  currency,
+  countryCode,
 }: Props) {
   const [loading, setLoading] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [selectedCurrency, setSelectedCurrency] = useState<CurrencyConfig>(currency)
 
   const plans = planConfigs
     .filter((p) => p.active)
-    .map((p) => ({
-      key: p.planKey,
-      name: p.displayName,
-      price: p.displayPriceCents === 0 ? '$0' : formatCents(p.displayPriceCents),
-      period: p.priceSuffix,
-      icon: PLAN_ICONS[p.planKey] ?? Zap,
-      features: JSON.parse(p.features) as string[],
-      monthlyKey: PLAN_MONTHLY_KEYS[p.planKey] ?? null,
-      highlight: p.highlight,
-      hasStripe: !!p.stripePriceId,
-      hasRazorpay: !!p.razorpayPlanId,
-    }))
+    .map((p) => {
+      const planRow = p as PlanConfigRow & { localePricesJson?: string }
+      const localePrices = JSON.parse(planRow.localePricesJson ?? '{}') as Partial<Record<string, number>>
+      const localeSmallestUnits = localePrices[selectedCurrency.code] ?? null
+      const displayPrice = p.displayPriceCents === 0
+        ? formatPrice(0, selectedCurrency)
+        : formatPrice(localeSmallestUnits, selectedCurrency, p.displayPriceCents)
+
+      return {
+        key: p.planKey,
+        name: p.displayName,
+        price: displayPrice,
+        period: p.priceSuffix,
+        icon: PLAN_ICONS[p.planKey] ?? Zap,
+        features: JSON.parse(p.features) as string[],
+        monthlyKey: PLAN_MONTHLY_KEYS[p.planKey] ?? null,
+        highlight: p.highlight,
+        hasStripe: !!p.stripePriceId,
+        hasRazorpay: !!p.razorpayPlanId,
+        displayPriceCents: p.displayPriceCents,
+      }
+    })
+
+  // Razorpay is primary when the selected currency routes to razorpay
+  const razorpayIsPrimary = selectedCurrency.gateway === 'razorpay'
 
   function getPromoForPlan(monthlyKey: string | null): ActivePromo | null {
     if (!monthlyKey) return null
@@ -101,7 +144,11 @@ export function PricingClient({
       const res = await fetch('/api/billing/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ priceKey, ...(promoId ? { promoCodeId: promoId } : {}) }),
+        body: JSON.stringify({
+          priceKey,
+          ...(promoId ? { promoCodeId: promoId } : {}),
+          currency: selectedCurrency.code.toLowerCase(),
+        }),
       })
       const data = (await res.json()) as { url?: string; error?: string }
       if (data.url) {
@@ -222,14 +269,36 @@ export function PricingClient({
   const secondaryBtnClass = (_highlight: boolean) =>
     `w-full rounded-lg py-2 text-xs font-medium transition-colors disabled:opacity-60 border border-border text-muted-foreground hover:bg-accent`
 
+  const showApproxNote =
+    selectedCurrency.code !== 'USD' && selectedCurrency.code !== 'INR'
+
   return (
     <div className="min-h-screen bg-background px-4 py-16">
       <div className="mx-auto max-w-5xl">
-        <div className="mb-12 text-center">
+        <div className="mb-8 text-center">
           <h1 className="font-bold text-4xl text-foreground">Simple, transparent pricing</h1>
           <p className="mt-3 text-muted-foreground text-lg">
             Start free. Upgrade when you&apos;re ready to scale.
           </p>
+        </div>
+
+        {/* Currency selector */}
+        <div className="mb-8 flex items-center justify-center gap-2">
+          <span className="text-sm text-muted-foreground">Currency:</span>
+          <select
+            value={selectedCurrency.code}
+            onChange={(e) => {
+              const cfg = CURRENCY_CONFIGS[e.target.value as CurrencyCode]
+              if (cfg) setSelectedCurrency(cfg)
+            }}
+            className="rounded-md border border-border bg-background px-2.5 py-1.5 text-sm font-medium text-foreground focus:outline-none focus:ring-2 focus:ring-brand/50"
+          >
+            {SELECTOR_CURRENCIES.map((code) => (
+              <option key={code} value={code}>
+                {CURRENCY_FLAGS[code]} {code}
+              </option>
+            ))}
+          </select>
         </div>
 
         {error && (
@@ -250,6 +319,9 @@ export function PricingClient({
               const Icon = plan.icon
               const promo = getPromoForPlan(plan.monthlyKey)
               const hasPromo = !!promo && !!promo.promoPriceCents && !!promo.originalPriceCents
+
+              // Determine button order: razorpay-primary when gateway routes there and plan supports it
+              const showRazorpayPrimary = razorpayIsPrimary && plan.hasRazorpay
 
               return (
                 <div
@@ -295,12 +367,14 @@ export function PricingClient({
                       <div>
                         <div className="flex items-baseline gap-2">
                           <span className="text-sm line-through text-muted-foreground">
-                            {formatCents(promo.originalPriceCents!)}
+                            {approxPromoPrice(promo.originalPriceCents!, selectedCurrency)}
                           </span>
-                          <span className="font-bold text-3xl">{formatCents(promo.promoPriceCents!)}</span>
+                          <span className="font-bold text-3xl">
+                            {approxPromoPrice(promo.promoPriceCents!, selectedCurrency)}
+                          </span>
                         </div>
                         <p className="text-xs mt-0.5 text-success">
-                          first month, then {formatCents(promo.originalPriceCents!)}{plan.period}
+                          first month, then {approxPromoPrice(promo.originalPriceCents!, selectedCurrency)}{plan.period}
                         </p>
                         {promo.expiresAt && (
                           <p className="text-[11px] mt-0.5 text-muted-foreground">
@@ -361,36 +435,71 @@ export function PricingClient({
                     </a>
                   ) : (
                     <div className="flex flex-col gap-2">
-                      {plan.hasStripe && (
-                        <button
-                          type="button"
-                          disabled={!!loading}
-                          onClick={() => plan.monthlyKey && void handleStripeUpgrade(plan.monthlyKey, promo?.id)}
-                          className={btnClass(plan.highlight)}
-                        >
-                          <span className="flex items-center justify-center gap-2">
-                            <CreditCard className="h-3.5 w-3.5" />
-                            {loading === `stripe-${plan.monthlyKey}`
+                      {/* Primary button — razorpay or stripe depending on detected currency */}
+                      {showRazorpayPrimary ? (
+                        <>
+                          <button
+                            type="button"
+                            disabled={!!loading}
+                            onClick={() => plan.monthlyKey && void handleRazorpayUpgrade(plan.monthlyKey)}
+                            className={btnClass(plan.highlight)}
+                          >
+                            {loading === `razorpay-${plan.monthlyKey}`
                               ? 'Loading…'
                               : hasPromo && promo
-                                ? `Pay with Card — ${formatCents(promo.promoPriceCents!)}`
-                                : 'Pay with Card'}
-                          </span>
-                        </button>
-                      )}
-                      {plan.hasRazorpay && (
-                        <button
-                          type="button"
-                          disabled={!!loading}
-                          onClick={() => plan.monthlyKey && void handleRazorpayUpgrade(plan.monthlyKey)}
-                          className={plan.hasStripe ? secondaryBtnClass(plan.highlight) : btnClass(plan.highlight)}
-                        >
-                          {loading === `razorpay-${plan.monthlyKey}`
-                            ? 'Loading…'
-                            : hasPromo && promo
-                              ? `₹ Pay with Razorpay — ${formatCents(promo.promoPriceCents!)}`
-                              : '₹ Pay with Razorpay'}
-                        </button>
+                                ? `Pay — ${approxPromoPrice(promo.promoPriceCents!, selectedCurrency)}`
+                                : `Pay ${selectedCurrency.symbol} (Razorpay)`}
+                          </button>
+                          {plan.hasStripe && (
+                            <button
+                              type="button"
+                              disabled={!!loading}
+                              onClick={() => plan.monthlyKey && void handleStripeUpgrade(plan.monthlyKey, promo?.id)}
+                              className={secondaryBtnClass(plan.highlight)}
+                            >
+                              <span className="flex items-center justify-center gap-2">
+                                <CreditCard className="h-3.5 w-3.5" />
+                                {loading === `stripe-${plan.monthlyKey}`
+                                  ? 'Loading…'
+                                  : 'Pay with Card (Stripe)'}
+                              </span>
+                            </button>
+                          )}
+                        </>
+                      ) : (
+                        <>
+                          {plan.hasStripe && (
+                            <button
+                              type="button"
+                              disabled={!!loading}
+                              onClick={() => plan.monthlyKey && void handleStripeUpgrade(plan.monthlyKey, promo?.id)}
+                              className={btnClass(plan.highlight)}
+                            >
+                              <span className="flex items-center justify-center gap-2">
+                                <CreditCard className="h-3.5 w-3.5" />
+                                {loading === `stripe-${plan.monthlyKey}`
+                                  ? 'Loading…'
+                                  : hasPromo && promo
+                                    ? `Pay with Card — ${approxPromoPrice(promo.promoPriceCents!, selectedCurrency)}`
+                                    : 'Pay with Card'}
+                              </span>
+                            </button>
+                          )}
+                          {plan.hasRazorpay && (
+                            <button
+                              type="button"
+                              disabled={!!loading}
+                              onClick={() => plan.monthlyKey && void handleRazorpayUpgrade(plan.monthlyKey)}
+                              className={plan.hasStripe ? secondaryBtnClass(plan.highlight) : btnClass(plan.highlight)}
+                            >
+                              {loading === `razorpay-${plan.monthlyKey}`
+                                ? 'Loading…'
+                                : hasPromo && promo
+                                  ? `Pay — ${approxPromoPrice(promo.promoPriceCents!, selectedCurrency)}`
+                                  : '₹ Pay with Razorpay'}
+                            </button>
+                          )}
+                        </>
                       )}
                       {!plan.hasStripe && !plan.hasRazorpay && (
                         <p className="text-center text-muted-foreground text-xs py-2">
@@ -405,7 +514,13 @@ export function PricingClient({
           </div>
         )}
 
-        <p className="mt-8 text-center text-muted-foreground text-sm">
+        {showApproxNote && (
+          <p className="mt-6 text-center text-muted-foreground text-xs">
+            Prices shown in {selectedCurrency.code} are approximate. You&apos;ll be charged in USD via Stripe.
+          </p>
+        )}
+
+        <p className="mt-4 text-center text-muted-foreground text-sm">
           All plans include 14-day free trial. No credit card required to start.
         </p>
       </div>

@@ -19,6 +19,7 @@ const patchSchema = z.object({
   features: z.array(z.string()).optional(),
   highlight: z.boolean().optional(),
   active: z.boolean().optional(),
+  localePricesJson: z.string().optional(),
 })
 
 export async function PATCH(
@@ -48,6 +49,7 @@ export async function PATCH(
   if (data.features !== undefined) updates.features = JSON.stringify(data.features)
   if (data.highlight !== undefined) updates.highlight = data.highlight
   if (data.active !== undefined) updates.active = data.active
+  if (data.localePricesJson !== undefined) updates.localePricesJson = data.localePricesJson
 
   const [updated] = await db
     .update(planConfig)

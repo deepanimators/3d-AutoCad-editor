@@ -12,6 +12,7 @@ interface EditState {
   features: string
   stripePriceId: string
   razorpayPlanId: string
+  localePricesJson: string  // raw JSON text, edited as textarea
 }
 
 function planToEditState(plan: ParsedPlanConfig): EditState {
@@ -22,6 +23,7 @@ function planToEditState(plan: ParsedPlanConfig): EditState {
     features: plan.features.join('\n'),
     stripePriceId: plan.stripePriceId ?? '',
     razorpayPlanId: plan.razorpayPlanId ?? '',
+    localePricesJson: plan.localePricesJson ?? '{}',
   }
 }
 
@@ -53,6 +55,7 @@ function PlanCard({ plan, onSaved }: { plan: ParsedPlanConfig; onSaved: (updated
         features: form.features.split('\n').map((s) => s.trim()).filter(Boolean),
         stripePriceId: form.stripePriceId || null,
         razorpayPlanId: form.razorpayPlanId || null,
+        localePricesJson: form.localePricesJson,
       }
       const res = await fetch(`/api/admin/plan-config/${plan.planKey}`, {
         method: 'PATCH',
@@ -182,6 +185,23 @@ function PlanCard({ plan, onSaved }: { plan: ParsedPlanConfig; onSaved: (updated
                 placeholder="plan_..."
               />
             </div>
+          </div>
+
+          <div>
+            <label className="block text-xs font-medium text-muted-foreground mb-1">
+              Locale Prices (JSON)
+            </label>
+            <textarea
+              rows={4}
+              className="w-full rounded border border-border bg-background px-3 py-2 text-xs font-mono resize-y focus:outline-none focus:ring-1 focus:ring-ring"
+              value={form.localePricesJson}
+              onChange={(e) => setForm(f => ({ ...f, localePricesJson: e.target.value }))}
+              placeholder={'{\n  "INR": 249900,\n  "EUR": 2699,\n  "GBP": 2299\n}'}
+            />
+            <p className="text-[10px] text-muted-foreground mt-0.5">
+              Values in smallest currency unit (paise for INR, cents for EUR/GBP/USD).
+              Leave empty to use USD price with approximate conversion.
+            </p>
           </div>
 
           {error && <p className="text-xs text-red-600">{error}</p>}

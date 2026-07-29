@@ -10,7 +10,10 @@ export async function POST(request: Request) {
   const session = await getSession()
   if (!session) return Response.json({ error: 'unauthorized' }, { status: 401 })
 
-  const { priceKey, seats = 1, promoCodeId } = await request.json() as { priceKey: string; seats?: number; promoCodeId?: string }
+  const { priceKey, seats = 1, promoCodeId, currency = 'usd' } = await request.json() as { priceKey: string; seats?: number; promoCodeId?: string; currency?: string }
+
+  const SUPPORTED_STRIPE_CURRENCIES = new Set(['usd','eur','gbp','aud','cad','sgd','aed','jpy','brl','mxn','chf','sek','nok','dkk','pln','zar','krw','inr'])
+  const checkoutCurrency = SUPPORTED_STRIPE_CURRENCIES.has(currency.toLowerCase()) ? currency.toLowerCase() : 'usd'
   const priceId = PRICE_MAP[priceKey]
   if (!priceId) return Response.json({ error: 'invalid_price' }, { status: 400 })
 
@@ -36,10 +39,12 @@ export async function POST(request: Request) {
   }
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3002'
+  // Requires Adaptive Pricing enabled in Stripe Dashboard → Settings → Billing → Adaptive Pricing
   const checkout = await stripe.checkout.sessions.create({
     customer: customerId,
     mode: 'subscription',
     payment_method_types: ['card'],
+    currency: checkoutCurrency,
     line_items: [{ price: priceId, quantity: seats }],
     subscription_data: {
       trial_period_days: 14,

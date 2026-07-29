@@ -157,6 +157,7 @@ export const planConfig = pgTable('plan_config', {
   features: text('features').notNull(),                 // JSON array of feature strings
   highlight: boolean('highlight').notNull().default(false),
   active: boolean('active').notNull().default(true),
+  localePricesJson: text('locale_prices_json').notNull().default('{}'),
   updatedAt: timestamp('updated_at', { mode: 'string' }).notNull().defaultNow(),
 })
 
