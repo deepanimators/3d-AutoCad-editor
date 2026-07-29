@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { getSession } from '@/lib/auth-server'
 import { db } from '@/lib/db/client'
 import { globalModels } from '@/lib/db/schema'
@@ -6,6 +7,11 @@ import { AppShell } from '@/components/app-shell'
 import { CatalogClient } from './catalog-client'
 
 export const dynamic = 'force-dynamic'
+
+export const metadata: Metadata = {
+  title: 'Catalog',
+  description: 'Browse thousands of 3D models, furniture, and architectural assets.',
+}
 
 const S3_BASE = process.env.CATALOG_ASSETS_BASE_URL ?? ''
 

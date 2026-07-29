@@ -1,3 +1,9 @@
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Admin: Roles',
+}
+
 import { redirect } from 'next/navigation'
 import { getSession } from '@/lib/auth-server'
 import { db } from '@/lib/db/client'

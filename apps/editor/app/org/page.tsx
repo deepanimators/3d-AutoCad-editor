@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { eq } from 'drizzle-orm'
 import { getSession } from '@/lib/auth-server'
@@ -7,6 +8,11 @@ import { AppShell } from '@/components/app-shell'
 import { OrgListClient } from './org-list-client'
 
 export const dynamic = 'force-dynamic'
+
+export const metadata: Metadata = {
+  title: 'Organizations',
+  description: 'Manage your Aruct teams and organizations.',
+}
 
 export default async function OrgListPage() {
   const session = await getSession()

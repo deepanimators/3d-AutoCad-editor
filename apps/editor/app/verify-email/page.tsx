@@ -1,4 +1,10 @@
+import type { Metadata } from 'next'
 import { Mail } from 'lucide-react'
+
+export const metadata: Metadata = {
+  title: 'Verify Email',
+  description: 'Check your inbox to verify your Aruct account.',
+}
 
 export default function VerifyEmailPage() {
   return (

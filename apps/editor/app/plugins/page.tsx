@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { getSession } from '@/lib/auth-server'
 import { PLUGIN_CATALOG, getEnabledPlugins, canUsePlugin } from '@/lib/plugins/catalog'
@@ -7,6 +8,11 @@ import { eq } from 'drizzle-orm'
 import { PluginsClient } from './plugins-client'
 
 export const dynamic = 'force-dynamic'
+
+export const metadata: Metadata = {
+  title: 'Plugins',
+  description: 'Extend the Aruct editor with tools, catalogs, and integrations.',
+}
 
 export default async function PluginsPage() {
   const session = await getSession()

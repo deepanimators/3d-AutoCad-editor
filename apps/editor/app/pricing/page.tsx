@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { headers } from 'next/headers'
 import { getSession } from '@/lib/auth-server'
 import { db } from '@/lib/db/client'
@@ -8,6 +9,11 @@ import { getCurrencyForCountry } from '@/lib/geo-currency'
 import { PricingClient } from './pricing-client'
 
 export const dynamic = 'force-dynamic'
+
+export const metadata: Metadata = {
+  title: 'Pricing',
+  description: 'Choose a plan that fits your workflow. Free, Pro, and Team plans available.',
+}
 
 export default async function PricingPage() {
   const headersList = await headers()

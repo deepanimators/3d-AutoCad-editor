@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { getSession } from '@/lib/auth-server'
 import { db } from '@/lib/db/client'
@@ -8,6 +9,11 @@ import { eq, or } from 'drizzle-orm'
 import { ItemsClient } from './items-client'
 
 export const dynamic = 'force-dynamic'
+
+export const metadata: Metadata = {
+  title: 'My Items',
+  description: 'Manage your custom 3D model library.',
+}
 
 export default async function ItemsPage() {
   const session = await getSession()

@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { CreateSceneButton } from '@/components/save-button'
 import { SceneCard } from '@/components/scene-card'
 import { AppShell } from '@/components/app-shell'
@@ -7,6 +8,11 @@ import { scenes, orgMembers, organizations } from '@/lib/db/schema'
 import { eq } from 'drizzle-orm'
 
 export const dynamic = 'force-dynamic'
+
+export const metadata: Metadata = {
+  title: 'My Scenes',
+  description: 'Browse and manage your saved 3D scenes.',
+}
 
 type SceneRow = { id: string; name: string; nodeCount: number; updatedAt: string; thumbnailUrl: string | null; orgId: string | null }
 

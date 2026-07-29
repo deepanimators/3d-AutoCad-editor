@@ -1,3 +1,9 @@
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Admin: Plugins',
+}
+
 import { redirect } from 'next/navigation'
 import { getSession } from '@/lib/auth-server'
 import { PLUGIN_CATALOG } from '@/lib/plugins/catalog'

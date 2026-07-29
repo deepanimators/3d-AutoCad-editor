@@ -1,3 +1,9 @@
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Admin: Storage',
+}
+
 import { redirect } from 'next/navigation'
 import { getSession } from '@/lib/auth-server'
 import { getStorageProvider } from '@/lib/storage'

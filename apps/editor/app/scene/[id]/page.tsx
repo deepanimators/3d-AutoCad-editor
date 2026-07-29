@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import type { SceneGraph } from '@aruct/editor'
 import Link from 'next/link'
 import { eq } from 'drizzle-orm'
@@ -10,6 +11,16 @@ import { db } from '@/lib/db/client'
 import { scenes } from '@/lib/db/schema'
 
 export const dynamic = 'force-dynamic'
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}): Promise<Metadata> {
+  const { id } = await params
+  const [row] = await db.select({ name: scenes.name }).from(scenes).where(eq(scenes.id, id))
+  return { title: row?.name ?? 'Scene' }
+}
 
 interface SceneWithGraph extends SceneMeta {
   graph: SceneGraph

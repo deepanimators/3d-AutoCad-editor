@@ -1,3 +1,10 @@
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Subscription Activated',
+  description: 'Your Aruct subscription is now active.',
+}
+
 export default function BillingSuccessPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">

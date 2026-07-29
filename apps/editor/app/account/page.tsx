@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { getSession } from '@/lib/auth-server'
 import { db } from '@/lib/db/client'
@@ -6,6 +7,11 @@ import { eq } from 'drizzle-orm'
 import { getSceneLimit, getAIGenerationLimit, getVisionLimit } from '@/lib/feature-gates'
 import { AppShell } from '@/components/app-shell'
 import { AccountClient } from './account-client'
+
+export const metadata: Metadata = {
+  title: 'Account',
+  description: 'Manage your Aruct account, billing, and subscription.',
+}
 
 export default async function AccountPage() {
   const session = await getSession()

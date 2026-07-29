@@ -7,7 +7,8 @@ import type { Metadata } from 'next'
 export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
-  title: 'DCC Bridge — Aruct Editor',
+  title: 'DCC Bridge',
+  description: 'Connect Blender and other DCC tools directly to Aruct Editor.',
 }
 
 export default async function DCCBridgePage() {

@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { eq } from 'drizzle-orm'
 import { getSession } from '@/lib/auth-server'
@@ -7,6 +8,12 @@ import { AppShell } from '@/components/app-shell'
 import { OrgDashboardClient } from './org-dashboard-client'
 
 type PageProps = { params: Promise<{ slug: string }> }
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug } = await params
+  const [org] = await db.select({ name: organizations.name }).from(organizations).where(eq(organizations.slug, slug))
+  return { title: org?.name ?? 'Organization' }
+}
 
 export default async function OrgPage({ params }: PageProps) {
   const session = await getSession()
