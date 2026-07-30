@@ -420,6 +420,158 @@ LATER (6–12 months):
  11. Developer API — third-party plugin authoring portal
 ```
 
+
 ---
 
 *Analysis based on: Spline AI feature page, Spline product web research, SketchUp 2024 release notes and Trimble documentation, Arkio feature docs and Meta App Lab listing, Figma design collaboration guidelines, and Aruct codebase audit (`apps/editor/`, `packages/`, `wiki/architecture/`).*
+
+---
+
+## 6. Positioning Map
+
+The two most important axes in spatial design tools are **Collaboration Depth** (how well the tool supports teams vs. solo use) and **AEC Specificity** (how purpose-built it is for architecture/construction vs. general 3D).
+
+```
+                   AEC Specificity
+                   (High = architecture-specific tools)
+
+                            ▲
+                            │
+                            │       SketchUp
+                     ARKIO  │      (Pro/LayOut)
+                            │
+                            │
+    ────────────────────────┼────────────────────────▶
+    Solo/Static             │               Real-time Collaboration
+                            │
+                       ARUCT│ ← (current)
+                       (now)│
+                            │            SPLINE
+                            │
+                            │
+                            │  FIGMA (2D reference)
+                            │
+                            ▼
+                   General 3D / Web Creative
+```
+
+**Where Aruct wants to be:**
+
+```
+                            ▲
+                            │
+                            │       SketchUp       ← ARUCT TARGET
+                     ARKIO  │      (Pro/LayOut)    (AEC + collaboration)
+                            │
+                            │
+    ────────────────────────┼─────────────────────────────────────▶
+    Solo/Static             │               Real-time Collaboration
+                            │
+                            │
+                            │            SPLINE
+                            │
+```
+
+**The white space Aruct can own**: The top-right quadrant — AEC-specific with Figma-level real-time collaboration. SketchUp is AEC-specific but weak on live collaboration. Arkio is collaborative but not a full authoring tool. Aruct can be the first tool that combines both.
+
+---
+
+## 7. Aruct's Unique Angle — The Unfair Advantage
+
+After reviewing all four competitors, Aruct has capabilities that **none of the others have in combination**:
+
+| Unique Combination | Why it matters |
+|---|---|
+| **2D floorplan + 3D viewport in one tool** | SketchUp is 3D-only. Arkio is 3D-only. Spline is 3D-only. Aruct is the only tool where you draw in plan and model in 3D in the same session |
+| **Plugin architecture (isolated, toggleable)** | Aruct's plugin model is more modular than SketchUp's extension model — plugins don't bloat the core editor |
+| **MCP server (`packages/mcp`)** | No competitor has a native MCP (Model Context Protocol) integration. This gives Aruct a unique AI-agent integration story that others don't have yet |
+| **IFC converter in the monorepo** | BIM-ready architecture already exists — just needs surfacing |
+| **Browser-native (no install)** | SketchUp's web version is limited. Aruct is browser-first without the compromises |
+| **Dual-mode AI** (spatial + generative) | AI that understands architectural context (rooms, walls, programmes) is a different class than Spline's generic mesh generation |
+
+### The One-Sentence Positioning
+
+> **Aruct is the first browser-native 3D architectural editor where the entire team — architect, engineer, client — works in the same space, from first sketch to final export.**
+
+This is the gap none of the four competitors fills:
+- Spline: team-friendly but not architectural
+- SketchUp: architectural but not team-native (Trimble Connect is file-sharing, not co-editing)
+- Arkio: team-friendly VR but not a primary authoring tool
+- Figma: the team-native model but 2D only
+
+---
+
+## 8. Competitive Moat Framework
+
+For Aruct to build a defensible position, it needs moats in three layers:
+
+### Layer 1: Network Moat (hardest to replicate)
+- **Component library** — every object a user uploads becomes available to others → grows with every user
+- **Community scenes** — public scene feed creates discovery → users find Aruct through shared scenes
+- **Plugin marketplace** — third-party developers build on Aruct → ecosystem grows independently
+
+### Layer 2: Switching Cost Moat (moderate to replicate)
+- **Cloud scene library** — all your work lives in Aruct; moving it means re-doing it
+- **Team habits** — once a firm's architects, clients, and project managers are all commenting in Aruct, switching tools requires retraining everyone
+- **IFC history** — full project history in one place including BIM roundtrip
+
+### Layer 3: Technical Moat (easy to replicate but takes time)
+- **MCP integration** — first mover in AI-agent scene manipulation
+- **2D+3D sync** — the floorplan ↔ 3D sync is a subtle but hard-to-copy UX advantage
+- **WebXR viewer** — browser-based VR with no app install (vs. Arkio's native apps)
+
+---
+
+## 9. Quick-Reference One-Pager
+
+| | Spline | SketchUp | Arkio | **Aruct** |
+|---|---|---|---|---|
+| **Browser-native** | ✅ | Partial | ❌ | ✅ |
+| **2D + 3D views** | ❌ | ❌ | ❌ | ✅ |
+| **Architectural primitives** | ❌ | ✅ | Partial | ✅ |
+| **AI generation** | ✅ text+image | ❌ | AI render | ✅ spatial AI |
+| **Plugin system** | ✅ | ✅ 1,000+ | ❌ | ✅ |
+| **Real-time collaboration** | ✅ | ❌ (file-level) | ✅ | ✅ |
+| **IFC / BIM** | ❌ | ✅ | Indirect | ✅ (package) |
+| **Sun / shadow** | ❌ | ✅ | ❌ | ✅ plugin |
+| **Section cuts** | ❌ | ✅ | ❌ | ✅ plugin |
+| **Energy analysis** | ❌ | Plugin | ❌ | ✅ plugin |
+| **Terrain** | ❌ | ✅ | ❌ | ✅ plugin |
+| **BOM / schedules** | ❌ | Plugin | ❌ | ✅ plugin |
+| **Construction docs** | ❌ | ✅ LayOut | ❌ | ❌ **GAP** |
+| **Model library** | Community | 3D Warehouse | ❌ | ❌ **GAP** |
+| **Public embed/share** | ✅ | ❌ | ❌ | ❌ **GAP** |
+| **VR walkthrough** | ❌ | Viewer only | ✅ | ❌ **GAP** |
+| **MCP integration** | ❌ | ❌ | ❌ | ✅ **Unique** |
+| **Free tier** | ✅ | ✅ (limited) | ✅ | ✅ |
+| **Open format export** | GLB | SKP/OBJ/DXF | GLB/OBJ | GLB/STL/OBJ/DXF |
+| **Pricing (Pro)** | $16/mo | ~$29/mo | $50/mo | TBD |
+
+### Legend
+- ✅ = Present and working
+- Partial = Exists but limited
+- ❌ = Not present
+- **GAP** = Critical missing feature vs. market
+- **Unique** = Aruct-only capability
+
+---
+
+## 10. Recommended Competitive Messaging
+
+Based on gaps and strengths, here's how Aruct should position itself against each competitor when that comparison comes up:
+
+### vs. SketchUp
+> *"Everything SketchUp does, without the install, the price, and the 30-year-old UI. Plus AI, live collaboration, and the ability to show clients without emailing a file."*
+
+### vs. Spline
+> *"Spline is for making websites feel 3D. Aruct is for making buildings. Same browser-native elegance — built for architects, not motion designers."*
+
+### vs. Arkio
+> *"Arkio requires a VR headset and is built for reviewing existing designs. Aruct is where you create the design in the first place — and then share it with anyone, on any device, instantly."*
+
+### vs. "I just use Revit/Rhino"
+> *"Revit and Rhino are the right tools for production documentation. Aruct is where the design thinking happens — faster, lighter, and shareable before you've committed to geometry. Then export to your BIM tool of choice via IFC."*
+
+---
+
+*Document version 1.0 — July 2026. Maintained in the AC-Editor repository.*
