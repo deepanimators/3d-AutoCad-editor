@@ -12,12 +12,12 @@ interface MobileTabBarProps {
 export function MobileTabBar({ tabs, activeTab, onTabPress }: MobileTabBarProps) {
   return (
     <div
-      className="z-50 flex h-14 shrink-0 border-border/50 border-t bg-sidebar text-sidebar-foreground"
+      className="z-50 flex h-14 shrink-0 border-border/50 border-t bg-sidebar text-sidebar-foreground overflow-x-auto overscroll-x-contain"
       style={{
-        // Cap the safe-area inset — iOS Chrome can report its bottom UI bar
-        // (50–100px) as part of the safe area which would balloon the tab bar.
-        // 34px matches the iPhone home-indicator height (the typical max).
         paddingBottom: 'min(env(safe-area-inset-bottom, 0px), 34px)',
+        scrollbarWidth: 'none',        // Firefox
+        msOverflowStyle: 'none',       // IE/Edge legacy
+        WebkitOverflowScrolling: 'touch',
       }}
     >
       {tabs.map((tab) => {
@@ -25,7 +25,8 @@ export function MobileTabBar({ tabs, activeTab, onTabPress }: MobileTabBarProps)
         return (
           <button
             className={cn(
-              'flex flex-1 flex-col items-center justify-center gap-0.5 text-xs transition-colors',
+              'flex shrink-0 flex-col items-center justify-center gap-0.5 text-xs transition-colors',
+              'min-w-[56px] px-1',
               isActive ? 'text-foreground' : 'text-muted-foreground',
             )}
             key={tab.id}
@@ -37,7 +38,7 @@ export function MobileTabBar({ tabs, activeTab, onTabPress }: MobileTabBarProps)
                 {tab.mobileIcon}
               </span>
             ) : null}
-            <span className="font-medium">{tab.label}</span>
+            <span className="font-medium truncate max-w-[52px]">{tab.label}</span>
           </button>
         )
       })}
