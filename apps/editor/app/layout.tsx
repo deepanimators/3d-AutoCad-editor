@@ -5,6 +5,7 @@ import type { Metadata } from 'next'
 import localFont from 'next/font/local'
 import { ThemeProvider } from 'next-themes'
 import { ClientBootstrap } from './client-bootstrap'
+import { ToastProvider } from '@/components/toast-provider'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -63,6 +64,7 @@ export default function RootLayout({
       <body className="font-sans">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <ClientBootstrap enableDevDiagnostics={enableDevDiagnostics}>{children}</ClientBootstrap>
+          <ToastProvider />
           {enableDevDiagnostics && <Agentation />}
         </ThemeProvider>
       </body>
