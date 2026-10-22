@@ -166,6 +166,7 @@ export function PdfUnderlayDialog({ open, onClose }: Props) {
       if (blobUrlRef.current) URL.revokeObjectURL(blobUrlRef.current)
       blobUrlRef.current = url
       const pg = meta.pages[selectedPage - 1]
+      if (!pg) throw new Error('Selected page not found.')
       setCalibPoints([])
       setPhase({
         kind: 'calibrate',
@@ -189,6 +190,7 @@ export function PdfUnderlayDialog({ open, onClose }: Props) {
       if (blobUrlRef.current) URL.revokeObjectURL(blobUrlRef.current)
       blobUrlRef.current = url
       const pg = pages[pageIndex - 1]
+      if (!pg) throw new Error('Selected page not found.')
       setCalibPoints([])
       setPhase({
         kind: 'calibrate',
@@ -243,6 +245,7 @@ export function PdfUnderlayDialog({ open, onClose }: Props) {
 
     const { imageUrl, imageWidthPt, imageHeightPt } = phase
     const [p1, p2] = calibPoints
+    if (!(p1 && p2)) return
 
     // Distance between calibration points in image-relative units (0–1)
     const dx = p2.x - p1.x
@@ -420,6 +423,7 @@ export function PdfUnderlayDialog({ open, onClose }: Props) {
                 {/* Line between points */}
                 {calibPoints.length === 2 && (() => {
                   const [p1, p2] = calibPoints
+                  if (!(p1 && p2)) return null
                   const cx = ((p1.x + p2.x) / 2) * 100
                   const cy = ((p1.y + p2.y) / 2) * 100
                   const dx = (p2.x - p1.x) * 100

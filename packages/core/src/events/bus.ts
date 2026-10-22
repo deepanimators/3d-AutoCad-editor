@@ -54,6 +54,8 @@ import type {
   TerrainNode,
   CurtainWallNode,
   PointCloudNode,
+  RailingNode,
+  PdfUnderlayNode,
 } from '../schema'
 import type { AnyNode } from '../schema/types'
 
@@ -147,6 +149,8 @@ export type MeshEvent = NodeEvent<MeshNode>
 export type TerrainEvent = NodeEvent<TerrainNode>
 export type CurtainWallEvent = NodeEvent<CurtainWallNode>
 export type PointCloudEvent = NodeEvent<PointCloudNode>
+export type RailingEvent = NodeEvent<RailingNode>
+export type PdfUnderlayEvent = NodeEvent<PdfUnderlayNode>
 
 // Event suffixes - exported for use in hooks
 export const eventSuffixes = [
@@ -348,6 +352,8 @@ type EditorEvents = GridEvents &
   NodeEvents<'terrain', TerrainEvent> &
   NodeEvents<'curtain-wall', CurtainWallEvent> &
   NodeEvents<'point-cloud', PointCloudEvent> &
+  NodeEvents<'railing', RailingEvent> &
+  NodeEvents<'pdf-underlay', PdfUnderlayEvent> &
   CameraControlEvents &
   ToolEvents &
   GuideEvents &
