@@ -1,4 +1,4 @@
-import { boolean, integer, serial, text, timestamp, pgTable, unique } from 'drizzle-orm/pg-core'
+import { boolean, integer, real, serial, text, timestamp, pgTable, unique } from 'drizzle-orm/pg-core'
 
 export const users = pgTable('users', {
   id: text('id').primaryKey(),                         // Firebase UID
@@ -227,3 +227,21 @@ export const sceneEvents = pgTable('scene_events', {
 })
 
 export type SceneEventRow = typeof sceneEvents.$inferSelect
+
+// Scene comment/pin system — design review threads
+export const sceneComments = pgTable('scene_comments', {
+  id: text('id').primaryKey(),
+  sceneId: text('scene_id').notNull().references(() => scenes.id, { onDelete: 'cascade' }),
+  userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  nodeId: text('node_id'),                                // optional — pin on a specific node
+  positionX: real('position_x'),                          // optional — world X coordinate
+  positionY: real('position_y'),                          // optional — world Y coordinate
+  text: text('text').notNull(),
+  resolved: boolean('resolved').notNull().default(false),
+  parentId: text('parent_id'),                            // optional — reply thread (1 level deep)
+  createdAt: timestamp('created_at', { mode: 'string' }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { mode: 'string' }).notNull().defaultNow(),
+})
+
+export type SceneCommentRow = typeof sceneComments.$inferSelect
+export type NewSceneCommentRow = typeof sceneComments.$inferInsert

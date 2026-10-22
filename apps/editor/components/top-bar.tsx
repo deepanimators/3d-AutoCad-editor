@@ -49,6 +49,7 @@ type NavItem = {
 
 const TOP_NAV: NavItem[] = [
   { href: '/scenes', label: 'Scenes', icon: LayoutGrid },
+  { href: '/apps', label: 'Apps', icon: LayoutGrid },
   { href: '/org', label: 'Team', icon: Users, teamOnly: true },
   { href: '/pricing', label: 'Pricing', icon: Tag },
   { href: '/account', label: 'Account', icon: Settings },
@@ -57,6 +58,7 @@ const TOP_NAV: NavItem[] = [
 
 const DRAWER_NAV: NavItem[] = [
   { href: '/scenes', label: 'My Scenes', icon: LayoutGrid },
+  { href: '/apps', label: 'Aruct Universe', icon: Globe },
   { href: '/org', label: 'Team Workspaces', icon: Users, teamOnly: true },
   { href: '/items', label: 'My Items', icon: Package },
   { href: '/catalog', label: 'Model Catalog', icon: Globe },

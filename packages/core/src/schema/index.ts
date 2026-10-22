@@ -66,6 +66,7 @@ export {
   ConstructionDimensionTextPosition,
   ConstructionDrawingType,
   constructionDimensionRequiredAnchorCount,
+  DimensionStyle,
   resolveConstructionDimensionDrawingOverride,
   resolveConstructionDimensionDrawingPresentation,
   setConstructionDimensionDrawingPresentation,

@@ -11,6 +11,11 @@ const nextConfig: NextConfig = {
     // whose local path bypasses the top-level serverExternalPackages match.
     '@aruct/mcp/storage',
     '@aruct/mcp/operations',
+    // web-ifc ships native WASM — keep it out of the webpack bundle so
+    // Next.js doesn't try to process the binary assets. The IFC import
+    // route loads it via dynamic import() at request time.
+    'web-ifc',
+    '@aruct/ifc-converter',
   ],
   webpack: (config, { isServer }) => {
     if (isServer) {
