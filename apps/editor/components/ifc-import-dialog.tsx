@@ -1,6 +1,6 @@
 'use client'
 
-import { type AnyNode, useScene } from '@aruct/core'
+import { type AnyNode, type AnyNodeId, useScene } from '@aruct/core'
 import {
   AlertCircle,
   Building2,
@@ -180,7 +180,7 @@ export function IfcImportDialog({ open, onClose }: Props) {
     // in the imported set, become top-level entries in the current scene.
     const ops = (rootNodeIds as string[]).flatMap((id) => collectSubtree(nodes, id))
 
-    createNodes(ops)
+    createNodes(ops as { node: AnyNode; parentId?: AnyNodeId }[])
     setPhase({ kind: 'done' })
   }, [phase, createNodes])
 

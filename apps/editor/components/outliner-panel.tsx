@@ -266,7 +266,9 @@ export function OutlinerPanel() {
   function renderNode(node: AnyNode, depth: number): React.ReactNode {
     const isGroup = GROUP_TYPES.has(node.type)
     const childIds: string[] = (node as { children?: string[] }).children ?? []
-    const childNodes = childIds.map((id) => nodes[id]).filter((n): n is AnyNode => !!n)
+    const childNodes = childIds
+      .map((id) => (nodes as Record<string, AnyNode | undefined>)[id])
+      .filter((n): n is AnyNode => !!n)
 
     if (isGroup) {
       const expanded_ = isExpanded(node.id)

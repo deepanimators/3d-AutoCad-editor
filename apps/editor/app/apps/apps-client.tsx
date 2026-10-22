@@ -1,5 +1,6 @@
 'use client'
 
+import type React from 'react'
 import {
   Box,
   FileCode2,
@@ -24,7 +25,7 @@ type AppDef = {
   name: string
   tagline: string
   description: string
-  icon: React.ElementType
+  icon: React.ComponentType<{ className?: string; strokeWidth?: number }>
   status: AppStatus
   href: string
   external?: boolean

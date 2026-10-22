@@ -58,11 +58,11 @@ export function RegisteredSystems() {
 
   return (
     <Suspense fallback={null}>
-      <PipeSystem sceneApi={sceneApi} />
-      <DuctSystem sceneApi={sceneApi} />
-      <TerrainSystem sceneApi={sceneApi} />
-      <CurtainWallSystem sceneApi={sceneApi} />
-      <SectionSystem sceneApi={sceneApi} />
+      <PipeSystem />
+      <DuctSystem />
+      <TerrainSystem />
+      <CurtainWallSystem />
+      <SectionSystem />
       {entries.map(([kind, def]) => {
         if (!isNodeKindEnabled(kind, installedPlugins)) return null
         const Comp = loadSystem(def)
