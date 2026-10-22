@@ -11,6 +11,7 @@ import { type ComponentType, lazy, Suspense, useMemo } from 'react'
 import { CurtainWallSystem } from '../../systems/curtain-wall/curtain-wall-system'
 import { DuctSystem } from '../../systems/mep/duct-system'
 import { PipeSystem } from '../../systems/mep/pipe-system'
+import { RailingSystem } from '../../systems/railing/railing-system'
 import { SectionSystem } from '../../systems/section/section-system'
 import { TerrainSystem } from '../../systems/terrain/terrain-system'
 
@@ -62,6 +63,7 @@ export function RegisteredSystems() {
       <DuctSystem />
       <TerrainSystem />
       <CurtainWallSystem />
+      <RailingSystem />
       <SectionSystem />
       {entries.map(([kind, def]) => {
         if (!isNodeKindEnabled(kind, installedPlugins)) return null

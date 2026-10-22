@@ -69,7 +69,7 @@ async function rasterisePage(
   const ctx = canvas.getContext('2d')
   if (!ctx) throw new Error('Could not get canvas 2D context')
 
-  await page.render({ canvasContext: ctx, viewport }).promise
+  await page.render({ canvas, canvasContext: ctx, viewport }).promise
 
   return new Promise<string>((resolve, reject) => {
     canvas.toBlob((blob) => {
