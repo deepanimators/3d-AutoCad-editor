@@ -28,6 +28,7 @@ import { MeasurementNode } from './nodes/measurement'
 import { PipeFittingNode } from './nodes/pipe-fitting'
 import { PipeSegmentNode } from './nodes/pipe-segment'
 import { PipeTrapNode } from './nodes/pipe-trap'
+import { RailingNode } from './nodes/railing'
 import { RidgeVentNode } from './nodes/ridge-vent'
 import { RoofNode } from './nodes/roof'
 import { RoofSegmentNode } from './nodes/roof-segment'
@@ -50,6 +51,7 @@ import { MeshNode } from './nodes/mesh'
 import { TerrainNode } from './nodes/terrain'
 import { CurtainWallNode } from './nodes/curtain-wall'
 import { PointCloudNode } from './nodes/point-cloud'
+import { PdfUnderlayNode } from './nodes/pdf-underlay'
 
 export const AnyNode = z.discriminatedUnion('type', [
   SiteNode,
@@ -99,11 +101,13 @@ export const AnyNode = z.discriminatedUnion('type', [
   PipeSegmentNode,
   PipeFittingNode,
   PipeTrapNode,
+  RailingNode,
   SectionNode,
   MeshNode,
   TerrainNode,
   CurtainWallNode,
   PointCloudNode,
+  PdfUnderlayNode,
 ])
 
 export type AnyNode = z.infer<typeof AnyNode>

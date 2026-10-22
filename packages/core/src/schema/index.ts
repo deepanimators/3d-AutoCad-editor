@@ -157,6 +157,12 @@ export {
 export { PipeFittingNode } from './nodes/pipe-fitting'
 export { PipeSegmentNode } from './nodes/pipe-segment'
 export { PipeTrapNode } from './nodes/pipe-trap'
+export {
+  RailingNode,
+  RailingPathPoint,
+  RailingStyle,
+  RailingTopRailProfile,
+} from './nodes/railing'
 // Nodes
 export {
   createDefaultRidgeVentsForSegment,
@@ -304,6 +310,7 @@ export { MeshNode } from './nodes/mesh'
 export { TerrainNode } from './nodes/terrain'
 export { CurtainWallNode, CurtainWallPanelType } from './nodes/curtain-wall'
 export { PointCloudNode } from './nodes/point-cloud'
+export { PdfUnderlayNode } from './nodes/pdf-underlay'
 export { generateSceneMaterialId, SceneMaterial, type SceneMaterialId } from './scene-material'
 export type { AnyNodeId, AnyNodeType } from './types'
 // Union types
