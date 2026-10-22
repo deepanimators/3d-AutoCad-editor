@@ -1,7 +1,16 @@
 'use client'
 
 import type { FloorplanPalette } from '@aruct/core'
-import { createContext, type ReactNode, useContext, useMemo } from 'react'
+import {
+  createContext,
+  type MouseEvent,
+  type ReactNode,
+  useCallback,
+  useContext,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 
 /**
  * Per-frame render context shared between the legacy `floorplan-panel.tsx`
@@ -32,6 +41,12 @@ export type FloorplanRenderContextValue = {
    * readable instead of mirroring whatever the parent rotation is.
    */
   sceneRotationDeg: number
+  /**
+   * Current cursor position in world (scene) coordinates, updated by the
+   * SVG `mousemove` handler attached via `useCursorTracker`. `null` when the
+   * cursor is outside the canvas or tracking has not been set up.
+   */
+  cursorPosition: { x: number; y: number } | null
 }
 
 const FloorplanRenderContext = createContext<FloorplanRenderContextValue | null>(null)
@@ -42,12 +57,59 @@ export function FloorplanRenderProvider({
   palette,
   hatchPatternId,
   sceneRotationDeg,
-}: FloorplanRenderContextValue & { children: ReactNode }) {
+  cursorPosition = null,
+}: Omit<FloorplanRenderContextValue, 'cursorPosition'> & {
+  children: ReactNode
+  cursorPosition?: { x: number; y: number } | null
+}) {
   const value = useMemo<FloorplanRenderContextValue>(
-    () => ({ unitsPerPixel, palette, hatchPatternId, sceneRotationDeg }),
-    [unitsPerPixel, palette, hatchPatternId, sceneRotationDeg],
+    () => ({ unitsPerPixel, palette, hatchPatternId, sceneRotationDeg, cursorPosition }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [unitsPerPixel, palette, hatchPatternId, sceneRotationDeg, cursorPosition?.x, cursorPosition?.y],
   )
   return <FloorplanRenderContext.Provider value={value}>{children}</FloorplanRenderContext.Provider>
+}
+
+/**
+ * Returns a stable `onMouseMove` handler and a `cursorPosition` state value.
+ * Attach `onMouseMove` to the SVG element whose coordinate system matches the
+ * floorplan world space. The conversion from client coords to world coords
+ * requires an `SVGSVGElement` ref and the current viewBox-to-world transform.
+ *
+ * @param svgRef - ref to the root `<svg>` element
+ * @param clientToWorld - converts an `{x, y}` point in SVG client space to
+ *   world (scene) coordinates; typically `(pt) => viewportMatrix.inverse().transformPoint(pt)`
+ */
+export function useCursorTracker(
+  svgRef: React.RefObject<SVGSVGElement | null>,
+  clientToWorld: (clientPoint: { x: number; y: number }) => { x: number; y: number },
+): {
+  cursorPosition: { x: number; y: number } | null
+  onMouseMove: (e: MouseEvent<SVGSVGElement>) => void
+  onMouseLeave: () => void
+} {
+  const [cursorPosition, setCursorPosition] = useState<{ x: number; y: number } | null>(null)
+  // Keep clientToWorld stable across renders without stale-closure issues.
+  const clientToWorldRef = useRef(clientToWorld)
+  clientToWorldRef.current = clientToWorld
+
+  const onMouseMove = useCallback(
+    (e: MouseEvent<SVGSVGElement>) => {
+      const svg = svgRef.current
+      if (svg == null) return
+      // Map from client space to SVG local space, then to world coords.
+      const pt = svg.createSVGPoint()
+      pt.x = e.clientX
+      pt.y = e.clientY
+      const svgPt = pt.matrixTransform(svg.getScreenCTM()!.inverse())
+      setCursorPosition(clientToWorldRef.current({ x: svgPt.x, y: svgPt.y }))
+    },
+    [svgRef],
+  )
+
+  const onMouseLeave = useCallback(() => setCursorPosition(null), [])
+
+  return { cursorPosition, onMouseMove, onMouseLeave }
 }
 
 /**

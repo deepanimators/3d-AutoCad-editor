@@ -2,6 +2,7 @@
 
 import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
+import { ShortcutHelpOverlay, ShortcutHelpTrigger } from './shortcut-help-overlay'
 
 function AructMark({ className }: { className?: string }) {
   return (
@@ -41,6 +42,10 @@ export function EditorTopBar() {
         <ArrowLeft className="h-3.5 w-3.5" />
         <span className="hidden sm:inline">My Scenes</span>
       </Link>
+      <div className="ml-auto">
+        <ShortcutHelpTrigger />
+      </div>
+      <ShortcutHelpOverlay />
     </header>
   )
 }

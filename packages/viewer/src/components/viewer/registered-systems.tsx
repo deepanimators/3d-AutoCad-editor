@@ -8,6 +8,11 @@ import {
   useScene,
 } from '@aruct/core'
 import { type ComponentType, lazy, Suspense, useMemo } from 'react'
+import { CurtainWallSystem } from '../../systems/curtain-wall/curtain-wall-system'
+import { DuctSystem } from '../../systems/mep/duct-system'
+import { PipeSystem } from '../../systems/mep/pipe-system'
+import { SectionSystem } from '../../systems/section/section-system'
+import { TerrainSystem } from '../../systems/terrain/terrain-system'
 
 const DEFAULT_PRIORITY = 5
 
@@ -51,10 +56,13 @@ export function RegisteredSystems() {
       })
   }, [])
 
-  if (entries.length === 0) return null
-
   return (
     <Suspense fallback={null}>
+      <PipeSystem sceneApi={sceneApi} />
+      <DuctSystem sceneApi={sceneApi} />
+      <TerrainSystem sceneApi={sceneApi} />
+      <CurtainWallSystem sceneApi={sceneApi} />
+      <SectionSystem sceneApi={sceneApi} />
       {entries.map(([kind, def]) => {
         if (!isNodeKindEnabled(kind, installedPlugins)) return null
         const Comp = loadSystem(def)

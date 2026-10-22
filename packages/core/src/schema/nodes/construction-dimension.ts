@@ -60,6 +60,19 @@ export const ConstructionDimensionTextPosition = z.enum(['above', 'centered'])
 export const ConstructionDimensionImperialPrecision = z.enum(['1', '1/2', '1/4', '1/8', '1/16'])
 export const ConstructionDimensionMetricNotation = z.enum(['meters', 'millimeters'])
 
+export const DimensionStyle = z.object({
+  arrowType: z
+    .enum(['architectural-tick', 'filled-arrow', 'open-arrow', 'dot', 'none'])
+    .default('architectural-tick'),
+  textHeight: z.number().default(0.25),
+  extensionLineGap: z.number().default(0.05),
+  extensionLineOvershoot: z.number().default(0.1),
+  lineColor: z.string().default('#1a1a1a'),
+  prefix: z.string().default(''),
+  suffix: z.string().default(''),
+  showUnits: z.boolean().default(true),
+})
+
 export const ConstructionDimensionNode = BaseNode.extend({
   id: objectId('construction-dimension'),
   type: nodeType('construction-dimension'),
@@ -88,6 +101,7 @@ export const ConstructionDimensionNode = BaseNode.extend({
   drawingType: ConstructionDrawingType.default('floor-plan'),
   drawingOverrides: z.array(ConstructionDimensionDrawingOverride).max(5).default([]),
   controllingDimensionId: objectId('construction-dimension').nullable().default(null),
+  style: DimensionStyle.optional(),
 }).describe(
   dedent`
   Construction dimension node - an associative floor-plan construction dimension
@@ -126,6 +140,7 @@ export type ConstructionDimensionMetricNotation = z.infer<
   typeof ConstructionDimensionMetricNotation
 >
 export type ConstructionDimensionNode = z.infer<typeof ConstructionDimensionNode>
+export type DimensionStyle = z.infer<typeof DimensionStyle>
 
 export const CONSTRUCTION_DRAWING_TYPES = ConstructionDrawingType.options
 
