@@ -3,7 +3,7 @@ import { z } from 'zod'
 import { BaseNode, nodeType, objectId } from '../base'
 import { MeasurementAnchor } from './measurement'
 
-const FiniteCoordinate = z.number().finite()
+const FiniteCoordinate = z.number()
 
 export const ConstructionDimensionBaseline = z
   .object({
@@ -96,8 +96,8 @@ export const ConstructionDimensionNode = BaseNode.extend({
   textPosition: ConstructionDimensionTextPosition.default('above'),
   imperialPrecision: ConstructionDimensionImperialPrecision.default('1/16'),
   metricNotation: ConstructionDimensionMetricNotation.default('meters'),
-  extensionStartGap: z.number().finite().min(0).max(1).default(0.075),
-  extensionOvershoot: z.number().finite().min(0).max(1).default(0.12),
+  extensionStartGap: z.number().min(0).max(1).default(0.075),
+  extensionOvershoot: z.number().min(0).max(1).default(0.12),
   drawingType: ConstructionDrawingType.default('floor-plan'),
   drawingOverrides: z.array(ConstructionDimensionDrawingOverride).max(5).default([]),
   controllingDimensionId: objectId('construction-dimension').nullable().default(null),
