@@ -41,6 +41,8 @@ import { UnifiedPluginsPanel } from './unified-plugins-panel'
 import { EditorTopBar } from './editor-top-bar'
 import { CommentsPanel } from './comments-panel'
 import { OutlinerPanel } from './outliner-panel'
+import { AutosaveIndicator } from './autosave-indicator'
+import { useAutosave } from '@/lib/use-autosave'
 import { CommunityViewerToolbarLeft, CommunityViewerToolbarRight } from './viewer-toolbar'
 
 export interface SceneMeta {
@@ -279,6 +281,16 @@ export function SceneLoader({ initialScene, meta }: SceneLoaderProps) {
     showGuidesPublic: meta.showGuidesPublic ?? true,
   })
   const [enabledPlugins, setEnabledPlugins] = useState<string[]>([])
+
+  const autosave = useAutosave({
+    sceneId: meta.id,
+    name: sceneName,
+    version: versionRef.current,
+    getGraph: () => {
+      const s = useScene.getState()
+      return { nodes: s.nodes, rootNodeIds: s.rootNodeIds, collections: s.collections, materials: s.materials, installedPlugins: s.installedPlugins }
+    },
+  })
 
   useEffect(() => {
     fetch('/api/user/plugins', { cache: 'no-store' })
@@ -707,7 +719,18 @@ export function SceneLoader({ initialScene, meta }: SceneLoaderProps) {
       )}
       <Editor
         layoutVersion="v2"
-        navbarSlot={<EditorTopBar />}
+        navbarSlot={
+          <div className="flex h-full w-full items-center">
+            <EditorTopBar />
+            <div className="ml-auto mr-14 hidden sm:block">
+              <AutosaveIndicator
+                status={autosave.status}
+                lastSavedAt={autosave.lastSavedAt}
+                errorMessage={autosave.errorMessage}
+              />
+            </div>
+          </div>
+        }
         onLoad={handleLoad}
         onSave={handleSave}
         onSaveStatusChange={setSaveStatus}

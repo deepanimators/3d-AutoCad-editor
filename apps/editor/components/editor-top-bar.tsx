@@ -1,10 +1,11 @@
 'use client'
 
-import { ArrowLeft, FileCode, FileImage, Store } from 'lucide-react'
+import { ArrowLeft, FileCode, FileImage, FileBox, Store } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
 import { ShortcutHelpOverlay, ShortcutHelpTrigger } from './shortcut-help-overlay'
 import { DwgImportDialog } from './dwg-import-dialog'
+import { IfcImportDialog } from './ifc-import-dialog'
 import { PdfUnderlayDialog } from './pdf-underlay-dialog'
 
 function AructMark({ className }: { className?: string }) {
@@ -29,6 +30,7 @@ function AructMark({ className }: { className?: string }) {
 
 export function EditorTopBar() {
   const [dwgOpen, setDwgOpen] = useState(false)
+  const [ifcOpen, setIfcOpen] = useState(false)
   const [pdfOpen, setPdfOpen] = useState(false)
 
   return (
@@ -52,6 +54,15 @@ export function EditorTopBar() {
 
         {/* Import actions */}
         <div className="flex items-center gap-1">
+          <button
+            type="button"
+            title="Import IFC"
+            onClick={() => setIfcOpen(true)}
+            className="flex items-center gap-1.5 rounded-md px-2 py-1 text-xs text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+          >
+            <FileBox className="h-3.5 w-3.5" />
+            <span className="hidden md:inline">IFC</span>
+          </button>
           <button
             type="button"
             title="Import DWG"
@@ -86,6 +97,7 @@ export function EditorTopBar() {
         <ShortcutHelpOverlay />
       </header>
 
+      <IfcImportDialog open={ifcOpen} onClose={() => setIfcOpen(false)} />
       <DwgImportDialog open={dwgOpen} onClose={() => setDwgOpen(false)} />
       <PdfUnderlayDialog open={pdfOpen} onClose={() => setPdfOpen(false)} />
     </>
