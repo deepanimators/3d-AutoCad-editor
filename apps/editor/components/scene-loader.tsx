@@ -720,7 +720,7 @@ export function SceneLoader({ initialScene, meta }: SceneLoaderProps) {
       <Editor
         layoutVersion="v2"
         navbarSlot={
-          <div className="flex h-full w-full items-center">
+          <div className="flex w-full items-center">
             <EditorTopBar />
             <div className="ml-auto mr-14 hidden sm:block">
               <AutosaveIndicator
