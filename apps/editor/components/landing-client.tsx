@@ -10,6 +10,7 @@ import {
   ArrowRight, Check,
   Layers, Sparkles, Palette, Puzzle, Cloud, Download,
   BarChart2, Sun, Scissors, Box, Mountain, Zap, ChevronRight,
+  Users, Bot, Smartphone, Calendar, Glasses, Building2, DollarSign, FileText, Ruler,
 } from 'lucide-react'
 import { ThemeToggle } from './theme-toggle'
 
@@ -72,6 +73,7 @@ function Navbar() {
         <nav className="hidden items-center gap-6 text-[13px] text-slate-500 dark:text-white/50 sm:flex">
           <Link href="/pricing" className="hover:text-slate-900 dark:hover:text-white transition-colors">Pricing</Link>
           <Link href="/plugins" className="hover:text-slate-900 dark:hover:text-white transition-colors">Plugins</Link>
+          <Link href="#roadmap" className="hover:text-slate-900 dark:hover:text-white transition-colors">Roadmap</Link>
           <Link href="/contact" className="hover:text-slate-900 dark:hover:text-white transition-colors">Contact</Link>
         </nav>
         <div className="ml-auto flex items-center gap-3">
@@ -433,6 +435,22 @@ const FEATURES = [
     iconBg: 'bg-rose-500/10 text-rose-500 dark:text-rose-400',
     wide: false,
   },
+  {
+    icon: Users,
+    title: 'Real-Time Collaboration',
+    description: 'Multi-user editing with operational transforms. See teammates cursors, edits, and annotations in real time.',
+    accent: 'from-emerald-500/10 to-transparent',
+    iconBg: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400',
+    wide: true,
+  },
+  {
+    icon: Bot,
+    title: 'MCP Server Integration',
+    description: 'Connect AI agents to your scenes via the Model Context Protocol. Automate design tasks with Claude, GPT, and custom agents.',
+    accent: 'from-violet-500/10 to-transparent',
+    iconBg: 'bg-violet-500/10 text-violet-600 dark:text-violet-400',
+    wide: false,
+  },
 ]
 
 function FeatureCard({
@@ -498,6 +516,8 @@ function FeaturesSection() {
           <FeatureCard feature={FEATURES[3]!} index={3} inView={inView} colSpan="sm:col-span-2" />
           <FeatureCard feature={FEATURES[4]!} index={4} inView={inView} colSpan="" />
           <FeatureCard feature={FEATURES[5]!} index={5} inView={inView} colSpan="sm:col-span-2" />
+          <FeatureCard feature={FEATURES[6]!} index={6} inView={inView} colSpan="sm:col-span-2" />
+          <FeatureCard feature={FEATURES[7]!} index={7} inView={inView} colSpan="" />
         </div>
       </div>
     </motion.section>
@@ -691,6 +711,174 @@ function PluginShowcase() {
   )
 }
 
+// ─── Roadmap ──────────────────────────────────────────────────────────────────
+
+const ROADMAP_MAIN = [
+  {
+    icon: Smartphone,
+    name: 'Aruct Mobile',
+    tagline: 'Design on the go',
+    description: 'Capture dimensions on-site, sketch layouts, and sync with your desktop project — all from your phone or tablet.',
+  },
+  {
+    icon: Sparkles,
+    name: 'Aruct Render',
+    tagline: 'Photorealistic rendering studio',
+    description: 'GPU-accelerated path-traced renders with one click. Set lighting, materials, and camera — get a production-ready image in minutes.',
+  },
+  {
+    icon: Users,
+    name: 'Aruct Collaborate',
+    tagline: 'Design review & markup',
+    description: 'Invite clients and team members to annotate designs, leave comments on 3D elements, and track change requests — no CAD skills required.',
+  },
+  {
+    icon: Ruler,
+    name: 'Aruct Measure',
+    tagline: 'Quantity takeoff & BOM',
+    description: 'Automatically compute areas, volumes, and material quantities from your scene. Export a bill of materials to Excel or your procurement tool.',
+  },
+  {
+    icon: Calendar,
+    name: 'Aruct Scheduler',
+    tagline: 'Project scheduling & Gantt',
+    description: 'Link your 3D model elements to project phases and generate construction schedules. Visualise 4D construction sequences.',
+  },
+]
+
+const ROADMAP_ADDITIONAL = [
+  { icon: Bot, name: 'Aruct AI', tagline: 'AI-native design generation', eta: 'Q2 2027' },
+  { icon: Glasses, name: 'Aruct XR', tagline: 'Augmented & virtual reality', eta: 'Q3 2027' },
+  { icon: Building2, name: 'Aruct Structural', tagline: 'Structural analysis & coordination', eta: 'Q4 2027' },
+  { icon: Zap, name: 'Aruct MEP', tagline: 'Mechanical, electrical & plumbing', eta: 'Q1 2028' },
+  { icon: DollarSign, name: 'Aruct Cost', tagline: 'Live cost estimating', eta: 'Q2 2027' },
+  { icon: FileText, name: 'Aruct Specs', tagline: 'Specification authoring', eta: 'Q3 2027' },
+]
+
+function RoadmapSection() {
+  const sectionRef = useRef<HTMLElement>(null)
+  const headerRef = useRef<HTMLDivElement>(null)
+  const mainGridRef = useRef<HTMLDivElement>(null)
+  const addGridRef = useRef<HTMLDivElement>(null)
+  const headerInView = useInView(headerRef, { once: true, margin: '-60px' })
+  const mainGridInView = useInView(mainGridRef, { once: true, margin: '-80px' })
+  const addGridInView = useInView(addGridRef, { once: true, margin: '-80px' })
+
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start end', 'end start'] })
+  const sectionY = useTransform(scrollYProgress, [0, 1], ['4%', '-4%'])
+
+  return (
+    <motion.section
+      id="roadmap"
+      ref={sectionRef}
+      className="relative overflow-hidden bg-slate-50 dark:bg-[#06080f] px-6 py-24 sm:py-32"
+      style={{ y: sectionY }}
+    >
+      {/* Amber glow */}
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute left-1/2 top-1/4 -translate-x-1/2 h-[500px] w-[700px] rounded-full bg-amber-500/[0.04] dark:bg-amber-600/[0.07] blur-[130px]" />
+      </div>
+
+      <div className="relative mx-auto max-w-6xl">
+        {/* Header */}
+        <div ref={headerRef} className="mb-16 text-center">
+          <motion.p
+            className="mb-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-amber-600 dark:text-amber-400/70"
+            initial={{ opacity: 0, y: 20 }}
+            animate={headerInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5 }}
+          >
+            Coming soon
+          </motion.p>
+          <motion.h2
+            className="mb-4 font-black tracking-tight text-slate-900 dark:text-white"
+            style={{ fontSize: 'clamp(28px,4vw,44px)' }}
+            initial={{ opacity: 0, y: 25 }}
+            animate={headerInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.08 }}
+          >
+            The Aruct platform is just getting started
+          </motion.h2>
+          <motion.p
+            className="mx-auto max-w-lg text-[15px] leading-relaxed text-slate-500 dark:text-white/45"
+            initial={{ opacity: 0, y: 20 }}
+            animate={headerInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.15 }}
+          >
+            We are building an integrated suite of design, analysis, and delivery tools. Here is what is coming next.
+          </motion.p>
+        </div>
+
+        {/* Main roadmap grid */}
+        <div ref={mainGridRef} className="mb-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {ROADMAP_MAIN.map((item, i) => (
+            <motion.div
+              key={item.name}
+              className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-7 dark:border-white/[0.07] dark:bg-[#0a0d1c]"
+              initial={{ opacity: 0, y: 36, scale: 0.97 }}
+              animate={mainGridInView ? { opacity: 1, y: 0, scale: 1 } : {}}
+              transition={{ duration: 0.6, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
+            >
+              {/* Hover gradient */}
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-amber-500/[0.06] to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+
+              {/* Coming soon badge */}
+              <div className="relative mb-5 flex items-center justify-between">
+                <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400">
+                  <item.icon className="h-5 w-5" />
+                </div>
+                <span className="rounded-full border border-amber-400/30 bg-amber-400/10 px-2.5 py-0.5 text-[10px] font-semibold text-amber-600 dark:text-amber-400">
+                  Coming Soon
+                </span>
+              </div>
+
+              <h3 className="relative mb-0.5 text-[15px] font-bold text-slate-900 dark:text-white">{item.name}</h3>
+              <p className="relative mb-3 text-[12px] font-medium text-amber-600 dark:text-amber-400/80">{item.tagline}</p>
+              <p className="relative text-[13px] leading-relaxed text-slate-500 dark:text-white/45">{item.description}</p>
+
+              <div className="relative mt-5">
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-slate-400 hover:text-slate-700 dark:text-white/35 dark:hover:text-white/70 transition-colors"
+                >
+                  Notify me
+                  <ChevronRight className="h-3 w-3" />
+                </Link>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Additional roadmap items */}
+        <div ref={addGridRef} className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+          {ROADMAP_ADDITIONAL.map((item, i) => (
+            <motion.div
+              key={item.name}
+              className="group flex items-center gap-4 rounded-xl border border-slate-200 bg-white px-5 py-4 dark:border-white/[0.06] dark:bg-[#0a0d1c]"
+              initial={{ opacity: 0, y: 20 }}
+              animate={addGridInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.5, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <div className="shrink-0 inline-flex h-9 w-9 items-center justify-center rounded-lg bg-slate-100 text-slate-500 dark:bg-white/[0.06] dark:text-white/50">
+                <item.icon className="h-4 w-4" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2">
+                  <span className="text-[13px] font-semibold text-slate-900 dark:text-white">{item.name}</span>
+                  <span className="rounded-full border border-slate-200 bg-slate-50 px-2 py-px text-[10px] font-medium text-slate-400 dark:border-white/[0.07] dark:bg-white/[0.03] dark:text-white/30">
+                    {item.eta}
+                  </span>
+                </div>
+                <p className="truncate text-[12px] text-slate-400 dark:text-white/35">{item.tagline}</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </motion.section>
+  )
+}
+
 // ─── Workflow ─────────────────────────────────────────────────────────────────
 
 const STEPS = [
@@ -698,6 +886,8 @@ const STEPS = [
   { n: '02', title: 'Refine in 3D', body: 'Switch to the 3D viewport to adjust heights, add openings, apply materials.' },
   { n: '03', title: 'Enhance with plugins', body: 'Run a BOM report, sun study, or section cut with one-click plugins.' },
   { n: '04', title: 'Export or share', body: 'Save to your cloud account, invite teammates, or export to GLB / DXF.' },
+  { n: '05', title: 'Render & present', body: 'One-click photorealistic renders. Share a live 3D link with clients — no plugin or account required.' },
+  { n: '06', title: 'Measure & estimate', body: 'Auto-generate a bill of materials with areas, volumes, and quantities. Export to Excel or procurement tools.' },
 ]
 
 function WorkflowSection() {
@@ -725,7 +915,7 @@ function WorkflowSection() {
 
         <div
           ref={ref}
-          className="grid overflow-hidden rounded-2xl border border-slate-200 dark:border-white/[0.07] bg-slate-200 dark:bg-white/[0.05] sm:grid-cols-2 lg:grid-cols-4"
+          className="grid overflow-hidden rounded-2xl border border-slate-200 dark:border-white/[0.07] bg-slate-200 dark:bg-white/[0.05] sm:grid-cols-2 lg:grid-cols-3"
           style={{ gap: 1 }}
         >
           {STEPS.map((s, i) => (
@@ -837,6 +1027,7 @@ function Footer() {
           <Link href="/scenes" className="hover:text-slate-700 dark:hover:text-white/75 transition-colors">Scenes</Link>
           <Link href="/pricing" className="hover:text-slate-700 dark:hover:text-white/75 transition-colors">Pricing</Link>
           <Link href="/plugins" className="hover:text-slate-700 dark:hover:text-white/75 transition-colors">Plugins</Link>
+          <Link href="#roadmap" className="hover:text-slate-700 dark:hover:text-white/75 transition-colors">Roadmap</Link>
           <Link href="/contact" className="hover:text-slate-700 dark:hover:text-white/75 transition-colors">Contact</Link>
           <Link href="/privacy" className="hover:text-slate-700 dark:hover:text-white/75 transition-colors">Privacy</Link>
           <Link href="/terms" className="hover:text-slate-700 dark:hover:text-white/75 transition-colors">Terms</Link>
@@ -876,6 +1067,7 @@ export function LandingClient() {
       <StatsSection />
       <FeaturesSection />
       <PluginShowcase />
+      <RoadmapSection />
       <WorkflowSection />
       <CTASection />
       <Footer />
