@@ -1,9 +1,10 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import { Copy, Check, Info, Wifi, WifiOff } from 'lucide-react'
+import { Copy, Check, Wifi, WifiOff } from 'lucide-react'
 import { useState } from 'react'
 import { useCollabStore } from '@/lib/collaboration/collab-store'
+import { useCollabSession } from '@/lib/collaboration/use-collab-session'
 import type { CollabUser } from '@/lib/collaboration/types'
 import { useFirebaseUser } from '@/lib/use-auth'
 
@@ -62,11 +63,19 @@ export function CollabPanel() {
   const { status, room, localUser, joinRoom, leaveRoom, setUsers, setStatus } = useCollabStore()
   const { user } = useFirebaseUser()
   const [copied, setCopied] = useState(false)
+  const [syncEnabled, setSyncEnabled] = useState(false)
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const registeredRef = useRef(false)
 
   const sceneId =
     typeof window !== 'undefined' ? getSceneIdFromPath(window.location.pathname) : null
+
+  const { status: syncStatus } = useCollabSession({
+    sceneId: sceneId ?? '',
+    enabled: syncEnabled && !!sceneId && !!user,
+    userId: user?.uid,
+    userName: user?.displayName ?? user?.email?.split('@')[0],
+  })
 
   useEffect(() => {
     if (!sceneId || !user) return
@@ -176,20 +185,55 @@ export function CollabPanel() {
         </section>
       )}
 
-      {/* Real-time sync info */}
-      <section>
-        <p className="mb-2 text-xs font-medium text-muted-foreground uppercase tracking-wide">
-          Real-time sync
-        </p>
-        <div className="flex gap-2.5 rounded-lg border border-border bg-muted/30 p-3">
-          <Info className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
-          <p className="text-xs text-muted-foreground leading-relaxed">
-            <span className="font-medium text-foreground">Beta: presence only.</span> Full edit
-            sync coming soon — you can see who&apos;s in the scene but edits are not yet
-            synchronised in real time.
+      {/* Real-time sync */}
+      {sceneId && (
+        <section>
+          <p className="mb-2 text-xs font-medium text-muted-foreground uppercase tracking-wide">
+            Real-time sync
           </p>
-        </div>
-      </section>
+          <div className="flex items-center justify-between rounded-lg border border-border px-3 py-2.5">
+            <div className="flex items-center gap-2">
+              <span
+                className={`h-2 w-2 rounded-full ${
+                  syncStatus === 'connected'
+                    ? 'bg-green-500'
+                    : syncStatus === 'connecting'
+                    ? 'bg-yellow-400 animate-pulse'
+                    : syncStatus === 'error'
+                    ? 'bg-destructive'
+                    : 'bg-muted-foreground/40'
+                }`}
+              />
+              <span className="text-sm text-foreground">
+                {syncStatus === 'connected'
+                  ? 'Live sync active'
+                  : syncStatus === 'connecting'
+                  ? 'Connecting…'
+                  : syncStatus === 'error'
+                  ? 'Sync error'
+                  : 'Live sync off'}
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setSyncEnabled((v) => !v)}
+              className={`relative h-5 w-9 rounded-full transition-colors ${
+                syncEnabled ? 'bg-brand' : 'bg-muted'
+              }`}
+              aria-label="Toggle live sync"
+            >
+              <span
+                className={`absolute top-0.5 left-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform ${
+                  syncEnabled ? 'translate-x-4' : 'translate-x-0'
+                }`}
+              />
+            </button>
+          </div>
+          <p className="mt-1.5 text-xs text-muted-foreground">
+            Enable to sync edits in real time with other collaborators.
+          </p>
+        </section>
+      )}
     </div>
   )
 }

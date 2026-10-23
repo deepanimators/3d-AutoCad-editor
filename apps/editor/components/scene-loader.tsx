@@ -16,7 +16,7 @@ import {
   type SidebarTab,
   useEditor,
 } from '@aruct/editor'
-import { BarChart2, Building2, Camera, ClipboardList, Clock, CloudSnow, Hammer, LayoutGrid, Layers, Mountain, Package, Palette, PenTool, Plus, Scissors, Sun, Users, Zap } from 'lucide-react'
+import { BarChart2, Building2, Camera, ClipboardList, Clock, CloudSnow, Hammer, LayoutGrid, Layers, ListTree, MessageSquare, Mountain, Package, Palette, PenTool, Plus, Scissors, Sun, Users, Zap } from 'lucide-react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -39,6 +39,8 @@ import { RailAccountNav } from './rail-account-nav'
 import { SunStudyPanel } from './sun-study-panel'
 import { UnifiedPluginsPanel } from './unified-plugins-panel'
 import { EditorTopBar } from './editor-top-bar'
+import { CommentsPanel } from './comments-panel'
+import { OutlinerPanel } from './outliner-panel'
 import { CommunityViewerToolbarLeft, CommunityViewerToolbarRight } from './viewer-toolbar'
 
 export interface SceneMeta {
@@ -455,6 +457,23 @@ export function SceneLoader({ initialScene, meta }: SceneLoaderProps) {
       mobileIcon: <LayoutGrid className="h-5 w-5" />,
       icon: <LayoutGrid className="h-5 w-5" />,
     } as SidebarTab & { component: React.ComponentType }] : []),
+    {
+      id: 'outliner',
+      label: 'Outliner',
+      component: OutlinerPanel,
+      mobileDefaultSnap: 0.5,
+      mobileIcon: <ListTree className="h-5 w-5" />,
+      icon: <ListTree className="h-5 w-5" />,
+    },
+    {
+      id: 'comments',
+      label: 'Comments',
+      // eslint-disable-next-line react/display-name
+      component: () => <CommentsPanel sceneId={meta.id} />,
+      mobileDefaultSnap: 0.5,
+      mobileIcon: <MessageSquare className="h-5 w-5" />,
+      icon: <MessageSquare className="h-5 w-5" />,
+    },
     {
       id: 'plugins',
       label: 'Plugins',

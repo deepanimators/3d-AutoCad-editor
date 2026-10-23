@@ -1,8 +1,11 @@
 'use client'
 
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, FileCode, FileImage, Store } from 'lucide-react'
 import Link from 'next/link'
+import { useState } from 'react'
 import { ShortcutHelpOverlay, ShortcutHelpTrigger } from './shortcut-help-overlay'
+import { DwgImportDialog } from './dwg-import-dialog'
+import { PdfUnderlayDialog } from './pdf-underlay-dialog'
 
 function AructMark({ className }: { className?: string }) {
   return (
@@ -25,27 +28,66 @@ function AructMark({ className }: { className?: string }) {
 }
 
 export function EditorTopBar() {
+  const [dwgOpen, setDwgOpen] = useState(false)
+  const [pdfOpen, setPdfOpen] = useState(false)
+
   return (
-    <header className="flex h-12 shrink-0 items-center gap-3 border-b border-border bg-background px-4">
-      <a
-        href="/"
-        className="flex items-center gap-2.5 text-foreground hover:opacity-80 transition-opacity"
-      >
-        <AructMark className="h-5 w-5" />
-        <span className="text-sm font-semibold tracking-tight hidden sm:inline">Aruct</span>
-      </a>
-      <div className="h-4 w-px bg-border" />
-      <Link
-        href="/scenes"
-        className="flex items-center gap-1.5 rounded-md px-2 py-1 text-sm text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
-      >
-        <ArrowLeft className="h-3.5 w-3.5" />
-        <span className="hidden sm:inline">My Scenes</span>
-      </Link>
-      <div className="ml-auto">
-        <ShortcutHelpTrigger />
-      </div>
-      <ShortcutHelpOverlay />
-    </header>
+    <>
+      <header className="flex h-12 shrink-0 items-center gap-3 border-b border-border bg-background px-4">
+        <a
+          href="/"
+          className="flex items-center gap-2.5 text-foreground hover:opacity-80 transition-opacity"
+        >
+          <AructMark className="h-5 w-5" />
+          <span className="text-sm font-semibold tracking-tight hidden sm:inline">Aruct</span>
+        </a>
+        <div className="h-4 w-px bg-border" />
+        <Link
+          href="/scenes"
+          className="flex items-center gap-1.5 rounded-md px-2 py-1 text-sm text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+        >
+          <ArrowLeft className="h-3.5 w-3.5" />
+          <span className="hidden sm:inline">My Scenes</span>
+        </Link>
+
+        {/* Import actions */}
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            title="Import DWG"
+            onClick={() => setDwgOpen(true)}
+            className="flex items-center gap-1.5 rounded-md px-2 py-1 text-xs text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+          >
+            <FileCode className="h-3.5 w-3.5" />
+            <span className="hidden md:inline">DWG</span>
+          </button>
+          <button
+            type="button"
+            title="Add PDF underlay"
+            onClick={() => setPdfOpen(true)}
+            className="flex items-center gap-1.5 rounded-md px-2 py-1 text-xs text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+          >
+            <FileImage className="h-3.5 w-3.5" />
+            <span className="hidden md:inline">PDF</span>
+          </button>
+        </div>
+
+        <div className="ml-auto flex items-center gap-2">
+          <Link
+            href="/plugins/marketplace"
+            title="Plugin Marketplace"
+            className="hidden sm:flex items-center gap-1.5 rounded-md px-2 py-1 text-xs text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+          >
+            <Store className="h-3.5 w-3.5" />
+            <span>Marketplace</span>
+          </Link>
+          <ShortcutHelpTrigger />
+        </div>
+        <ShortcutHelpOverlay />
+      </header>
+
+      <DwgImportDialog open={dwgOpen} onClose={() => setDwgOpen(false)} />
+      <PdfUnderlayDialog open={pdfOpen} onClose={() => setPdfOpen(false)} />
+    </>
   )
 }

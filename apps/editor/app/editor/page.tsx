@@ -2,7 +2,7 @@
 
 import { type AssetInput, useScene } from '@aruct/core'
 import { CATALOG_ITEMS, Editor, type ExternalResult, ItemsPanel, useEditor } from '@aruct/editor'
-import { BarChart2, Building2, Camera, ClipboardList, Clock, CloudSnow, Hammer, LayoutGrid, Layers, Mountain, Package, Palette, PenTool, Plus, Scissors, Settings, Sun, Users, Zap } from 'lucide-react'
+import { BarChart2, Building2, Camera, ClipboardList, Clock, CloudSnow, Hammer, LayoutGrid, Layers, ListTree, MessageSquare, Mountain, Package, Palette, PenTool, Plus, Scissors, Settings, Sun, Users, Zap } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -24,6 +24,25 @@ import { VersionHistoryPanel } from '@/components/version-history-panel'
 import { ZoneRollupPanel } from '@/components/zone-rollup-panel'
 import { UnifiedPluginsPanel } from '@/components/unified-plugins-panel'
 import { EditorTopBar } from '@/components/editor-top-bar'
+import { CommentsPanel } from '@/components/comments-panel'
+import { OutlinerPanel } from '@/components/outliner-panel'
+
+function CommentsPanelWrapper() {
+  // sceneId comes from URL on /scene/[id]; local editor has none
+  const sceneId = typeof window !== 'undefined'
+    ? new URLSearchParams(window.location.search).get('sceneId') ?? undefined
+    : undefined
+  if (!sceneId) {
+    return (
+      <div className="flex h-full items-center justify-center p-6 text-center text-sm text-muted-foreground">
+        Comments are available on saved cloud scenes.
+        <br />
+        <a href="/scenes" className="mt-2 block text-brand underline">Save scene to enable</a>
+      </div>
+    )
+  }
+  return <CommentsPanel sceneId={sceneId} />
+}
 import { FloorplanConstructionPreflight } from '@/components/floorplan-construction-preflight'
 import { GlbExportGate } from '@/components/glb-export-gate'
 import { RailAccountNav } from '@/components/rail-account-nav'
@@ -368,6 +387,22 @@ export default function Home() {
       mobileIcon: <LayoutGrid className="h-5 w-5" />,
       icon: <LayoutGrid className="h-5 w-5" />,
     }] : []),
+    {
+      id: 'outliner',
+      label: 'Outliner',
+      component: OutlinerPanel,
+      mobileDefaultSnap: 0.5,
+      mobileIcon: <ListTree className="h-5 w-5" />,
+      icon: <ListTree className="h-5 w-5" />,
+    },
+    {
+      id: 'comments',
+      label: 'Comments',
+      component: CommentsPanelWrapper,
+      mobileDefaultSnap: 0.5,
+      mobileIcon: <MessageSquare className="h-5 w-5" />,
+      icon: <MessageSquare className="h-5 w-5" />,
+    },
     {
       id: 'settings',
       label: 'Settings',
