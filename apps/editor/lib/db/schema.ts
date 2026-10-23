@@ -245,3 +245,48 @@ export const sceneComments = pgTable('scene_comments', {
 
 export type SceneCommentRow = typeof sceneComments.$inferSelect
 export type NewSceneCommentRow = typeof sceneComments.$inferInsert
+
+// Plugin marketplace registry
+export const pluginRegistry = pgTable('plugin_registry', {
+  id: text('id').primaryKey(),
+  name: text('name').notNull(),
+  slug: text('slug').notNull().unique(),
+  description: text('description').notNull(),
+  longDescription: text('long_description'),
+  authorName: text('author_name').notNull(),
+  authorUrl: text('author_url'),
+  version: text('version').notNull(),
+  manifestUrl: text('manifest_url').notNull(),
+  iconUrl: text('icon_url'),
+  screenshotUrls: text('screenshot_urls').notNull().default('[]'),
+  category: text('category', {
+    enum: ['visualization', 'mep', 'structural', 'analysis', 'import-export', 'productivity', 'other'],
+  }).notNull().default('other'),
+  tags: text('tags').notNull().default('[]'),
+  status: text('status', { enum: ['pending', 'approved', 'rejected', 'deprecated'] }).notNull().default('pending'),
+  installCount: integer('install_count').notNull().default(0),
+  rating: real('rating'),
+  ratingCount: integer('rating_count').notNull().default(0),
+  minPlan: text('min_plan', { enum: ['free', 'pro', 'team'] }).notNull().default('free'),
+  verified: boolean('verified').notNull().default(false),
+  featured: boolean('featured').notNull().default(false),
+  submittedBy: text('submitted_by'),
+  approvedBy: text('approved_by'),
+  approvedAt: timestamp('approved_at', { mode: 'string' }),
+  createdAt: timestamp('created_at', { mode: 'string' }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { mode: 'string' }).notNull().defaultNow(),
+})
+
+export type PluginRegistryRow = typeof pluginRegistry.$inferSelect
+export type NewPluginRegistryRow = typeof pluginRegistry.$inferInsert
+
+export const pluginRatings = pgTable('plugin_ratings', {
+  id: text('id').primaryKey(),
+  pluginId: text('plugin_id').notNull().references(() => pluginRegistry.id, { onDelete: 'cascade' }),
+  userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  rating: integer('rating').notNull(),
+  review: text('review'),
+  createdAt: timestamp('created_at', { mode: 'string' }).notNull().defaultNow(),
+}, (t) => [unique().on(t.pluginId, t.userId)])
+
+export type PluginRatingRow = typeof pluginRatings.$inferSelect
