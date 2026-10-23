@@ -160,7 +160,7 @@ function DrawerContent({ user, onClose }: { user: User; onClose: () => void }) {
       {/* Open Editor CTA */}
       <div className="border-b border-border px-3 py-3 shrink-0">
         <a
-          href="/"
+          href="/scenes"
           className="flex items-center justify-between rounded-lg bg-brand px-3 py-2 text-brand-foreground text-sm font-semibold hover:opacity-90 transition-opacity"
         >
           <span>Open Editor</span>
@@ -352,7 +352,7 @@ export function TopBar({ user }: { user: User }) {
         <div className="flex items-center gap-1.5 ml-auto">
           {/* Open Editor (desktop only) */}
           <a
-            href="/"
+            href="/scenes"
             className="hidden md:inline-flex rounded-lg bg-brand px-3 py-1.5 text-brand-foreground text-sm font-semibold hover:opacity-90 transition-opacity"
           >
             Open Editor

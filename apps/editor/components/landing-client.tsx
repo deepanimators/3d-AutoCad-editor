@@ -4,6 +4,8 @@ import Lenis from 'lenis'
 import { motion, useScroll, useTransform, useInView, useMotionValue, useSpring } from 'motion/react'
 import Link from 'next/link'
 import { useRef, useState, useEffect } from 'react'
+import { onAuthStateChanged } from 'firebase/auth'
+import { firebaseAuth } from '@/lib/firebase/client'
 import {
   ArrowRight, Check,
   Layers, Sparkles, Palette, Puzzle, Cloud, Download,
@@ -47,10 +49,17 @@ function GridBg({ className }: { className?: string }) {
 
 function Navbar() {
   const [solid, setSolid] = useState(false)
+  const [loggedIn, setLoggedIn] = useState(false)
+
   useEffect(() => {
     const fn = () => setSolid(window.scrollY > 50)
     window.addEventListener('scroll', fn, { passive: true })
     return () => window.removeEventListener('scroll', fn)
+  }, [])
+
+  useEffect(() => {
+    const unsub = onAuthStateChanged(firebaseAuth, (user) => setLoggedIn(!!user))
+    return unsub
   }, [])
 
   return (
@@ -67,10 +76,18 @@ function Navbar() {
         </nav>
         <div className="ml-auto flex items-center gap-3">
           <ThemeToggle />
-          <Link href="/login" className="hidden text-[13px] text-slate-500 dark:text-white/50 hover:text-slate-900 dark:hover:text-white transition-colors sm:block">Sign in</Link>
-          <Link href="/signup" className="rounded-lg bg-blue-600 px-4 py-[7px] text-[13px] font-semibold text-white hover:bg-blue-500 transition-colors">
-            Get started
-          </Link>
+          {loggedIn ? (
+            <Link href="/scenes" className="rounded-lg bg-blue-600 px-4 py-[7px] text-[13px] font-semibold text-white hover:bg-blue-500 transition-colors">
+              Open editor
+            </Link>
+          ) : (
+            <>
+              <Link href="/login" className="hidden text-[13px] text-slate-500 dark:text-white/50 hover:text-slate-900 dark:hover:text-white transition-colors sm:block">Sign in</Link>
+              <Link href="/signup" className="rounded-lg bg-blue-600 px-4 py-[7px] text-[13px] font-semibold text-white hover:bg-blue-500 transition-colors">
+                Get started
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </header>

@@ -149,13 +149,19 @@ function DCCToolCard({
           </div>
         </div>
       </div>
-      <a
-        href={tool.installUrl}
-        className="flex items-center gap-1.5 rounded-lg bg-muted/60 px-3 py-2 text-sm font-medium text-foreground hover:bg-muted transition-colors"
-      >
-        <Download className="h-3.5 w-3.5" />
-        Install
-      </a>
+      {tool.installUrl === '#' ? (
+        <span className="rounded-lg bg-muted/60 px-3 py-2 text-sm text-muted-foreground text-center">
+          Download coming soon
+        </span>
+      ) : (
+        <a
+          href={tool.installUrl}
+          className="flex items-center gap-1.5 rounded-lg bg-muted/60 px-3 py-2 text-sm font-medium text-foreground hover:bg-muted transition-colors"
+        >
+          <Download className="h-3.5 w-3.5" />
+          Install
+        </a>
+      )}
     </div>
   )
 }
