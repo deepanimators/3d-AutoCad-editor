@@ -3,6 +3,7 @@ import { pluginRegistry } from '@/lib/db/schema'
 import { eq } from 'drizzle-orm'
 import { MarketplaceClient } from './marketplace-client'
 
+export const dynamic = 'force-dynamic'
 export const metadata = { title: 'Plugin Marketplace — Aruct' }
 
 export default async function MarketplacePage() {
