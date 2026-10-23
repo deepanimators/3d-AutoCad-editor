@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "dotenv -e ../../.env.local -- next dev --port ${PORT:-3002}",
+    "prebuild": "node scripts/run-migration.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "biome lint",

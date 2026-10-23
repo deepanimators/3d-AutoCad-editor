@@ -249,6 +249,49 @@ try {
   await sql`CREATE INDEX IF NOT EXISTS "idx_global_models_source" ON "global_models"("source")`
   console.log('✓ global_models table ready')
 
+  // Plugin marketplace
+  await sql`
+    CREATE TABLE IF NOT EXISTS "plugin_registry" (
+      "id" text PRIMARY KEY NOT NULL,
+      "name" text NOT NULL,
+      "slug" text NOT NULL UNIQUE,
+      "description" text NOT NULL,
+      "long_description" text,
+      "author_name" text NOT NULL,
+      "author_url" text,
+      "version" text NOT NULL,
+      "manifest_url" text NOT NULL,
+      "icon_url" text,
+      "screenshot_urls" text NOT NULL DEFAULT '[]',
+      "category" text NOT NULL DEFAULT 'other',
+      "tags" text NOT NULL DEFAULT '[]',
+      "status" text NOT NULL DEFAULT 'pending',
+      "install_count" integer NOT NULL DEFAULT 0,
+      "rating" real,
+      "rating_count" integer NOT NULL DEFAULT 0,
+      "min_plan" text NOT NULL DEFAULT 'free',
+      "verified" boolean NOT NULL DEFAULT false,
+      "featured" boolean NOT NULL DEFAULT false,
+      "submitted_by" text,
+      "approved_by" text,
+      "approved_at" timestamptz,
+      "created_at" timestamptz DEFAULT now() NOT NULL,
+      "updated_at" timestamptz DEFAULT now() NOT NULL
+    )
+  `
+  await sql`
+    CREATE TABLE IF NOT EXISTS "plugin_ratings" (
+      "id" text PRIMARY KEY NOT NULL,
+      "plugin_id" text NOT NULL REFERENCES "plugin_registry"("id") ON DELETE CASCADE,
+      "user_id" text NOT NULL REFERENCES "users"("id") ON DELETE CASCADE,
+      "rating" integer NOT NULL,
+      "review" text,
+      "created_at" timestamptz DEFAULT now() NOT NULL,
+      UNIQUE ("plugin_id", "user_id")
+    )
+  `
+  console.log('✓ plugin_registry + plugin_ratings tables ready')
+
   const u = await sql`SELECT COUNT(*) as count FROM users`
   const s = await sql`SELECT COUNT(*) as count FROM scenes`
   const g = await sql`SELECT COUNT(*) as count FROM global_models`
